@@ -21,29 +21,66 @@ export default function() {
 						quote = quote.slice(1,-1);
 						let parts = quote.split(' ');
 
+						//If it has 3 parts it means the book starts with a number. eg: (1 corintios 4:5)
 						if (parts.length === 3){
 							parts = [parts[0] + ' ' + parts[1], parts[2]];
 						}
-
+						
+						//Parse the book and store his number on full_quote.
+						//The full quote includes the chapters and the cited verses
+						let full_quote = {
+							book:{
+								chapters:{}
+							}};
+						
 						//To remove accents and diacritics, and make all lower case
-						const bk = (parts[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "")).toLowerCase();
-						const verse = parts[1];
-
+						const bk = (parts[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "")).toLowerCase();	//The book to parse
+						
 						let is_a_book = false;
-						let book_num = 0;
-
 						for (let book of bibleIndex.books) {
 							if (bk == book.name || bk == book.abrv){
 								is_a_book = true;
-								book_num = book.num;
+								full_quote.book.num = book.num;
 							}
 						}
+
+						
+						//Parse the chapters and verses
+						const chapters_verses = parts[1].split(';');	//["3:5-8","9:10,12-13"]
+						for (let chapt_ver of chapters_verses){
+							const splt1 = chapt_ver.split(':');			//["9", "10,12-13"]
+							const chapter = splt1[0];
+							full_quote.book.chapters[chapter] = {
+								verses: []
+							}
+
+							//Parse the verses
+							const verses_long = (splt1[1]).split(',');	//["10", "12-13"]
+							
+							for (let verse of verses_long){
+								
+								if (!verse.includes('-')){
+									full_quote.book.chapters[chapter].verses.push(parseInt(verse));
+								}else{
+									const splt2 = verse.split('-');
+									const min_ver = parseInt(splt2[0]);
+									const max_ver = parseInt(splt2[1]);
+									if (min_ver < max_ver){
+										for (let i = min_ver; i <= max_ver; i++){
+											full_quote.book.chapters[chapter].verses.push(i);
+										}
+									}
+								}	
+							}
+						}
+
+						
 						
 						if (is_a_book){
+							console.log(full_quote);
 							html += '<p>Indeed it is a book, whom number is: ';
-							html += book_num.toLocaleString();
+							html += full_quote.book.num;
 							html += '</p>';
-
 						}
 
 					};
