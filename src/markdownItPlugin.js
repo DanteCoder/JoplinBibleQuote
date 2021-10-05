@@ -17,10 +17,14 @@ export default function() {
 					for (let match of matchs){
 
 						match = match.slice(1,-1);
+						let args = match.split(' ');
 
-						html += '<p>';
-						html += match;
-						html += '</p>';
+						for (let arg of args){
+							html += '<p>';
+							html += arg;
+							html += '</p>';
+						}
+
 					};
 				};
 
