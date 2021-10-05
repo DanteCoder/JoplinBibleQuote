@@ -25,8 +25,8 @@ export default function() {
 							parts = [parts[0] + ' ' + parts[1], parts[2]];
 						}
 
-						//To remove accents and diacritics
-						const bk = parts[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+						//To remove accents and diacritics, and make all lower case
+						const bk = (parts[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "")).toLowerCase();
 						const verse = parts[1];
 
 						let is_a_book = false;
