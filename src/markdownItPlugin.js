@@ -98,7 +98,7 @@ export default function() {
 						}
 
 
-						html += `<div style="background-color:#424242; border:1px solid #ffffff;"><h2><b>${bibleIndex.books[full_quote.book.num-1].full_name}</b></h2>`
+						html += `<div style="border:1px solid #545454; padding: 5%;"><h2><b>${bibleIndex.books[full_quote.book.num-1].full_name}</b></h2>`
 						let c_keys = Object.keys(full_quote.book.chapters);
 						for (let c_key of c_keys){
 							html += `<h3>Capítulo ${c_key}</h3>`
