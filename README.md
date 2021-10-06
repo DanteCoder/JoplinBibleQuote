@@ -1,24 +1,35 @@
-# Joplin Plugin
+# Bible Citation Plugin for Joplin
 
-This is a template to create a new Joplin plugin.
+This plugin parses bible citation into bible verses. To do this you create a fenced block with "bible" as identifier with the following format:
 
-The main two files you will want to look at are:
+```bible
+(genesis 1:1)
+(exodo 1:3-6)
+```
 
-- `/src/index.ts`, which contains the entry point for the plugin source code.
-- `/src/manifest.json`, which is the plugin manifest. It contains information such as the plugin a name, version, etc.
+For example:
 
-## Building the plugin
+![](./example.png)
 
-The plugin is built using Webpack, which creates the compiled code in `/dist`. A JPL archive will also be created at the root, which can use to distribute the plugin.
+The general syntax for the citation is:
+```bible
+(<bookname> <chapter>:<verse>;<chapter>:<verse>-<verse>,<chapter>:<verse>,<verse>;<chapter>)
+```
+The bookname may be the full name, or the abbreviation.
+The chapter is the number of chapter within the book.
+The verse is a verse within the chapter:
+    Using "-" will display all the verses within a range of verses.
+    Using "," will separate the verses within the same chapter.
+You can cite multiple chapters of the same book, using ";", Eg:
+```bible
+(genesis 1;2)
+```
 
-To build the plugin, simply run `npm run dist`.
+## Installation
+Install the .jpl under Releases.
 
-The project is setup to use TypeScript, although you can change the configuration to use plain JavaScript.
+## Notes
+This is my attemp to make a plugin using markdown, feel free to improve it or change it.
 
-## Updating the plugin framework
-
-To update the plugin framework, run `npm run update`.
-
-In general this command tries to do the right thing - in particular it's going to merge the changes in package.json and .gitignore instead of overwriting. It will also leave "/src" as well as README.md untouched.
-
-The file that may cause problem is "webpack.config.js" because it's going to be overwritten. For that reason, if you want to change it, consider creating a separate JavaScript file and include it in webpack.config.js. That way, when you update, you only have to restore the line that include your file.
+Right now the only bible available is the RVR1960, with spanish citation, but feel free to change the book names on the file "src/bibles/bible_index.js".
+To change the bible version you need a XML version of the bible, and then convert it to a .js object, just like "src/bibles/rvr1960.js" and modify the import on "src/markdownItPlugin.js"
