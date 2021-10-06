@@ -98,14 +98,15 @@ export default function() {
 						}
 
 
-						html += `<p>${bibleIndex.books[full_quote.book.num-1].full_name}</p>`
+						html += `<div style="background-color:#424242; border:1px solid #ffffff;"><h2><b>${bibleIndex.books[full_quote.book.num-1].full_name}</b></h2>`
 						let c_keys = Object.keys(full_quote.book.chapters);
 						for (let c_key of c_keys){
-							html += `<p>Capítulo ${c_key}</p>`
+							html += `<h3>Capítulo ${c_key}</h3>`
 							for (let v of full_quote.book.chapters[c_key].verses){
-								html += `<p>${v}. ${bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[c_key-1].VERS[v-1]}</p>`
+								html += `<p><b>${v}.</b> ${bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[c_key-1].VERS[v-1]}</p>`
 							}
 						}
+						html += '</div>'
 					};
 				};
 
