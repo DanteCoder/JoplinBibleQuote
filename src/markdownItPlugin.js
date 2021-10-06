@@ -1,4 +1,5 @@
 const bibleIndex = require('./bibles/bible_index').default;
+import bible from './bibles/rvr1960';
 
 export default function() { 
 	return {
@@ -43,28 +44,51 @@ export default function() {
 								full_quote.book.num = book.num;
 							}
 						}
-
+						const book_chapters_num = bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER.length;
 						
 						//Parse the chapters and verses
 						const chapters_verses = parts[1].split(';');	//["3:5-8","9:10,12-13"]
 						for (let chapt_ver of chapters_verses){
 							const splt1 = chapt_ver.split(':');			//["9", "10,12-13"]
-							const chapter = splt1[0];
+							const chapter = parseInt(splt1[0]);
 							full_quote.book.chapters[chapter] = {
 								verses: []
 							}
-
-							//Parse the verses
-							const verses_long = (splt1[1]).split(',');	//["10", "12-13"]
 							
+							if (chapter > book_chapters_num){
+								return `<p>The book of ${bibleIndex.books[full_quote.book.num-1].name} has only ${book_chapters_num} chapters.</p>`
+							}
+
+							const chapter_verses_num = bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[chapter-1].VERS.length;
+
+							//Parse the verses.
+							//If there is only chapter, it will display all the verses
+							let verses_long = '';
+							if (splt1.length === 1){
+								verses_long = ['1-' + chapter_verses_num];
+							}else{
+								verses_long = (splt1[1]).split(',');	//["10", "12-13"]
+							}
+
+							
+							const html_exeded_verse = `<p>The chapter ${chapter} from the book of ${bibleIndex.books[full_quote.book.num-1].name} has only ${chapter_verses_num} verses.</p>`;
+
 							for (let verse of verses_long){
 								
 								if (!verse.includes('-')){
+									if (parseInt(verse) > chapter_verses_num){
+										return html_exeded_verse;
+									}
 									full_quote.book.chapters[chapter].verses.push(parseInt(verse));
 								}else{
 									const splt2 = verse.split('-');
 									const min_ver = parseInt(splt2[0]);
 									const max_ver = parseInt(splt2[1]);
+
+									if (max_ver > chapter_verses_num){
+										return html_exeded_verse;
+									}
+
 									if (min_ver < max_ver){
 										for (let i = min_ver; i <= max_ver; i++){
 											full_quote.book.chapters[chapter].verses.push(i);
