@@ -2,28 +2,28 @@
 
 This plugin parses bible citation into bible verses. To do this you create a fenced block with "bible" as identifier with the following format:
 
-```bible
-(genesis 1:1)
-(exodo 1:3-6)
-```
+    ```bible
+    (genesis 1:1)
+    (exodo 1:3-6)
+    ```
 
 For example:
 
 ![](./example.png)
 
 The general syntax for the citation is:
-```bible
-(<bookname> <chapter>:<verse>;<chapter>:<verse>-<verse>,<chapter>:<verse>,<verse>;<chapter>)
-```
+    ```bible
+    (<bookname> <chapter>:<verse>;<chapter>:<verse>-<verse>,<chapter>:<verse>,<verse>;<chapter>)
+    ```
 The bookname may be the full name, or the abbreviation.
 The chapter is the number of chapter within the book.
 The verse is a verse within the chapter:
     Using "-" will display all the verses within a range of verses.
     Using "," will separate the verses within the same chapter.
 You can cite multiple chapters of the same book, using ";", Eg:
-```bible
-(genesis 1;2)
-```
+    ```bible
+    (genesis 1;2)
+    ```
 
 ## Installation
 Install the .jpl under Releases.
