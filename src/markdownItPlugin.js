@@ -37,10 +37,8 @@ export default function() {
 						//To remove accents and diacritics, and make all lower case
 						const bk = (parts[0].normalize("NFD").replace(/[\u0300-\u036f]/g, "")).toLowerCase();	//The book to parse
 						
-						let is_a_book = false;
 						for (let book of bibleIndex.books) {
 							if (bk == book.name || bk == book.abrv){
-								is_a_book = true;
 								full_quote.book.num = book.num;
 							}
 						}
@@ -52,6 +50,7 @@ export default function() {
 							const splt1 = chapt_ver.split(':');			//["9", "10,12-13"]
 							const chapter = parseInt(splt1[0]);
 							full_quote.book.chapters[chapter] = {
+								num: chapter,
 								verses: []
 							}
 							
@@ -94,19 +93,19 @@ export default function() {
 											full_quote.book.chapters[chapter].verses.push(i);
 										}
 									}
-								}	
+								}
 							}
 						}
 
-						
-						
-						if (is_a_book){
-							console.log(full_quote);
-							html += '<p>Indeed it is a book, whom number is: ';
-							html += full_quote.book.num;
-							html += '</p>';
-						}
 
+						html += `<p>${bibleIndex.books[full_quote.book.num-1].full_name}</p>`
+						let c_keys = Object.keys(full_quote.book.chapters);
+						for (let c_key of c_keys){
+							html += `<p>Capítulo ${c_key}</p>`
+							for (let v of full_quote.book.chapters[c_key].verses){
+								html += `<p>${v}. ${bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[c_key-1].VERS[v-1]}</p>`
+							}
+						}
 					};
 				};
 
