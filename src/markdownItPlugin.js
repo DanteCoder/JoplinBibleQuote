@@ -1,4 +1,4 @@
-const bibleIndex = require('./bibles/bible_index').default;
+import bibleIndex from './bibles/bible_index';
 import bible from './bibles/rvr1960';
 
 export default function() { 
