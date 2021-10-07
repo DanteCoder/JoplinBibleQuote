@@ -1,21 +1,29 @@
+import joplin from 'api'
 import bibleIndex from './bibles/bible_index';
 import bible from './bibles/rvr1960';
+/*  const bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
+const bcv = new bcv_parser;
+const parseXmlString = require('xml2js').parseString;
+const fs = require('fs'); */
 
-export default function() { 
+/* let jsonBible = null;
+let bible_path = null; */
+
+export default function(context) { 
 	return {
 		plugin: function(markdownIt, _options) {
 			const defaultRender = markdownIt.renderer.rules.fence || function(tokens, idx, options, env, self) {
 				return self.renderToken(tokens, idx, options, env, self);
 			};
-		
+
 			markdownIt.renderer.rules.fence = function(tokens, idx, options, env, self) {
 				const token = tokens[idx];
 				if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
-
+				
 				let html = '';
-
+				
 				let quotes  = token.content.match(/\(.*?\)/g)
-
+				
 				if (quotes){
 
 					html += '<div style="border:1px solid #545454;">'
@@ -24,7 +32,7 @@ export default function() {
 
 						const full_quote = parseQuote(quote);
 
-						console.log(full_quote);
+						//console.log(full_quote);
 
 						if (full_quote.book.name === null) {
 							html += '<div style="padding: 20px;"><h2 style="text-align:center;"><b>Invalid book name</b></h2></div>';
@@ -66,6 +74,33 @@ export default function() {
 		},
 	}
 }
+
+/* function XmmBible2Js(bible_path){
+	let parsed_bible = null;
+	
+	const xml = fs.readFileSync(bible_path, 'utf8');
+	parseXmlString(xml, function(err, result){
+		if (err) throw err;
+		parsed_bible = result;
+	})
+
+	return parsed_bible;
+} */
+
+/* function parseQuote(quote){
+	bcv.parse(quote);
+	//console.log(bcv.osis());
+
+	let full_quote = {
+		book:{
+			num: null,
+			name: null,
+			num_chapters: null,
+			chapters:[]
+		}};
+
+	return(full_quote);
+} */
 
 function parseQuote(quote){
 	//Parse the book and store his number on full_quote.
@@ -165,4 +200,4 @@ function parseQuote(quote){
 	}
 
 	return full_quote;
-}
+} 
