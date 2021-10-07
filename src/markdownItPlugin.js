@@ -17,6 +17,9 @@ export default function() {
 				let quotes  = token.content.match(/\(.*?\)/g)
 
 				if (quotes){
+
+					html += '<div style="border:1px solid #545454;">'
+
 					for (let quote of quotes){
 
 						const full_quote = parseQuote(quote);
@@ -24,11 +27,11 @@ export default function() {
 						console.log(full_quote);
 
 						if (full_quote.book.name === null) {
-							html += '<div style="border:1px solid #545454; padding: 5%;"><h2><b>Invalid book name</b></h2></div>';
+							html += '<div style="padding: 20px;"><h2 style="text-align:center;"><b>Invalid book name</b></h2></div>';
 							continue;
 						}
 
-						html += `<div style="border:1px solid #545454; padding: 5%;"><h2><b>${full_quote.book.name}</b></h2>`;
+						html += `<div style="padding: 20px;"><h2 style="text-align:center;"><b>${full_quote.book.name}</b></h2>`;
 
 						for (let chapter of full_quote.book.chapters){
 							if (chapter.num === null){
@@ -38,18 +41,24 @@ export default function() {
 							}
 							html += `<h3>Capítulo ${chapter.num}</h3>`;
 
+							html += '<p align="justify";>';
+
 							for (let verse of chapter.verses){
 								if (verse === null){
 									html += '<p>Invalid verse. '
 									html += `The chapter has ${chapter.num_verses} verses.</p>`
 									continue;
 								}
-								html += `<p><b>${verse}.</b> ${bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[chapter.num-1].VERS[verse-1]}</p>`
+								html += `<b>${verse}.</b> ${bible.XMLBIBLE.BIBLEBOOK[full_quote.book.num-1].CHAPTER[chapter.num-1].VERS[verse-1]}<br>`
 							}
+
+							html += '</p>';
 						}
 
-						html += '</div>'
+						html += '</div><hr width="90%" size="1">'
 					};
+					html = html.slice(0, html.length - '<hr width="90%" size="1">'.length);
+					html += '</div><br>'
 				};
 
 				return html;
