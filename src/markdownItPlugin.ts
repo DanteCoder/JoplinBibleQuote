@@ -37,9 +37,19 @@ export default function () {
 							for (let c of b.chapters){
 								html += `<h3 style="padding-left: 10px"><b>Capítulo ${c.ID}</b></h3>`;
 
+								html +='<div style="white-space: pre-wrap;">';
+
 								for (let v of c.verses){
-									html += `<b>${v}.</b> ${jsonBible.div[b.num-1].chapter[c.num-1].verse[v-1]._}<br>`
+									let text = <string>jsonBible.div[b.num-1].chapter[c.num-1].verse[v-1]._;
+									text = text.replace(/\n /, '');
+									text = text.replace(/\n /g, '<br>----');
+									text = text.replace(/\s+/g,' ');
+									text = text.replace(/----/g,'\t');
+
+									html += `<b>${v}. </b>${text}<br>`
 								}
+
+								html +='</div>';
 							}
 
 							html += '</div>'
@@ -71,13 +81,16 @@ function XmmBible2Js(bible_path: string) {
 }
 
 function parseQuote(quote: string) {
-	//Ideally a single quote only cites one book
+	let books = [];
+
+	if (quote === '()'){
+		return books;
+	}
+
 	bcv.set_options({'osis_compaction_strategy': 'bcv', 'consecutive_combination_strategy': 'separate'});
 	bcv.parse(quote);
 	const osisS = <string>bcv.osis().split(',');
-	//console.log(osisS);
 
-	let books = [];
 
 	for (let osis of osisS) {
 
