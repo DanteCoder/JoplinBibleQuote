@@ -32,18 +32,20 @@ export default function () {
 						const full_quote = parseQuote(quote);
 
 						for (let b of full_quote){
-							html += `<div style="padding: 20px;"><h2 style="text-align:center;"><b>${bibleIndex.books[b.num-1].full_name}</b></h2>`;
+							html += `<div style="padding: 35px;"><h2 style="text-align:center;"><b>${bibleIndex.books[b.num-1].full_name}</b></h2>`;
 
 							for (let c of b.chapters){
-								html += `<h3><b>Capítulo ${c.ID}</b></h3>`;
+								html += `<h3 style="padding-left: 10px"><b>Capítulo ${c.ID}</b></h3>`;
 
 								for (let v of c.verses){
 									html += `<b>${v}.</b> ${jsonBible.div[b.num-1].chapter[c.num-1].verse[v-1]._}<br>`
 								}
 							}
+
+							html += '</div>'
 						}
 
-						html += '</div><hr width="90%" size="1">'
+						html += '<hr width="90%" size="1">'
 					};
 					html = html.slice(0, html.length - '<hr width="90%" size="1">'.length);
 					html += '</div><br>'
