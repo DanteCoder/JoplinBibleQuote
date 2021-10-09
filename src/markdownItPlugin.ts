@@ -205,7 +205,7 @@ function parseQuote(quote: string) {
 
 		//Divide into books
 		const b_num = bibleInfo.order[osis_parts[0]];
-		const b_name = bibleIndex.books[b_num - 1].full_name
+		const b_name = bibleIndex[b_num - 1]
 		if (books.length === 0) {
 			books.push({
 				ID: osis_parts[0],
