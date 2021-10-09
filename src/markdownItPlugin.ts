@@ -40,7 +40,7 @@ export default function () {
 
 								for (let v of c.verses){
 									let text = <string>jsonBible.div[b.num-1].chapter[c.num-1].verse[v-1]._;
-									text = text.replace(/\n /, '');
+									text = text.trim();
 									text = text.replace(/\n /g, '<br>----');
 									text = text.replace(/\s+/g,' ');
 									text = text.replace(/----/g,'\t');
