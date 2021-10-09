@@ -1,5 +1,5 @@
 {
 	"extraScripts": [
-		"markdownItPlugin.js"
+		"markdownItPlugin.ts"
 	]
 }
