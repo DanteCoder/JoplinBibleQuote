@@ -1,4 +1,3 @@
-import joplin from 'api'
 import bibleIndex from './bibles/bible_index';
 const bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
 const bcv = new bcv_parser;
