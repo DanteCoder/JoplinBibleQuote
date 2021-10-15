@@ -1,14 +1,39 @@
 import bibleIndex from './bibles/bible_index';
-const bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
-const bcv = new bcv_parser;
 const parseXmlString = require('xml2js').parseString;
 const fs = require('fs');
 
-let bible_path = 'D:\\Dante Gamaliel\\Coding\\PersonalProjects\\JoplinPlugins\\JoplinBibleQuote\\src\\bibles\\OSIS\\Reina-Valera 1960.xml';
-const jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
+let cite_lang = null;
+let book_names_lang = null;
+let bible_path = null;
+let book_alignment = null;
+let chapter_alignment = null;
+let chapter_padding = null;
+
+console.log(bible_path);
+updateSettings();
+
+console.log(bible_path);
+
+let bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
+let bcv = new bcv_parser;
 const bibleInfo = bcv.translation_info();
 
-export default function () {
+
+
+
+
+
+
+let jsonBible = {div:[{chapter:[{verse:[{_:''}]}]}]};
+
+if (bible_path !== null){
+	try {
+		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
+	} catch (error) {	
+	}
+}
+
+export default function (context) {
 	return {
 		plugin: function (markdownIt, _options) {
 			const defaultRender = markdownIt.renderer.rules.fence || function (tokens, idx, options, env, self) {
@@ -19,6 +44,18 @@ export default function () {
 				const token = tokens[idx];
 
 				if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
+
+				if (localStorage.getItem('pluginSettingsUpdated') === 'true'){
+					updateSettings();
+				}
+
+				if (bible_path === null){
+					const noBibleHtml = `<div style="padding:35px; border: 1px solid #545454;">
+					<p>There is no selected OSIS xml bible or it is corrupted.<p></div>`
+					
+					return noBibleHtml
+				}
+
 				let html = '';
 				let quotes = (token.content.replace(/\n/g, ' ')).match(/\(.*?\)/g);
 
@@ -63,6 +100,22 @@ export default function () {
 			};
 		},
 	}
+}
+
+function updateSettings(){
+	cite_lang = localStorage.getItem('citeLang');
+	book_names_lang = localStorage.getItem('bookNamesLang');
+	bible_path = localStorage.getItem('biblePath');
+	book_alignment = localStorage.getItem('bookAlignment');
+	chapter_alignment = localStorage.getItem('chapterAlignment');
+	chapter_padding = localStorage.getItem('chapterPadding');
+
+	try {
+		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
+	} catch (error) {
+		bible_path = null;
+	}
+
 }
 
 function XmmBible2Js(bible_path: string) {
