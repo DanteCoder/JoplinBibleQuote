@@ -1,6 +1,8 @@
-import bibleIndex from './bibles/bible_index';
 const parseXmlString = require('xml2js').parseString;
 const fs = require('fs');
+
+import bibleIndexFull from './bibles/bible_index'
+let bibleIndex = null;
 
 let cite_lang = null;
 let book_names_lang = null;
@@ -9,29 +11,14 @@ let book_alignment = null;
 let chapter_alignment = null;
 let chapter_padding = null;
 
-console.log(bible_path);
-updateSettings();
+let jsonBible = {div:[{chapter:[{verse:[{_:''}]}]}]};
 
-console.log(bible_path);
-
-let bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
+let bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
 let bcv = new bcv_parser;
 const bibleInfo = bcv.translation_info();
 
+updateSettings();
 
-
-
-
-
-
-let jsonBible = {div:[{chapter:[{verse:[{_:''}]}]}]};
-
-if (bible_path !== null){
-	try {
-		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
-	} catch (error) {	
-	}
-}
 
 export default function (context) {
 	return {
@@ -46,6 +33,7 @@ export default function (context) {
 				if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
 
 				if (localStorage.getItem('pluginSettingsUpdated') === 'true'){
+					localStorage.setItem('pluginSettingsUpdated', 'false');
 					updateSettings();
 				}
 
@@ -67,10 +55,10 @@ export default function (context) {
 						const full_quote = parseQuote(quote);
 
 						for (let b of full_quote) {
-							html += `<div style="padding: 35px;"><h2 style="text-align:center;"><b>${b.name}</b></h2>`;
+							html += `<div style="padding: 35px;"><h2 style="text-align:${book_alignment};"><b>${b.name}</b></h2>`;
 
 							for (let c of b.chapters) {
-								html += `<h3 style="padding-left: 10px"><b>Capítulo ${c.ID}</b></h3>`;
+								html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>Capítulo ${c.ID}</b></h3>`;
 
 								html += '<div style="white-space: pre-wrap;">';
 
@@ -110,12 +98,47 @@ function updateSettings(){
 	chapter_alignment = localStorage.getItem('chapterAlignment');
 	chapter_padding = localStorage.getItem('chapterPadding');
 
+	console.log(cite_lang);
+	console.log(book_names_lang);
+	console.log(bible_path);
+	console.log(book_alignment);
+	console.log(chapter_alignment);
+	console.log(chapter_padding);
+
 	try {
 		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
 	} catch (error) {
 		bible_path = null;
 	}
 
+	switch (cite_lang) {
+		case 'es':
+			bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
+			break;
+			
+		case 'en':
+		bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
+		break;
+
+		default:
+			break;
+	}
+	bcv = new bcv_parser;
+
+	console.log("todo bien hasta aquí");
+
+	switch (book_names_lang) {
+		case 'es':
+			bibleIndex = bibleIndexFull.es;
+			break;
+	
+		case 'en':
+			bibleIndex = bibleIndexFull.en;
+			break;
+
+		default:
+			break;
+	}
 }
 
 function XmmBible2Js(bible_path: string) {
