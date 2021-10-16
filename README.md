@@ -16,9 +16,9 @@ The plugin is based on [Bible Passage Reference Parser](https://github.com/openb
 
 ## Installation
 1. Install the .jpl under Releases.
-2. Download a bible from /bibles/OSIS to your computer, or use an already existing bible.
+2. Download a bible from /bibles/OSIS to your computer, or use an already existing OSIS xml bible.
 3. Copy the path of the OSIS xml bible and paste it on the plugin setting "Path to OSIS bible file".
-4. Select your desired language.
+4. Select your desired language on the plugin settings.
 5. Enjoy.
 
 For the settings to take effect after you save them arter already created cites, you have to make a change on any of them.
