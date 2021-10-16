@@ -1,7 +1,7 @@
 const parseXmlString = require('xml2js').parseString;
 const fs = require('fs');
 
-import bibleIndexFull from './bibles/bible_index'
+import bibleIndexFull from './bible_index'
 let bibleIndex = null;
 
 let cite_lang = null;
@@ -41,7 +41,7 @@ export default function (context) {
 
 				if (bible_path === null){
 					const noBibleHtml = `<div style="padding:35px; border: 1px solid #545454;">
-					<p>There is no selected OSIS xml bible or it is corrupted.<p></div>`
+					<p>There is no selected OSIS xml bible or the path is invalid.<p></div>`
 					
 					return noBibleHtml
 				}
