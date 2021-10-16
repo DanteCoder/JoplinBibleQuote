@@ -24,4 +24,6 @@ The plugin is based on [Bible Passage Reference Parser](https://github.com/openb
 For the settings to take effect after you save them on already existing cites you have to make a change on any of the cites.
  
  ## Notes
- If you have a bug or any issue, feel free to make an issue or to modify the plugin.
+- To convert almost from almost any bible format to OSIS xml you can use the [Simple Bible Reader](https://www.softpedia.com/get/Others/Home-Education/Jeyareuben-Simple-Bible-Reader.shtml) software.
+ 
+- If you have a bug or any issue, feel free to make an issue or to modify the plugin.
