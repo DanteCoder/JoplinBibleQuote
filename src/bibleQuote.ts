@@ -30,9 +30,6 @@ export namespace bibleQuote {
     }
         
     export async function settingsChanged(event:any) {
-        console.log("keys");
-        console.log(event.keys);
-
         for (let key of event.keys){
             await updateSetting(key);
         }
