@@ -1,4 +1,8 @@
 const bibleIndexFull = {
+    chapter:{
+        es: 'Capítulo',
+        en: 'Chapter'
+    },
     es:[
         "Génesis",
         "Éxodo",
