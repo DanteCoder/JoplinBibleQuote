@@ -86,7 +86,32 @@ export namespace settings {
                 public:true,
                 label:"Chapter side padding",
                 description: "Chapter side padding in pixels."
-            }
+            },
+
+            verseFontSize: {
+                value:16,
+                minimum: 10,
+                maximum: 30,
+                type: SettingItemType.Int,
+                section: "bibleQuoteSection",
+                public:true,
+                label:"Verse font size",
+            },
+
+            verseAlignment: {
+                value:"justify",
+                type: SettingItemType.String,
+                isEnum:true,
+                section: "bibleQuoteSection",
+                public:true,
+                label:"Verse alignment",
+                options: {
+                    center:"Center",
+                    left:"Left",
+                    right:"Right",
+                    justify:"Justify"
+                }
+            },
 
         })
 
