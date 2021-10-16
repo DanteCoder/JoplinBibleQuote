@@ -21,7 +21,7 @@ The plugin is based on [Bible Passage Reference Parser](https://github.com/openb
 4. Select your desired language on the plugin settings.
 5. Enjoy.
 
-For the settings to take effect after you save them arter already created cites, you have to make a change on any of them.
+For the settings to take effect after you save them on already existing cites you have to make a change on any of the cites.
  
  ## Notes
  If you have a bug or any issue, feel free to make an issue or to modify the plugin.
