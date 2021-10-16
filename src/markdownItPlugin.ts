@@ -10,6 +10,8 @@ let bible_path = null;
 let book_alignment = null;
 let chapter_alignment = null;
 let chapter_padding = null;
+let verse_font_size = null;
+let verse_alignment = null;
 
 let jsonBible = {div:[{chapter:[{verse:[{_:''}]}]}]};
 
@@ -60,7 +62,7 @@ export default function (context) {
 							for (let c of b.chapters) {
 								html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>Capítulo ${c.ID}</b></h3>`;
 
-								html += '<div style="white-space: pre-wrap;">';
+								html += `<div style="white-space: pre-wrap; font-size: ${verse_font_size}px; text-align:${verse_alignment}">`;
 
 								for (let v of c.verses) {
 									let text = <string>jsonBible.div[b.num - 1].chapter[c.num - 1].verse[v - 1]._;
@@ -69,7 +71,7 @@ export default function (context) {
 									text = text.replace(/\s+/g, ' ');
 									text = text.replace(/----/g, '\t');
 
-									html += `<b>${v}. </b>${text}<br>`
+									html += `<bstyle="font-size: ${verse_font_size}px">${v}. </b>${text}<br>`
 								}
 
 								html += '</div>';
@@ -97,13 +99,8 @@ function updateSettings(){
 	book_alignment = localStorage.getItem('bookAlignment');
 	chapter_alignment = localStorage.getItem('chapterAlignment');
 	chapter_padding = localStorage.getItem('chapterPadding');
-
-	console.log(cite_lang);
-	console.log(book_names_lang);
-	console.log(bible_path);
-	console.log(book_alignment);
-	console.log(chapter_alignment);
-	console.log(chapter_padding);
+	verse_font_size = localStorage.getItem('verseFontSize');
+	verse_alignment = localStorage.getItem('verseAlignment');
 
 	try {
 		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
@@ -124,8 +121,6 @@ function updateSettings(){
 			break;
 	}
 	bcv = new bcv_parser;
-
-	console.log("todo bien hasta aquí");
 
 	switch (book_names_lang) {
 		case 'es':

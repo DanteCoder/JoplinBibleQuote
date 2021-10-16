@@ -9,12 +9,14 @@ export namespace bibleQuote {
 
         await settings.register();
 
-        await updateSetting('citeLang')
-        await updateSetting('bookNamesLang')
-        await updateSetting('biblePath')
-        await updateSetting('bookAlignment')
-        await updateSetting('chapterAlignment')
-        await updateSetting('chapterPadding')
+        await updateSetting('citeLang');
+        await updateSetting('bookNamesLang');
+        await updateSetting('biblePath');
+        await updateSetting('bookAlignment');
+        await updateSetting('chapterAlignment');
+        await updateSetting('chapterPadding');
+        await updateSetting('verseFontSize');
+        await updateSetting('verseAlignment');
 
         joplin.settings.onChange(async (event: any) =>{
             await bibleQuote.settingsChanged(event);
