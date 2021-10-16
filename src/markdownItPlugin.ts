@@ -6,6 +6,7 @@ let bibleIndex = null;
 
 let cite_lang = null;
 let book_names_lang = null;
+let chapter_title_text = null;
 let bible_path = null;
 let book_alignment = null;
 let chapter_alignment = null;
@@ -60,7 +61,7 @@ export default function (context) {
 							html += `<div style="padding: 35px;"><h2 style="text-align:${book_alignment};"><b>${b.name}</b></h2>`;
 
 							for (let c of b.chapters) {
-								html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>Capítulo ${c.ID}</b></h3>`;
+								html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
 
 								html += `<div style="white-space: pre-wrap; font-size: ${verse_font_size}px; text-align:${verse_alignment}">`;
 
@@ -125,11 +126,13 @@ function updateSettings(){
 	switch (book_names_lang) {
 		case 'es':
 			bibleIndex = bibleIndexFull.es;
+			chapter_title_text = bibleIndexFull.chapter.es
 			break;
-	
+			
 		case 'en':
 			bibleIndex = bibleIndexFull.en;
-			break;
+			chapter_title_text = bibleIndexFull.chapter.en
+		break;
 
 		default:
 			break;
