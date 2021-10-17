@@ -104,7 +104,7 @@ function updateSettings(){
 	verse_alignment = localStorage.getItem('verseAlignment');
 
 	try {
-		jsonBible = (XmmBible2Js(bible_path)).osis.osisText[0];
+		jsonBible = (XmlBible2Js(bible_path)).osis.osisText[0];
 	} catch (error) {
 		bible_path = null;
 	}
@@ -139,7 +139,7 @@ function updateSettings(){
 	}
 }
 
-function XmmBible2Js(bible_path: string) {
+function XmlBible2Js(bible_path: string) {
 	let parsed_bible = null;
 
 	const xml = fs.readFileSync(bible_path, 'utf8');
