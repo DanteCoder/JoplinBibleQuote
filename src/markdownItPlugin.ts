@@ -163,6 +163,12 @@ function parseQuote(quote: string) {
 	let start_bcv = null;
 	let end_bcv = null;
 
+	console.log("entities:");
+	console.log(entities);
+
+	console.log("Cite:");
+	console.log(osis2Cite(entities));
+
 	for (let entity of entities.entities) {
 		start_bcv = entity.start;
 		end_bcv = entity.end;
@@ -326,4 +332,52 @@ function parseQuote(quote: string) {
 	}
 
 	return (books);
+}
+
+function osis2Cite(main_entity){
+	let cite = ''
+
+	/*
+	entity types:
+	bcv		=>	Single verse
+	bc		=>	Single chapter
+	cv		=>	Can be preceded by (bcv || bc)
+	integer	=>	Can be preceded by (bcv || bc || cv)
+	range	=>	Can be preceded by (bcv || bc || cv || null)
+	*/
+
+	let last_ent_type = null;
+	let last_book = null;
+
+	for (let entity of main_entity.entities){
+		if (entity.type === 'bcv'){
+			const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+			cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
+			last_ent_type = 'bcv';
+			last_book = entity.start.b;
+
+		}else if (entity.type === 'bc'){
+			const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+			cite += ' ' + bName + ' ' + entity.start.c;
+			last_ent_type = 'bc';
+			last_book = entity.start.b
+
+		}else if (entity.type === 'cv'){
+			cite += ', ' + entity.start.c + ':' + entity.start.v;
+			last_ent_type = 'cv';
+
+		}else if (entity.type === 'integer'){
+			if (last_ent_type === 'bcv' || 'cv'){
+				cite += ',' + entity.start.v
+
+			}else if (last_ent_type === 'bc'){
+				cite += ', ' + entity.start.c
+			}
+
+		}else if (entity.type === 'range'){
+			//Implement for range type entities
+		}
+	}
+
+	return cite;
 }
