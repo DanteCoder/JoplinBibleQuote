@@ -15,13 +15,13 @@ For example:
 The plugin is based on [Bible Passage Reference Parser](https://github.com/openbibleinfo/Bible-Passage-Reference-Parser) to parse the references.
 
 ## Installation
-1. Install the .jpl under Releases.
-2. Download a bible from /bibles/OSIS to your computer, or use an already existing OSIS xml bible.
+1. In Joplin, open the configuration screen, then under "Plugins" search for "Bible Quote" and install it. 
+2. Download a bible from /bibles/OSIS to your computer, or use an already existing OSIS xml bible (you can convert almost any bible format to OSIS xml using the software linked below).
 3. Copy the path of the OSIS xml bible and paste it on the plugin setting "Path to OSIS bible file".
-4. Select your desired language on the plugin settings.
+4. Select your desired language for citation and book names on the plugin settings and save.
 5. Enjoy.
 
-For the settings to take effect after you save them on already existing cites you have to make a change on any of the cites.
+For the settings to take effect after on already existing cites you have to make a change on any of the cites.
  
  ## Notes
 - To convert almost from almost any bible format to OSIS xml you can use the [Simple Bible Reader](https://www.softpedia.com/get/Others/Home-Education/Jeyareuben-Simple-Bible-Reader.shtml) software.
