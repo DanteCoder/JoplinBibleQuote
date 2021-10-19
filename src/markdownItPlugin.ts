@@ -559,19 +559,8 @@ function osis2Cite(main_entity) {
 					cite += entity.end.c;
 					last_type = 'c';
 
-				} else if (end_ent_type === 'cv') {
-					cite += entity.end.c + ':' + entity.end.v;
-					last_type = 'v';
-
-				} else if (end_ent_type === 'integer') {
-					if (last_type === 'v') {
-						cite += entity.end.c + ':' + entity.end.v;
-						last_type = 'v';
-
-					} else if (last_type === 'c') {
-						cite += entity.end.c;
-						last_type = 'c';
-					}
+				} else {
+					cite += "not handled";
 				}
 
 				last_book = null;
