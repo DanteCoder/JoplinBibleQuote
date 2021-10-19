@@ -14,7 +14,7 @@ let chapter_padding = null;
 let verse_font_size = null;
 let verse_alignment = null;
 
-let jsonBible = {div:[{chapter:[{verse:[{_:''}]}]}]};
+let jsonBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
 
 let bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
 let bcv = new bcv_parser;
@@ -35,15 +35,15 @@ export default function (context) {
 
 				if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
 
-				if (localStorage.getItem('pluginSettingsUpdated') === 'true'){
+				if (localStorage.getItem('pluginSettingsUpdated') === 'true') {
 					localStorage.setItem('pluginSettingsUpdated', 'false');
 					updateSettings();
 				}
 
-				if (bible_path === null){
+				if (bible_path === null) {
 					const noBibleHtml = `<div style="padding:35px; border: 1px solid #545454;">
 					<p>There is no selected OSIS xml bible or the path is invalid.<p></div>`
-					
+
 					return noBibleHtml
 				}
 
@@ -93,7 +93,7 @@ export default function (context) {
 	}
 }
 
-function updateSettings(){
+function updateSettings() {
 	cite_lang = localStorage.getItem('citeLang');
 	book_names_lang = localStorage.getItem('bookNamesLang');
 	bible_path = localStorage.getItem('biblePath');
@@ -113,10 +113,10 @@ function updateSettings(){
 		case 'es':
 			bcv_parser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
 			break;
-			
+
 		case 'en':
-		bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
-		break;
+			bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
+			break;
 
 		default:
 			break;
@@ -128,11 +128,11 @@ function updateSettings(){
 			bibleIndex = bibleIndexFull.es;
 			chapter_title_text = bibleIndexFull.chapter.es
 			break;
-			
+
 		case 'en':
 			bibleIndex = bibleIndexFull.en;
 			chapter_title_text = bibleIndexFull.chapter.en
-		break;
+			break;
 
 		default:
 			break;
@@ -157,7 +157,7 @@ function parseQuote(quote: string) {
 	if (bcv.parse(quote).osis() === '') {
 		return books;
 	}
-	
+
 	bcv.set_options({ 'osis_compaction_strategy': 'bcv', 'consecutive_combination_strategy': 'separate' });
 	let entities = (bcv.parse(quote).parsed_entities())[0];
 	let start_bcv = null;
@@ -244,9 +244,9 @@ function parseQuote(quote: string) {
 				// If b is the last book
 
 				for (let c = 1; c <= end_bcv.c; c++) {
-					
+
 					let c_v_num = bibleInfo.chapters[bookId][c - 1];
-					
+
 					if (c === end_bcv.c) {
 						//If c is the last chapter
 
@@ -267,9 +267,9 @@ function parseQuote(quote: string) {
 				// If b is any book in between the first and last books
 
 				for (let c = 1; c <= b_c_num; c++) {
-					
+
 					let c_v_num = bibleInfo.chapters[bookId][c - 1];
-					
+
 					for (let v = 1; v <= c_v_num; v++) {
 						insertAndDivide(bookId + '.' + c + '.' + v);
 					}
@@ -334,7 +334,7 @@ function parseQuote(quote: string) {
 	return (books);
 }
 
-function osis2Cite(main_entity){
+function osis2Cite(main_entity) {
 	let cite = ''
 
 	/*
@@ -346,36 +346,240 @@ function osis2Cite(main_entity){
 	range	=>	Can be preceded by (bcv || bc || cv || null)
 	*/
 
-	let last_ent_type = null;
+	let last_type = null;
 	let last_book = null;
+	let last_chap = null;
 
-	for (let entity of main_entity.entities){
-		if (entity.type === 'bcv'){
-			const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
-			cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
-			last_ent_type = 'bcv';
-			last_book = entity.start.b;
+	for (let entity of main_entity.entities) {
+		if (entity.type === 'bcv') {
 
-		}else if (entity.type === 'bc'){
-			const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
-			cite += ' ' + bName + ' ' + entity.start.c;
-			last_ent_type = 'bc';
-			last_book = entity.start.b
-
-		}else if (entity.type === 'cv'){
-			cite += ', ' + entity.start.c + ':' + entity.start.v;
-			last_ent_type = 'cv';
-
-		}else if (entity.type === 'integer'){
-			if (last_ent_type === 'bcv' || 'cv'){
-				cite += ',' + entity.start.v
-
-			}else if (last_ent_type === 'bc'){
-				cite += ', ' + entity.start.c
+			if (entity.start.b !== last_book) {
+				const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+				cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
+			} else {
+				if (entity.start.c === last_chap) {
+					cite += ',' + entity.start.v;
+				} else {
+					cite += ';' + entity.start.c + ':' + entity.start.v;
+				}
 			}
 
-		}else if (entity.type === 'range'){
-			//Implement for range type entities
+			last_type = 'v';
+			last_book = entity.start.b;
+			last_chap = entity.start.c;
+
+		} else if (entity.type === 'bc') {
+
+			if (entity.start.b !== last_book) {
+				const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+				cite += ' ' + bName + ' ' + entity.start.c;
+			} else {
+				cite += ';' + entity.start.c;
+
+			}
+
+			last_type = 'c';
+			last_book = entity.start.b;
+			last_chap = entity.start.c;
+
+		} else if (entity.type === 'cv') {
+
+			if (entity.start.c !== last_chap) {
+				cite += ';' + entity.start.c + ':' + entity.start.v;
+			} else {
+				cite += ',' + entity.start.v;
+			}
+
+			last_type = 'v';
+			last_chap = entity.start.c;
+
+		} else if (entity.type === 'integer') {
+			if (last_type === 'v') {
+				cite += ',' + entity.start.v;
+			} else if (last_type === 'c') {
+				cite += ';' + entity.start.c;
+			}
+
+		} else if (entity.type === 'range') {
+			//Get the type of range
+			let range_type = null;
+			if (entity.start.b !== entity.end.b) {
+				range_type = 'book'
+			} else {
+				if (entity.start.c !== entity.end.c) {
+					range_type = 'chap'
+				} else {
+					if (entity.start.v !== entity.end.v) {
+						range_type = 'verse';
+					}
+				}
+			}
+
+			console.log("Last book:");
+			console.log(last_book);
+			console.log("Last chap:");
+			console.log(last_chap);
+
+			const srt_ent_type = entity.start.type;
+			const end_ent_type = entity.end.type;
+
+			if (range_type === 'verse') {
+				if (srt_ent_type === 'bcv') {
+					if (entity.start.b !== last_book) {
+						const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+						cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
+					} else {
+						cite += ',' + entity.start.v;
+					}
+					last_type = 'v';
+
+				} else if (srt_ent_type === 'bc') {
+					if (entity.start.b !== last_book) {
+						const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+						cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
+					} else {
+						cite += ',' + entity.start.v;
+					}
+					last_type = 'v';
+
+				} else if (srt_ent_type === 'cv') {
+					if (entity.start.c !== last_chap) {
+						cite += ';' + entity.start.c + ':' + entity.start.v;
+					} else {
+						cite += ',' + entity.start.v;
+					}
+					last_type = 'v';
+
+				} else if (srt_ent_type === 'integer') {
+					if (last_type === 'v') {
+						cite += ',' + entity.start.v;
+
+					} else if (last_type === 'c') {
+						cite += ';' + entity.start.c;
+					}
+				} else {
+					cite += "not handled";
+				}
+
+				cite += '-' + entity.end.v;
+				last_type = 'v';
+				
+			} else if (range_type === 'chap') {
+
+				if (srt_ent_type === 'bcv') {
+					if (entity.start.b !== last_book) {
+						const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+						cite += ' ' + bName + ' ' + entity.start.c + ':' + entity.start.v;
+					} else {
+						cite += ';' + entity.start.c + ':' + entity.start.v;
+					}
+					last_type = 'v';
+
+				} else if (srt_ent_type === 'bc') {
+					if (entity.start.b !== last_book) {
+						const bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+						cite += ' ' + bName + ' ' + entity.start.c;
+					} else {
+						cite += ';' + entity.start.c;
+					}
+					last_type = 'c';
+
+				} else if (srt_ent_type === 'cv') {
+					if (entity.start.c !== last_chap) {
+						cite += ';' + entity.start.c + ':' + entity.start.v;
+					} else {
+						cite += ',' + entity.start.v;
+					}
+					last_type = 'v';
+
+				} else if (srt_ent_type === 'integer') {
+					if (last_type === 'v') {
+						cite += ',' + entity.start.v;
+
+					} else if (last_type === 'c') {
+						cite += ';' + entity.start.c;
+					}
+				} else {
+					cite += "not handled";
+				}
+
+				cite += '-';
+
+				if (end_ent_type === 'bcv') {
+					cite += entity.end.c + ':' + entity.end.v;
+
+				} else if (end_ent_type === 'bc') {
+					cite += entity.end.c;
+
+				} else if (end_ent_type === 'cv') {
+					cite += entity.end.c + ':' + entity.end.v;
+
+				} else if (end_ent_type === 'integer') {
+					if (last_type === 'v') {
+						cite += entity.end.v;
+
+					} else if (last_type === 'c') {
+						cite += entity.end.c;
+					}
+				} else {
+					cite += "not handled";
+				}
+
+
+			} else if (range_type === 'book') {
+				const start_bName = bibleIndex[bibleInfo.books.indexOf(entity.start.b)];
+				const end_bName = bibleIndex[bibleInfo.books.indexOf(entity.end.b)];
+				cite += ' ' + start_bName + ' ';
+
+				if (srt_ent_type === 'bcv') {
+					cite += entity.start.c + ':' + entity.start.v;
+
+				} else if (srt_ent_type === 'bc') {
+					cite += entity.start.c;
+
+				} else if (srt_ent_type === 'cv') {
+					cite += entity.start.c + ':' + entity.start.v;
+
+				} else if (srt_ent_type === 'integer') {
+					if (last_type === 'v') {
+						cite += entity.start.c + ':' + entity.start.v;
+
+					} else if (last_type === 'c') {
+						cite += entity.start.c;
+					}
+				}
+
+				cite += ' - ' + end_bName + ' ';
+
+				if (end_ent_type === 'bcv') {
+					cite += entity.end.c + ':' + entity.end.v;
+					last_type = 'v';
+
+				} else if (end_ent_type === 'bc') {
+					cite += entity.end.c;
+					last_type = 'c';
+
+				} else if (end_ent_type === 'cv') {
+					cite += entity.end.c + ':' + entity.end.v;
+					last_type = 'v';
+
+				} else if (end_ent_type === 'integer') {
+					if (last_type === 'v') {
+						cite += entity.end.c + ':' + entity.end.v;
+						last_type = 'v';
+
+					} else if (last_type === 'c') {
+						cite += entity.end.c;
+						last_type = 'c';
+					}
+				}
+
+				last_book = null;
+				last_chap = null;
+
+			} else {
+				cite += 'not a range';
+			}
 		}
 	}
 
