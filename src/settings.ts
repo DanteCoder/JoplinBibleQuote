@@ -1,79 +1,79 @@
-import joplin from "api";
-import { SettingItemType } from "api/types";
+import joplin from 'api';
+import { SettingItemType } from 'api/types';
 
 export namespace settings {
 
     export async function register() {
         
-        await joplin.settings.registerSection("bibleQuoteSection",{
-            label: "Bible Quote"
+        await joplin.settings.registerSection('bibleQuoteSection',{
+            label: 'Bible Quote'
         });
 
         await joplin.settings.registerSettings({
             citeLang: {
-                value:"es",
+                value:'es',
                 type: SettingItemType.String,
                 isEnum:true,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Citation language",
-                description:"The language of the citations.",
+                label:'Citation language',
+                description:'The language of the citations.',
                 options: {
-                    es: "Spanish",
-                    en: "English"
+                    es: 'Spanish',
+                    en: 'English'
                 },
             },
 
             bookNamesLang: {
-                value:"es",
+                value:'es',
                 type: SettingItemType.String,
                 isEnum:true,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Bible book names language",
-                description:"The language to show the books name on.",
+                label:'Bible book names language',
+                description:'The language to show the books name on.',
                 options: {
-                    es: "Spanish",
-                    en: "English"
+                    es: 'Spanish',
+                    en: 'English'
                 },
             },
 
             biblePath: {
-                value:"",
+                value:'',
                 type: SettingItemType.String,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Path to OSIS Bible file",
-                description:"e.g. C:/My/Path/To/OSIS_Bible.xml"
+                label:'Path to OSIS Bible file',
+                description:'e.g. C:/My/Path/To/OSIS_Bible.xml'
             },
 
             bookAlignment: {
-                value:"center",
+                value:'center',
                 type: SettingItemType.String,
                 isEnum:true,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Bible book name alignment",
+                label:'Bible book name alignment',
                 options: {
-                    center:"Center",
-                    left:"Left",
-                    right:"Right",
-                    justify:"Justify"
+                    center:'Center',
+                    left:'Left',
+                    right:'Right',
+                    justify:'Justify'
                 }
             },
 
             chapterAlignment: {
-                value:"left",
+                value:'left',
                 type: SettingItemType.String,
                 isEnum:true,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Chapter number alignment",
+                label:'Chapter number alignment',
                 options: {
-                    center:"Center",
-                    left:"Left",
-                    right:"Right",
-                    justify:"Justify"
+                    center:'Center',
+                    left:'Left',
+                    right:'Right',
+                    justify:'Justify'
                 }
             },
 
@@ -82,10 +82,10 @@ export namespace settings {
                 minimum: 0,
                 maximum: 100,
                 type: SettingItemType.Int,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Chapter side padding",
-                description: "Chapter side padding in pixels."
+                label:'Chapter side padding',
+                description: 'Chapter side padding in pixels.'
             },
 
             verseFontSize: {
@@ -93,25 +93,40 @@ export namespace settings {
                 minimum: 10,
                 maximum: 30,
                 type: SettingItemType.Int,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Verse font size",
+                label:'Verse font size',
             },
 
             verseAlignment: {
-                value:"justify",
+                value:'justify',
                 type: SettingItemType.String,
                 isEnum:true,
-                section: "bibleQuoteSection",
+                section: 'bibleQuoteSection',
                 public:true,
-                label:"Verse alignment",
+                label:'Verse alignment',
                 options: {
-                    center:"Center",
-                    left:"Left",
-                    right:"Right",
-                    justify:"Justify"
+                    center:'Center',
+                    left:'Left',
+                    right:'Right',
+                    justify:'Justify'
                 }
             },
+
+            displayFormat: {
+                value: 'full',
+                type: SettingItemType.String,
+                isEnum: true,
+                section: 'bibleQuoteSection',
+                public: true,
+                label: 'Quotation display format',
+                description: `Full: display the book name and chapter number for each reference.
+                                Only cite: display the full cite for all the references.`,
+                options: {
+                    full: 'Full',
+                    cite: 'Only cite'
+                }
+            }
 
         })
 

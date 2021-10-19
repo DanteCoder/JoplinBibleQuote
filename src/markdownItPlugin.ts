@@ -13,6 +13,7 @@ let chapter_alignment = null;
 let chapter_padding = null;
 let verse_font_size = null;
 let verse_alignment = null;
+let display_format = null;
 
 let jsonBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
 
@@ -57,11 +58,20 @@ export default function (context) {
 					for (let quote of quotes) {
 						const full_quote = parseQuote(quote);
 
-						for (let b of full_quote) {
-							html += `<div style="padding: 35px;"><h2 style="text-align:${book_alignment};"><b>${b.name}</b></h2>`;
+						for (let b of full_quote.books) {
+							
+							html += `<div style="padding: 35px;">`;
+
+							if (display_format === 'full'){
+								html += `<h2 style="text-align:${book_alignment};"><b>${b.name}</b></h2>`;
+							}else if (display_format === 'cite'){
+								html += `<h3 style="padding:10px">${full_quote.cite}</h3>`;
+							}
 
 							for (let c of b.chapters) {
-								html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
+								if (display_format === 'full'){
+									html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
+								}
 
 								html += `<div style="white-space: pre-wrap; font-size: ${verse_font_size}px; text-align:${verse_alignment}">`;
 
@@ -102,6 +112,7 @@ function updateSettings() {
 	chapter_padding = localStorage.getItem('chapterPadding');
 	verse_font_size = localStorage.getItem('verseFontSize');
 	verse_alignment = localStorage.getItem('verseAlignment');
+	display_format = localStorage.getItem('displayFormat');
 
 	try {
 		jsonBible = (XmlBible2Js(bible_path)).osis.osisText[0];
@@ -155,13 +166,15 @@ function parseQuote(quote: string) {
 	let books = [];
 
 	if (bcv.parse(quote).osis() === '') {
-		return books;
+		return {books:[], cite:''};
 	}
 
 	bcv.set_options({ 'osis_compaction_strategy': 'bcv', 'consecutive_combination_strategy': 'separate' });
 	let entities = (bcv.parse(quote).parsed_entities())[0];
 	let start_bcv = null;
 	let end_bcv = null;
+
+	const norm_cite = osis2Cite(entities);
 
 	for (let entity of entities.entities) {
 		start_bcv = entity.start;
@@ -325,7 +338,7 @@ function parseQuote(quote: string) {
 		)
 	}
 
-	return (books);
+	return ({books:books, cite:norm_cite});
 }
 
 function osis2Cite(main_entity) {

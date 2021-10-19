@@ -17,6 +17,7 @@ export namespace bibleQuote {
         await updateSetting('chapterPadding');
         await updateSetting('verseFontSize');
         await updateSetting('verseAlignment');
+        await updateSetting('displayFormat');
 
         joplin.settings.onChange(async (event: any) =>{
             await bibleQuote.settingsChanged(event);
