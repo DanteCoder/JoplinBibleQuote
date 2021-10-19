@@ -163,12 +163,6 @@ function parseQuote(quote: string) {
 	let start_bcv = null;
 	let end_bcv = null;
 
-	console.log("entities:");
-	console.log(entities);
-
-	console.log("Cite:");
-	console.log(osis2Cite(entities));
-
 	for (let entity of entities.entities) {
 		start_bcv = entity.start;
 		end_bcv = entity.end;
@@ -414,11 +408,6 @@ function osis2Cite(main_entity) {
 					}
 				}
 			}
-
-			console.log("Last book:");
-			console.log(last_book);
-			console.log("Last chap:");
-			console.log(last_chap);
 
 			const srt_ent_type = entity.start.type;
 			const end_ent_type = entity.end.type;
