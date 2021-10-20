@@ -11,7 +11,7 @@ export namespace settings {
 
         await joplin.settings.registerSettings({
             citeLang: {
-                value:'es',
+                value:'en',
                 type: SettingItemType.String,
                 isEnum:true,
                 section: 'bibleQuoteSection',
@@ -19,13 +19,13 @@ export namespace settings {
                 label:'Citation language',
                 description:'The language of the citations.',
                 options: {
+                    en: 'English',
                     es: 'Spanish',
-                    en: 'English'
                 },
             },
 
             bookNamesLang: {
-                value:'es',
+                value:'en',
                 type: SettingItemType.String,
                 isEnum:true,
                 section: 'bibleQuoteSection',
@@ -33,8 +33,8 @@ export namespace settings {
                 label:'Bible book names language',
                 description:'The language to show the books name on.',
                 options: {
+                    en: 'English',
                     es: 'Spanish',
-                    en: 'English'
                 },
             },
 
