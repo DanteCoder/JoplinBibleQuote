@@ -43,7 +43,7 @@ export default function (context) {
 
 				if (bible_path === null) {
 					const noBibleHtml = `<div style="padding:35px; border: 1px solid #545454;">
-					<p>There is no selected OSIS xml bible or the path is invalid.<p></div>`
+					<p style="text-align: center;">There is no selected OSIS xml bible or the path is invalid.<p></div>`
 
 					return noBibleHtml
 				}
@@ -70,12 +70,8 @@ export default function (context) {
 							}
 
 							for (let c of b.chapters) {
-								if (display_format === 'full'){
-									html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
-								}else if (display_format === 'cite'){
-									if (b.chapters.length > 1){
-										html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
-									}
+								if (display_format === 'full' || (display_format === 'cite' && b.chapters.length > 1)){
+									html += `<h3 style="padding-left:${chapter_padding}px; padding-right:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
 								}
 
 								html += `<div style="white-space: pre-wrap; font-size: ${verse_font_size}px; text-align:${verse_alignment}">`;
@@ -97,7 +93,7 @@ export default function (context) {
 									if (display_format === 'full'){
 										html += `${v}. `
 									}else if (display_format === 'cite'){
-										if (c.verses.length > 1){
+										if (c.verses.length > 1 || b.chapters.length > 1 || full_quote.books.length > 1){
 											html += `${v}. `
 										}
 									}
