@@ -57,24 +57,30 @@ export default function (context) {
 
 					for (let quote of quotes) {
 						const full_quote = parseQuote(quote);
+						html += '<div style="padding: 35px;">'
+
+						if (display_format === 'cite'){
+							html += `<h3><b>${full_quote.cite}</b></h3>`;
+						}
 
 						for (let b of full_quote.books) {
-							
-							html += `<div style="padding: 35px;">`;
 
-							if (display_format === 'full'){
+							if (display_format === 'full' || (display_format === 'cite' && full_quote.books.length > 1)){
 								html += `<h2 style="text-align:${book_alignment};"><b>${b.name}</b></h2>`;
-							}else if (display_format === 'cite'){
-								html += `<h3 style="padding:10px">${full_quote.cite}</h3>`;
 							}
 
 							for (let c of b.chapters) {
 								if (display_format === 'full'){
 									html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
+								}else if (display_format === 'cite'){
+									if (b.chapters.length > 1){
+										html += `<h3 style="padding:${chapter_padding}px; text-align:${chapter_alignment}"><b>${chapter_title_text} ${c.ID}</b></h3>`;
+									}
 								}
 
 								html += `<div style="white-space: pre-wrap; font-size: ${verse_font_size}px; text-align:${verse_alignment}">`;
 
+								let last_verse = null;
 								for (let v of c.verses) {
 									let text = <string>jsonBible.div[b.num - 1].chapter[c.num - 1].verse[v - 1]._;
 									text = text.trim();
@@ -82,15 +88,29 @@ export default function (context) {
 									text = text.replace(/\s+/g, ' ');
 									text = text.replace(/----/g, '\t');
 
-									html += `<bstyle="font-size: ${verse_font_size}px">${v}. </b>${text}<br>`
+									html += `<bstyle="font-size: ${verse_font_size}px">`;
+
+									if (v-1 !== last_verse && last_verse !== null){
+										html += '<br>';
+									}
+
+									if (display_format === 'full'){
+										html += `${v}. `
+									}else if (display_format === 'cite'){
+										if (c.verses.length > 1){
+											html += `${v}. `
+										}
+									}
+
+									html += `</b>${text}<br>`
+
+									last_verse = v;
 								}
 
 								html += '</div>';
 							}
-
-							html += '</div>'
 						}
-
+						html += '</div>'
 						html += '<hr width="90%" size="1">'
 					};
 					html = html.slice(0, html.length - '<hr width="90%" size="1">'.length);

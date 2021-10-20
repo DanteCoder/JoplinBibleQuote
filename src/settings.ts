@@ -119,12 +119,11 @@ export namespace settings {
                 isEnum: true,
                 section: 'bibleQuoteSection',
                 public: true,
-                label: 'Quotation display format',
-                description: `Full: display the book name and chapter number for each reference.
-                                Only cite: display the full cite for all the references.`,
+                label: 'Show cite on viewer',
+                description: `Whether to show or not the full cite on top of the quote.`,
                 options: {
-                    full: 'Full',
-                    cite: 'Only cite'
+                    full: 'Don\'t show',
+                    cite: 'Show cite'
                 }
             }
 
