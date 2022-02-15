@@ -144,6 +144,9 @@ function updateSettings() {
 		case 'en':
 			bcv_parser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
 			break;
+		case 'fr':
+			bcv_parser = require('bible-passage-reference-parser/js/fr_bcv_parser').bcv_parser;
+			break;
 
 		default:
 			break;
@@ -159,6 +162,10 @@ function updateSettings() {
 		case 'en':
 			bibleIndex = bibleIndexFull.en;
 			chapter_title_text = bibleIndexFull.chapter.en
+			break;
+		case 'fr':
+			bibleIndex = bibleIndexFull.fr;
+			chapter_title_text = bibleIndexFull.chapter.fr
 			break;
 
 		default:
