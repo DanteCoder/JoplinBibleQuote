@@ -1,7 +1,7 @@
-const parseXmlString = require('xml2js').parseString;
-const fs = require('fs');
+import {parseString as parseXmlString} from 'xml2js';
+import fs = require('fs');
+import bibleIndexFull from './bible_index';
 
-import bibleIndexFull from './bible_index'
 let bibleIndex = null;
 
 let cite_lang = null;
