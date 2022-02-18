@@ -1,5 +1,6 @@
 import {parseString as parseXmlString} from 'xml2js';
 import fs = require('fs');
+import path = require('path');
 import bibleIndexFull from './bible_index';
 
 let bibleIndex = null;
@@ -176,7 +177,8 @@ function updateSettings() {
 function XmlBible2Js(bible_path: string) {
 	let parsed_bible = null;
 
-	const xml = fs.readFileSync(bible_path, 'utf8');
+	const normalizedPath = path.normalize(bible_path);
+	const xml = fs.readFileSync(normalizedPath, 'utf8');
 	parseXmlString(xml, function (err, result) {
 		if (err) throw err;
 		parsed_bible = result;
