@@ -21,6 +21,7 @@ export namespace settings {
                 options: {
                     en: 'English',
                     es: 'Spanish',
+                    fr: 'Français'
                 },
             },
 
@@ -35,6 +36,7 @@ export namespace settings {
                 options: {
                     en: 'English',
                     es: 'Spanish',
+                    fr: 'Français'
                 },
             },
 
