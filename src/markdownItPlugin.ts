@@ -10,10 +10,10 @@ import { ParsedQuote } from './interfaces/parsedQuote';
 import { PluginConfig } from './interfaces/config';
 import { OsisParts } from './interfaces/osisParts';
 
-const pluginConfig: PluginConfig = getPluginConfig();
+let pluginConfig: PluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
-let osisBible: OsisBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
-const bcv = init();
+let osisBible: OsisBible = getOsisBible(pluginConfig.biblePath);
+let bcv = importBcvParser(pluginConfig.citationLanguage);
 const bibleInfo = bcv.translation_info();
 
 export default function (context) {
@@ -30,9 +30,13 @@ export default function (context) {
 
         if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
 
+        // Update the runtime variables with the new plugin config
         if (localStorage.getItem('pluginSettingsUpdated') === 'true') {
           localStorage.setItem('pluginSettingsUpdated', 'false');
-          init();
+          pluginConfig = getPluginConfig();
+          bibleIndex = bibleIndexFull[pluginConfig.bookNamesLanguage];
+          osisBible = getOsisBible(pluginConfig.biblePath);
+          bcv = importBcvParser(pluginConfig.citationLanguage);
         }
 
         if (pluginConfig.biblePath === null) {
@@ -125,7 +129,7 @@ function getPluginConfig(): PluginConfig {
   const pluginConfig: any = {
     citationLanguage: localStorage.getItem('citeLang'),
     bookNamesLanguage: localStorage.getItem('bookNamesLang'),
-    biblePath: localStorage.getItem('biblePath'),
+    biblePath: path.normalize(localStorage.getItem('biblePath')),
     bookAlignment: localStorage.getItem('bookAlignment'),
     chapterAlignment: localStorage.getItem('chapterAlignment'),
     chapterPadding: localStorage.getItem('chapterPadding'),
@@ -143,33 +147,29 @@ function getPluginConfig(): PluginConfig {
 }
 
 /**
- * Initialize the config variables and import the corresponding bcv parser.
- * @returns bcv parser.
+ * Gets the osis bible from a osis xml bible path.
+ * @param biblePath
+ * @returns OsisBible from a file, and empty OsisBible
+ * if some error happens opening or parsing the bible file.
  */
-function init(): any {
+function getOsisBible(biblePath: string): OsisBible {
+  let osisBible: OsisBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
   try {
     osisBible = XmlBible2Js(pluginConfig.biblePath).osis.osisText[0];
   } catch (error) {
     pluginConfig.biblePath = null;
   }
+  return osisBible;
+}
 
-  let bcvParser: any;
-  switch (pluginConfig.citationLanguage) {
-    case 'es':
-      bcvParser = require('bible-passage-reference-parser/js/es_bcv_parser').bcv_parser;
-      break;
-    case 'en':
-      bcvParser = require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
-      break;
-    case 'fr':
-      bcvParser = require('bible-passage-reference-parser/js/fr_bcv_parser').bcv_parser;
-      break;
-
-    default:
-      break;
-  }
+/**
+ * Imports the corresponding bcv parser to match the configured language.
+ * @param citationLanguage
+ * @returns bcv parser.
+ */
+function importBcvParser(citationLanguage: string): any {
+  const bcvParser: any = require(`bible-passage-reference-parser/js/${citationLanguage}_bcv_parser`).bcv_parser;
   const bcv = new bcvParser();
-
   return bcv;
 }
 
@@ -180,9 +180,7 @@ function init(): any {
  */
 function XmlBible2Js(biblePath: string): any {
   let parsedBible: object;
-
-  const normalizedPath = path.normalize(biblePath);
-  const xmlFile = fs.readFileSync(normalizedPath, 'utf8');
+  const xmlFile = fs.readFileSync(biblePath, 'utf8');
   parseXmlString(xmlFile, function (err, result) {
     if (err) throw err;
     parsedBible = result;
