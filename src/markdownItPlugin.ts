@@ -10,19 +10,8 @@ import { ParsedQuote } from './interfaces/parsedQuote';
 import { PluginConfig } from './interfaces/config';
 import { OsisParts } from './interfaces/osisParts';
 
-const pluginConfig: PluginConfig = {
-  citationLanguage: null,
-  bookNamesLanguage: null,
-  chapterTitleText: null,
-  biblePath: null,
-  bookAlignment: null,
-  chapterAlignment: null,
-  chapterPadding: null,
-  verseFontSize: null,
-  verseAlignment: null,
-  displayFormat: null,
-};
-let bibleIndex: BibleLanguage = null;
+const pluginConfig: PluginConfig = getPluginConfig();
+let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
 let osisBible: OsisBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
 const bcv = init();
 const bibleInfo = bcv.translation_info();
@@ -129,20 +118,35 @@ export default function (context) {
 }
 
 /**
+ * Gets the plugin configuration from localStorage
+ * @returns pluginConfig object
+ */
+function getPluginConfig(): PluginConfig {
+  const pluginConfig: any = {
+    citationLanguage: localStorage.getItem('citeLang'),
+    bookNamesLanguage: localStorage.getItem('bookNamesLang'),
+    biblePath: localStorage.getItem('biblePath'),
+    bookAlignment: localStorage.getItem('bookAlignment'),
+    chapterAlignment: localStorage.getItem('chapterAlignment'),
+    chapterPadding: localStorage.getItem('chapterPadding'),
+    verseFontSize: localStorage.getItem('verseFontSize'),
+    verseAlignment: localStorage.getItem('verseAlignment'),
+    displayFormat: localStorage.getItem('displayFormat'),
+  };
+  pluginConfig.chapterTitleText = bibleIndexFull[pluginConfig.bookNamesLanguage].chapterTitle;
+
+  for (const key in pluginConfig) {
+    if (pluginConfig[key] === '') pluginConfig[key] = null;
+  }
+
+  return pluginConfig;
+}
+
+/**
  * Initialize the config variables and import the corresponding bcv parser.
  * @returns bcv parser.
  */
 function init(): any {
-  pluginConfig.citationLanguage = localStorage.getItem('citeLang');
-  pluginConfig.bookNamesLanguage = localStorage.getItem('bookNamesLang');
-  pluginConfig.biblePath = localStorage.getItem('biblePath');
-  pluginConfig.bookAlignment = localStorage.getItem('bookAlignment');
-  pluginConfig.chapterAlignment = localStorage.getItem('chapterAlignment');
-  pluginConfig.chapterPadding = localStorage.getItem('chapterPadding');
-  pluginConfig.verseFontSize = localStorage.getItem('verseFontSize');
-  pluginConfig.verseAlignment = localStorage.getItem('verseAlignment');
-  pluginConfig.displayFormat = localStorage.getItem('displayFormat');
-
   try {
     osisBible = XmlBible2Js(pluginConfig.biblePath).osis.osisText[0];
   } catch (error) {
@@ -165,25 +169,6 @@ function init(): any {
       break;
   }
   const bcv = new bcvParser();
-
-  switch (pluginConfig.bookNamesLanguage) {
-    case 'es':
-      bibleIndex = bibleIndexFull.es;
-      pluginConfig.chapterTitleText = bibleIndexFull.es.chapterTitle;
-      break;
-
-    case 'en':
-      bibleIndex = bibleIndexFull.en;
-      pluginConfig.chapterTitleText = bibleIndexFull.en.chapterTitle;
-      break;
-    case 'fr':
-      bibleIndex = bibleIndexFull.fr;
-      pluginConfig.chapterTitleText = bibleIndexFull.fr.chapterTitle;
-      break;
-
-    default:
-      break;
-  }
 
   return bcv;
 }
