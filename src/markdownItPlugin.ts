@@ -28,6 +28,7 @@ export default function (context) {
       markdownIt.renderer.rules.fence = function (tokens, idx, options, env, self) {
         const token = tokens[idx];
 
+        // The token after the "```"
         if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
 
         // Update the runtime variables with the new plugin config
@@ -39,6 +40,7 @@ export default function (context) {
           bcv = importBcvParser(pluginConfig.citationLanguage);
         }
 
+        // Invalid biblePath handle
         if (pluginConfig.biblePath === null) {
           const noBibleHtml = `<div style="padding:35px; border: 1px solid #545454;">
 					<p style="text-align: center;">There is no selected OSIS xml bible or the path is invalid.<p></div>`;
