@@ -1,6 +1,7 @@
 import { PluginConfig } from './interfaces/config';
 import { OsisBible } from './interfaces/osisBible';
 import { ParsedQuote } from './interfaces/parsedQuote';
+import { cssObj2String } from './utils/cssObj2String';
 import { getVerseText } from './utils/getVerseText';
 
 /**
@@ -12,10 +13,7 @@ import { getVerseText } from './utils/getVerseText';
  */
 export function createVerseHtml(verseText: string, verseNumber: number, verseOptions: VerseOptions): string {
   let html = document.createElement('div');
-  html.setAttribute(
-    'style',
-    `font-size: ${verseOptions.verseFontSize}px;` + `text-align: ${verseOptions.verseTextAlign};`
-  );
+  html.setAttribute('style', cssObj2String(verseOptions.style));
 
   if (verseOptions.displayNumber) {
     html.innerHTML += `${verseNumber}. `;
@@ -37,12 +35,7 @@ export function createChapterHtml(versesHtml: Array<string>, chapterOptions: Cha
 
   if (chapterOptions.displayChapter) {
     const chapterTitle = document.createElement('h3');
-    chapterTitle.setAttribute(
-      'style',
-      `font-size: ${chapterOptions.chapterFontSize}px;` +
-        `text-indent: ${chapterOptions.chapterTextIndent}px;` +
-        `text-align: ${chapterOptions.chapterAlignment}`
-    );
+    chapterTitle.setAttribute('style', cssObj2String(chapterOptions.style));
     chapterTitle.innerHTML = `${chapterOptions.chapterText} ${chapterOptions.chapterNumber}`;
     html.appendChild(chapterTitle);
   }
@@ -70,7 +63,7 @@ export function createBookHtml(chaptersHtml: Array<string>, bookOptions: BookOpt
 
   if (bookOptions.displayBookName) {
     const bookNameTitle = document.createElement('h2');
-    bookNameTitle.setAttribute('style', `text-align:${bookOptions.bookAlignment};`);
+    bookNameTitle.setAttribute('style', cssObj2String(bookOptions.style));
     bookNameTitle.innerHTML = `<b>${bookOptions.bookName}<b>`;
     html.appendChild(bookNameTitle);
   }
@@ -93,7 +86,7 @@ export function createCitationHtml(booksHtml: Array<string>, citationOptions: Ci
 
   if (citationOptions.diplayFullCitation) {
     const citationTitle = document.createElement('h3');
-    citationTitle.setAttribute('style', `font-size: ${citationOptions.citationFontSize}px;`);
+    citationTitle.setAttribute('style', cssObj2String(citationOptions.style));
     citationTitle.innerHTML = `<b>${citationOptions.citation}<b>`;
     if (citationOptions.displayOsisIDWork) {
       citationTitle.innerHTML += `<b> (${citationOptions.osisIDWork})<b>`;
@@ -134,49 +127,57 @@ export function createBlockHtml(
           const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
           versesHTML.push(
             createVerseHtml(verseText, verse, {
-              verseFontSize: pluginConfig.verseFontSize,
-              verseTextAlign: pluginConfig.verseAlignment,
               displayNumber:
                 pluginConfig.displayFormat === 'full' ||
                 chapter.verses.length > 1 ||
                 book.chapters.length > 1 ||
                 fullQuote.books.length > 1,
+              style: {
+                fontSize: `${pluginConfig.verseFontSize}px`,
+                textAlign: pluginConfig.verseAlignment,
+              },
             })
           );
         }
 
         chaptersHTML.push(
           createChapterHtml(versesHTML, {
-            chapterAlignment: pluginConfig.chapterAlignment,
-            chapterFontSize: pluginConfig.verseFontSize * 1.1,
             chapterNumber: chapter.id,
-            chapterPadding: pluginConfig.chapterPadding,
             chapterText: pluginConfig.chapterTitleText,
-            chapterTextIndent: pluginConfig.verseFontSize * 2,
             displayChapter:
               pluginConfig.displayFormat === 'full' ||
               (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
+            style: {
+              fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
+              padding: `${pluginConfig.chapterPadding}px`,
+              textAlign: pluginConfig.chapterAlignment,
+              textIndent: `${pluginConfig.verseFontSize * 2}px`,
+            },
           })
         );
       }
 
       booksHtml.push(
         createBookHtml(chaptersHTML, {
-          bookAlignment: pluginConfig.bookAlignment,
           bookName: book.name,
           displayBookName:
             pluginConfig.displayFormat === 'full' ||
             (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
+          style: {
+            textAlign: pluginConfig.bookAlignment,
+          },
         })
       );
     }
 
     html.innerHTML += createCitationHtml(booksHtml, {
       citation: fullQuote.cite,
-      citationFontSize: pluginConfig.verseFontSize,
       osisIDWork: osisBible.$.osisIDWork,
       diplayFullCitation: pluginConfig.displayFormat === 'cite',
       displayOsisIDWork: pluginConfig.displayBibleVersion,
+      style: {
+        fontSize: `${pluginConfig.verseFontSize}px`,
+      },
     });
 
     // Add a line separator after the citation if theres is more than one
@@ -190,30 +191,26 @@ export function createBlockHtml(
 }
 interface VerseOptions {
   displayNumber: boolean;
-  verseFontSize: number;
-  verseTextAlign: string;
+  style: any;
 }
 
 interface ChapterOptions {
-  chapterAlignment: string;
-  chapterFontSize: number;
   chapterNumber: number;
-  chapterPadding: number;
   chapterText: string;
-  chapterTextIndent: number;
   displayChapter: boolean;
+  style: any;
 }
 
 interface BookOptions {
-  bookAlignment: string;
   bookName: string;
   displayBookName: boolean;
+  style: any;
 }
 
 interface CitationOptions {
   citation: string;
-  citationFontSize: number;
   diplayFullCitation: boolean;
   displayOsisIDWork: boolean;
   osisIDWork: string;
+  style: any;
 }
