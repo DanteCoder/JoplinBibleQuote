@@ -119,11 +119,11 @@ export namespace settings {
         isEnum: true,
         section: 'bibleQuoteSection',
         public: true,
-        label: 'Show cite on viewer',
-        description: `Whether to show or not the full cite on top of the quote.`,
+        label: 'Display citation on the view',
+        description: `Displays the full citation on top of the view.`,
         options: {
-          full: "Don't show",
-          cite: 'Show cite',
+          full: 'Display',
+          cite: 'Hide',
         },
       },
 
