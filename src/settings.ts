@@ -4,6 +4,7 @@ import { SettingItemType } from 'api/types';
 export namespace settings {
   export async function register() {
     await joplin.settings.registerSection('bibleQuoteSection', {
+      iconName: 'fas fa-book',
       label: 'Bible Quote',
     });
 
