@@ -319,7 +319,7 @@ function parseQuote(quote: string): ParsedQuote {
       verse: parseInt(split[2]),
     };
     let lastBookIndex: number = null;
-    let lastChapterindex: number = null;
+    let lastChapterIndex: number = null;
 
     const bookNumber = bibleInfo.order[osisParts.bookId];
     const bookName = bibleIndex.books[bookNumber - 1];
@@ -356,18 +356,18 @@ function parseQuote(quote: string): ParsedQuote {
     }
     // Push the chapter to the last book pushed only if it's different from the last pushed chapter
     else {
-      lastChapterindex = parsedQuote.books[lastBookIndex].chapters.length - 1;
-      if (parsedQuote.books[lastBookIndex].chapters[lastChapterindex].id !== osisParts[1]) {
+      lastChapterIndex = parsedQuote.books[lastBookIndex].chapters.length - 1;
+      if (parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].id !== osisParts.chapter) {
         parsedQuote.books[lastBookIndex].chapters.push({
           id: osisParts.chapter,
           verses: [],
         });
       }
     }
-    lastChapterindex = parsedQuote.books[lastBookIndex].chapters.length - 1;
+    lastChapterIndex = parsedQuote.books[lastBookIndex].chapters.length - 1;
 
     // Push the verse to the last chapter pushed
-    parsedQuote.books[lastBookIndex].chapters[lastChapterindex].verses.push(osisParts.verse);
+    parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].verses.push(osisParts.verse);
   }
 
   return parsedQuote;
