@@ -1,4 +1,7 @@
 export interface OsisBible {
+  $: {
+    osisIDWork: string;
+  };
   div: Array<book>;
 }
 

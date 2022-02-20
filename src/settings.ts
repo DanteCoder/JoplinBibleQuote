@@ -119,11 +119,25 @@ export namespace settings {
         isEnum: true,
         section: 'bibleQuoteSection',
         public: true,
-        label: 'Show cite on viewer',
-        description: `Whether to show or not the full cite on top of the quote.`,
+        label: 'Display citation on the view',
+        description: `Displays the full citation on top of the view.`,
         options: {
-          full: "Don't show",
-          cite: 'Show cite',
+          full: 'Display',
+          cite: 'Hide',
+        },
+      },
+
+      displayBibleVersion: {
+        value: true,
+        type: SettingItemType.Bool,
+        isEnum: true,
+        section: 'bibleQuoteSection',
+        public: true,
+        label: 'Display Bible version on citation',
+        description: `Displays or hides the Bible version. Only works when the "Display citation" is enabled.`,
+        options: {
+          true: 'Display',
+          false: 'Hide',
         },
       },
     });

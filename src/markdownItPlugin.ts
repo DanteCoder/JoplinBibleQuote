@@ -110,7 +110,9 @@ export default function (context) {
 
             html.innerHTML += createCitationHtml(booksHtml, {
               citation: fullQuote.cite,
+              osisIDWork: osisBible.$.osisIDWork,
               diplayFullCitation: pluginConfig.displayFormat === 'cite',
+              displayOsisIDWork: pluginConfig.displayBibleVersion,
             });
 
             // Add a line separator after the citation if theres is more than one
@@ -136,7 +138,7 @@ export default function (context) {
  */
 function getPluginConfig(): PluginConfig {
   const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
-  const pluginConfig: any = {
+  const pluginConfig: PluginConfig = {
     citationLanguage: localStorageConfig['citeLang'],
     bookNamesLanguage: localStorageConfig['bookNamesLang'],
     biblePath: path.normalize(localStorageConfig['biblePath']),
@@ -146,6 +148,8 @@ function getPluginConfig(): PluginConfig {
     verseFontSize: localStorageConfig['verseFontSize'],
     verseAlignment: localStorageConfig['verseAlignment'],
     displayFormat: localStorageConfig['displayFormat'],
+    displayBibleVersion: localStorageConfig['displayBibleVersion'],
+    chapterTitleText: '',
   };
   pluginConfig.chapterTitleText = bibleIndexFull[pluginConfig.bookNamesLanguage].chapterTitle;
 

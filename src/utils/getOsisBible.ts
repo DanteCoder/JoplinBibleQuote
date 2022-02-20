@@ -8,7 +8,7 @@ import { xmlBible2Js } from './xmlBible2Js';
  * was an error importing the bible
  */
 export function getOsisBible(biblePath: string): returnValue {
-  let osisBible: OsisBible = { div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
+  let osisBible: OsisBible = { $: { osisIDWork: '' }, div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
   let error = false;
 
   const result = xmlBible2Js(biblePath);
