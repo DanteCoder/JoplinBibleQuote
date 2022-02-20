@@ -1,9 +1,9 @@
 export interface ParsedQuote {
-  books: Array<Books>;
+  books: Array<Book>;
   cite: string;
 }
 
-interface Books {
+interface Book {
   id: string;
   num: number;
   name: string;

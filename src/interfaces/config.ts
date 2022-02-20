@@ -3,10 +3,10 @@ export interface PluginConfig {
   bookAlignment: string;
   bookNamesLanguage: string;
   chapterAlignment: string;
-  chapterPadding: string;
+  chapterPadding: number;
   chapterTitleText: string;
   citationLanguage: string;
   displayFormat: string;
   verseAlignment: string;
-  verseFontSize: string;
+  verseFontSize: number;
 }

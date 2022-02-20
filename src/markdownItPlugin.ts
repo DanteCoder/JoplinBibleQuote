@@ -1,7 +1,12 @@
+// Libraries
 import { parseString as parseXmlString } from 'xml2js';
 import fs = require('fs');
 import path = require('path');
+
+// Utils
 import bibleIndexFull from './bibleIndex';
+import { createBookHtml, createChapterHtml, createCitationHtml, createVerseHtml } from './htmlCreator';
+import { getVerseText } from './utils/getVerseText';
 
 // Interfaces
 import { BibleLanguage } from './interfaces/bibleIndex';
@@ -49,99 +54,67 @@ export default function (context) {
         }
 
         const html = document.createElement('div');
-        // Extract the quotes from the block of text
-        const quotes = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
+        // Extract the citations from the block of text
+        const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
 
-        if (quotes) {
+        if (citations) {
           html.setAttribute('style', `border:1px solid #545454;`);
 
-          for (const quoteIndex in quotes) {
-            const quote = quotes[quoteIndex];
-            const fullQuote = parseQuote(quote);
-            const quoteDiv = document.createElement('div');
-            quoteDiv.setAttribute('style', `padding: 35px;`);
+          for (const citationIndex in citations) {
+            const citation = citations[citationIndex];
+            const fullQuote = parseQuote(citation);
 
-            // Display the full citation if enabled in settings
-            if (pluginConfig.displayFormat === 'cite') {
-              const citationTitle = document.createElement('h3');
-              citationTitle.innerHTML = `<b>${fullQuote.cite}<b>`;
-              quoteDiv.appendChild(citationTitle);
-            }
-
+            const booksHtml = [];
             for (const book of fullQuote.books) {
-              // Display the book name if displayFormat is 'full' or there is more than one book in the citation
-              if (
-                pluginConfig.displayFormat === 'full' ||
-                (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1)
-              ) {
-                const bookNameTitle = document.createElement('h2');
-                bookNameTitle.setAttribute('style', `text-align:${pluginConfig.bookAlignment};`);
-                bookNameTitle.innerHTML = `<b>${book.name}<b>`;
-                quoteDiv.appendChild(bookNameTitle);
-              }
-
+              const chaptersHTML = [];
               for (const chapter of book.chapters) {
-                // Display the chapter number if displayFormat is 'full' or there is more than one chapter in the citation
-                if (
-                  pluginConfig.displayFormat === 'full' ||
-                  (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1)
-                ) {
-                  const chapterTitle = document.createElement('h3');
-                  chapterTitle.setAttribute(
-                    'style',
-                    `padding-left: ${pluginConfig.chapterPadding}px;` +
-                      `padding-right: ${pluginConfig.chapterPadding}px;` +
-                      `text-align: ${pluginConfig.chapterAlignment}`
-                  );
-                  chapterTitle.innerHTML = `${pluginConfig.chapterTitleText} ${chapter.id}`;
-                  quoteDiv.appendChild(chapterTitle);
-                }
-
-                const paragraphsDiv = document.createElement('div');
-                paragraphsDiv.setAttribute(
-                  'style',
-                  `white-space: pre-wrap;` +
-                    `font-size: ${pluginConfig.verseFontSize}px;` +
-                    `text-align: ${pluginConfig.verseAlignment};`
-                );
-
-                let lastVerse = null;
+                const versesHTML = [];
                 for (let verse of chapter.verses) {
-                  let verseText = osisBible.div[book.num - 1].chapter[chapter.id - 1].verse[verse - 1]._;
-                  verseText = verseText.trim();
-                  verseText = verseText.replace(/\n /g, '<br>----');
-                  verseText = verseText.replace(/\s+/g, ' ');
-                  verseText = verseText.replace(/----/g, '\t');
-
-                  paragraphsDiv.innerHTML += `<bstyle="font-size: ${pluginConfig.verseFontSize}px">`;
-
-                  // Add a break before verses exept on first verse
-                  if (verse - 1 !== lastVerse && lastVerse !== null) {
-                    paragraphsDiv.innerHTML += '<br>';
-                  }
-
-                  if (
-                    pluginConfig.displayFormat === 'full' ||
-                    chapter.verses.length > 1 ||
-                    book.chapters.length > 1 ||
-                    fullQuote.books.length > 1
-                  ) {
-                    paragraphsDiv.innerHTML += `${verse}. `;
-                  }
-
-                  paragraphsDiv.innerHTML += `</b>${verseText}<br>`;
-                  lastVerse = verse;
+                  const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
+                  versesHTML.push(
+                    createVerseHtml(verseText, verse, {
+                      verseFontSize: pluginConfig.verseFontSize,
+                      displayNumber:
+                        pluginConfig.displayFormat === 'full' ||
+                        chapter.verses.length > 1 ||
+                        book.chapters.length > 1 ||
+                        fullQuote.books.length > 1,
+                    })
+                  );
                 }
 
-                quoteDiv.appendChild(paragraphsDiv);
+                chaptersHTML.push(
+                  createChapterHtml(versesHTML, {
+                    chapterAlignment: pluginConfig.chapterAlignment,
+                    chapterNumber: chapter.id,
+                    chapterPadding: pluginConfig.chapterPadding,
+                    chapterText: pluginConfig.chapterTitleText,
+                    displayChapter:
+                      pluginConfig.displayFormat === 'full' ||
+                      (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
+                  })
+                );
               }
+
+              booksHtml.push(
+                createBookHtml(chaptersHTML, {
+                  bookAlignment: pluginConfig.bookAlignment,
+                  bookName: book.name,
+                  displayBookName:
+                    pluginConfig.displayFormat === 'full' ||
+                    (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
+                })
+              );
             }
 
-            html.appendChild(quoteDiv);
+            html.innerHTML += createCitationHtml(booksHtml, {
+              citation: fullQuote.cite,
+              diplayFullCitation: pluginConfig.displayFormat === 'cite',
+            });
 
             // Add a line separator after the citation if theres is more than one
             // and don't add a separator to the last one
-            if (parseInt(quoteIndex) !== quotes.length - 1) {
+            if (parseInt(citationIndex) !== citations.length - 1) {
               const divisorHr = document.createElement('hr');
               divisorHr.setAttribute('width', `90%`);
               divisorHr.setAttribute('size', `1`);
