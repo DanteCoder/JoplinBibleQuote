@@ -3,14 +3,14 @@ import path = require('path');
 
 // Utils
 import bibleIndexFull from './bibleIndex';
-import { createBookHtml, createChapterHtml, createCitationHtml, createVerseHtml } from './htmlCreator';
-import { getVerseText } from './utils/getVerseText';
+import { createBlockHtml } from './htmlCreator';
 import { parseQuote } from './utils/parseQuote';
 import { getOsisBible } from './utils/getOsisBible';
 
 // Interfaces
 import { BibleLanguage } from './interfaces/bibleIndex';
 import { PluginConfig } from './interfaces/config';
+import { ParsedQuote } from './interfaces/parsedQuote';
 
 let pluginConfig: PluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
@@ -55,76 +55,17 @@ export default function (context) {
         }
 
         const html = document.createElement('div');
+        html.setAttribute('style', `border:1px solid #545454;`);
+
         // Extract the citations from the block of text
         const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
 
-        if (citations) {
-          html.setAttribute('style', `border:1px solid #545454;`);
-
-          for (const citationIndex in citations) {
-            const citation = citations[citationIndex];
-            const fullQuote = parseQuote(citation, bcv, bibleIndex, bibleInfo);
-
-            const booksHtml = [];
-            for (const book of fullQuote.books) {
-              const chaptersHTML = [];
-              for (const chapter of book.chapters) {
-                const versesHTML = [];
-                for (let verse of chapter.verses) {
-                  const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
-                  versesHTML.push(
-                    createVerseHtml(verseText, verse, {
-                      verseFontSize: pluginConfig.verseFontSize,
-                      displayNumber:
-                        pluginConfig.displayFormat === 'full' ||
-                        chapter.verses.length > 1 ||
-                        book.chapters.length > 1 ||
-                        fullQuote.books.length > 1,
-                    })
-                  );
-                }
-
-                chaptersHTML.push(
-                  createChapterHtml(versesHTML, {
-                    chapterAlignment: pluginConfig.chapterAlignment,
-                    chapterNumber: chapter.id,
-                    chapterPadding: pluginConfig.chapterPadding,
-                    chapterText: pluginConfig.chapterTitleText,
-                    displayChapter:
-                      pluginConfig.displayFormat === 'full' ||
-                      (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
-                  })
-                );
-              }
-
-              booksHtml.push(
-                createBookHtml(chaptersHTML, {
-                  bookAlignment: pluginConfig.bookAlignment,
-                  bookName: book.name,
-                  displayBookName:
-                    pluginConfig.displayFormat === 'full' ||
-                    (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
-                })
-              );
-            }
-
-            html.innerHTML += createCitationHtml(booksHtml, {
-              citation: fullQuote.cite,
-              osisIDWork: osisBible.$.osisIDWork,
-              diplayFullCitation: pluginConfig.displayFormat === 'cite',
-              displayOsisIDWork: pluginConfig.displayBibleVersion,
-            });
-
-            // Add a line separator after the citation if theres is more than one
-            // and don't add a separator to the last one
-            if (parseInt(citationIndex) !== citations.length - 1) {
-              const divisorHr = document.createElement('hr');
-              divisorHr.setAttribute('width', `90%`);
-              divisorHr.setAttribute('size', `1`);
-              html.appendChild(divisorHr);
-            }
-          }
+        const parsedQuotes: Array<ParsedQuote> = [];
+        for (const citation of citations) {
+          parsedQuotes.push(parseQuote(citation, bcv, bibleIndex, bibleInfo));
         }
+
+        html.innerHTML += createBlockHtml(parsedQuotes, osisBible, pluginConfig);
 
         return html.outerHTML;
       };
