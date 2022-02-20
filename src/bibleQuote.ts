@@ -37,7 +37,6 @@ export namespace bibleQuote {
     localStorage.setItem('bibleQuoteSettingsUpdated', 'true');
     const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
     localStorageConfig[setting] = await joplin.settings.value(setting);
-    console.log(localStorageConfig);
     localStorage.setItem('bibleQuotePlugin', JSON.stringify(localStorageConfig));
   }
 }
