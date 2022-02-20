@@ -123,8 +123,8 @@ export namespace settings {
         label: 'Display citation on the view',
         description: `Displays the full citation on top of the view.`,
         options: {
-          full: 'Display',
-          cite: 'Hide',
+          cite: 'Display',
+          full: 'Hide',
         },
       },
 
