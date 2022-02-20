@@ -35,8 +35,8 @@ export default function (context) {
         if (token.info !== 'bible') return defaultRender(tokens, idx, options, env, self);
 
         // Update the runtime variables with the new plugin config
-        if (localStorage.getItem('pluginSettingsUpdated') === 'true') {
-          localStorage.setItem('pluginSettingsUpdated', 'false');
+        if (localStorage.getItem('bibleQuoteSettingsUpdated') === 'true') {
+          localStorage.setItem('bibleQuoteSettingsUpdated', 'false');
           pluginConfig = getPluginConfig();
           bibleIndex = bibleIndexFull[pluginConfig.bookNamesLanguage];
           importResult = getOsisBible(pluginConfig.biblePath);
@@ -135,16 +135,17 @@ export default function (context) {
  * @returns pluginConfig object
  */
 function getPluginConfig(): PluginConfig {
+  const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
   const pluginConfig: any = {
-    citationLanguage: localStorage.getItem('citeLang'),
-    bookNamesLanguage: localStorage.getItem('bookNamesLang'),
-    biblePath: path.normalize(localStorage.getItem('biblePath')),
-    bookAlignment: localStorage.getItem('bookAlignment'),
-    chapterAlignment: localStorage.getItem('chapterAlignment'),
-    chapterPadding: localStorage.getItem('chapterPadding'),
-    verseFontSize: localStorage.getItem('verseFontSize'),
-    verseAlignment: localStorage.getItem('verseAlignment'),
-    displayFormat: localStorage.getItem('displayFormat'),
+    citationLanguage: localStorageConfig['citeLang'],
+    bookNamesLanguage: localStorageConfig['bookNamesLang'],
+    biblePath: path.normalize(localStorageConfig['biblePath']),
+    bookAlignment: localStorageConfig['bookAlignment'],
+    chapterAlignment: localStorageConfig['chapterAlignment'],
+    chapterPadding: localStorageConfig['chapterPadding'],
+    verseFontSize: localStorageConfig['verseFontSize'],
+    verseAlignment: localStorageConfig['verseAlignment'],
+    displayFormat: localStorageConfig['displayFormat'],
   };
   pluginConfig.chapterTitleText = bibleIndexFull[pluginConfig.bookNamesLanguage].chapterTitle;
 
