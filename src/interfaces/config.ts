@@ -7,6 +7,7 @@ export interface PluginConfig {
   chapterTitleText: string;
   citationLanguage: string;
   displayFormat: string;
+  displayBibleVersion: boolean;
   verseAlignment: string;
   verseFontSize: number;
 }

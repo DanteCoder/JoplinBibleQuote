@@ -18,6 +18,7 @@ export namespace bibleQuote {
     await updateSetting('verseFontSize');
     await updateSetting('verseAlignment');
     await updateSetting('displayFormat');
+    await updateSetting('displayBibleVersion');
 
     joplin.settings.onChange(async (event: any) => {
       await bibleQuote.settingsChanged(event);

@@ -126,6 +126,20 @@ export namespace settings {
           cite: 'Show cite',
         },
       },
+
+      displayBibleVersion: {
+        value: true,
+        type: SettingItemType.Bool,
+        isEnum: true,
+        section: 'bibleQuoteSection',
+        public: true,
+        label: 'Display Bible version on citation',
+        description: `Displays or hides the Bible version. Only works when the "Display citation" is enabled.`,
+        options: {
+          true: 'Display',
+          false: 'Hide',
+        },
+      },
     });
   }
 }

@@ -87,6 +87,9 @@ export function createCitationHtml(booksHtml: Array<string>, citationOptions: Ci
   if (citationOptions.diplayFullCitation) {
     const citationTitle = document.createElement('h3');
     citationTitle.innerHTML = `<b>${citationOptions.citation}<b>`;
+    if (citationOptions.displayOsisIDWork) {
+      citationTitle.innerHTML += `<b> (${citationOptions.osisIDWork})<b>`;
+    }
     html.appendChild(citationTitle);
   }
 
@@ -118,4 +121,6 @@ interface BookOptions {
 interface CitationOptions {
   citation: string;
   diplayFullCitation: boolean;
+  displayOsisIDWork: boolean;
+  osisIDWork: string;
 }
