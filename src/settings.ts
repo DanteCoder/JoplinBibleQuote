@@ -4,6 +4,7 @@ import { SettingItemType } from 'api/types';
 export namespace settings {
   export async function register() {
     await joplin.settings.registerSection('bibleQuoteSection', {
+      iconName: 'fas fa-book',
       label: 'Bible Quote',
     });
 
@@ -122,8 +123,8 @@ export namespace settings {
         label: 'Display citation on the view',
         description: `Displays the full citation on top of the view.`,
         options: {
-          full: 'Display',
-          cite: 'Hide',
+          cite: 'Display',
+          full: 'Hide',
         },
       },
 
