@@ -1,27 +1,28 @@
-import Book from './components/Book';
-import Chapter from './components/Chapter';
-import Citation from './components/Citation';
-import Verse from './components/Verse';
-import { PluginConfig } from './interfaces/config';
-import { OsisBible } from './interfaces/osisBible';
-import { ParsedQuote } from './interfaces/parsedQuote';
-import { getVerseText } from './utils/getVerseText';
+import { PluginConfig } from '../interfaces/config';
+import { OsisBible } from '../interfaces/osisBible';
+import { ParsedQuote } from '../interfaces/parsedQuote';
+import { cssObj2String } from '../utils/cssObj2String';
+import { getVerseText } from '../utils/getVerseText';
+import Book from './Book';
+import Chapter from './Chapter';
+import Citation from './Citation';
+import Verse from './Verse';
 
 /**
- * Creates the html for a list of citations from a given osisBible
- * @param parsedQuotes
- * @param osisBible
- * @param pluginConfig
+ * Creates the html for a list of citations
+ * @param props
  * @returns html string
  */
-export function createBlockHtml(
-  parsedQuotes: Array<ParsedQuote>,
-  osisBible: OsisBible,
-  pluginConfig: PluginConfig
-): string {
+export default function CitationsBlock(props: Props) {
+  const { osisBible, parsedQuotes, pluginConfig } = props;
   const html = document.createElement('div');
-  const padding = pluginConfig.verseFontSize * 2;
-  html.setAttribute('style', `padding: ${padding}px`);
+
+  html.setAttribute(
+    'style',
+    cssObj2String({
+      padding: '30px',
+    })
+  );
 
   for (const fullQuote of parsedQuotes) {
     const booksHtml = [];
@@ -100,28 +101,9 @@ export function createBlockHtml(
 
   return html.outerHTML;
 }
-interface VerseOptions {
-  displayNumber: boolean;
-  style: any;
-}
 
-interface ChapterOptions {
-  chapterNumber: number;
-  chapterText: string;
-  displayChapter: boolean;
-  style: any;
-}
-
-interface BookOptions {
-  bookName: string;
-  displayBookName: boolean;
-  style: any;
-}
-
-interface CitationOptions {
-  citation: string;
-  diplayFullCitation: boolean;
-  displayOsisIDWork: boolean;
-  osisIDWork: string;
-  style: any;
+interface Props {
+  parsedQuotes: Array<ParsedQuote>;
+  osisBible: OsisBible;
+  pluginConfig: PluginConfig;
 }

@@ -3,9 +3,9 @@ import path = require('path');
 
 // Utils
 import bibleIndexFull from './bibleIndex';
-import { createBlockHtml } from './htmlCreator';
 import { parseQuote } from './utils/parseQuote';
 import { getOsisBible } from './utils/getOsisBible';
+import CitationsBlock from './components/CitationsBlock';
 
 // Interfaces
 import { BibleLanguage } from './interfaces/bibleIndex';
@@ -65,7 +65,11 @@ export default function (context) {
           parsedQuotes.push(parseQuote(citation, bcv, bibleIndex, bibleInfo));
         }
 
-        html.innerHTML += createBlockHtml(parsedQuotes, osisBible, pluginConfig);
+        html.innerHTML += CitationsBlock({
+          osisBible,
+          parsedQuotes,
+          pluginConfig,
+        });
 
         return html.outerHTML;
       };
