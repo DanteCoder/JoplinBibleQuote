@@ -1,59 +1,11 @@
+import Book from './components/Book';
 import Chapter from './components/Chapter';
+import Citation from './components/Citation';
 import Verse from './components/Verse';
 import { PluginConfig } from './interfaces/config';
 import { OsisBible } from './interfaces/osisBible';
 import { ParsedQuote } from './interfaces/parsedQuote';
-import { cssObj2String } from './utils/cssObj2String';
 import { getVerseText } from './utils/getVerseText';
-
-/**
- * Creates the html for a book
- * @param chaptersHtml
- * @param bookOptions
- * @returns html string
- */
-export function createBookHtml(chaptersHtml: Array<string>, bookOptions: BookOptions) {
-  const html = document.createElement('div');
-
-  if (bookOptions.displayBookName) {
-    const bookNameTitle = document.createElement('h2');
-    bookNameTitle.setAttribute('style', cssObj2String(bookOptions.style));
-    bookNameTitle.innerHTML = `<b>${bookOptions.bookName}<b>`;
-    html.appendChild(bookNameTitle);
-  }
-
-  for (const chapterHtml of chaptersHtml) {
-    html.innerHTML += chapterHtml;
-  }
-
-  return html.outerHTML;
-}
-
-/**
- * Creates the html for a citation
- * @param booksHtml
- * @param citationOptions
- * @returns html string
- */
-export function createCitationHtml(booksHtml: Array<string>, citationOptions: CitationOptions): string {
-  const html = document.createElement('div');
-
-  if (citationOptions.diplayFullCitation) {
-    const citationTitle = document.createElement('h3');
-    citationTitle.setAttribute('style', cssObj2String(citationOptions.style));
-    citationTitle.innerHTML = `<b>${citationOptions.citation}<b>`;
-    if (citationOptions.displayOsisIDWork) {
-      citationTitle.innerHTML += `<b> (${citationOptions.osisIDWork})<b>`;
-    }
-    html.appendChild(citationTitle);
-  }
-
-  for (const bookHtml of booksHtml) {
-    html.innerHTML += bookHtml;
-  }
-
-  return html.outerHTML;
-}
 
 /**
  * Creates the html for a list of citations from a given osisBible
@@ -115,9 +67,10 @@ export function createBlockHtml(
       }
 
       booksHtml.push(
-        createBookHtml(chaptersHTML, {
-          bookName: book.name,
-          displayBookName:
+        Book({
+          chapters: chaptersHTML,
+          name: book.name,
+          displayName:
             pluginConfig.displayFormat === 'full' ||
             (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
           style: {
@@ -127,10 +80,11 @@ export function createBlockHtml(
       );
     }
 
-    html.innerHTML += createCitationHtml(booksHtml, {
+    html.innerHTML += Citation({
+      books: booksHtml,
       citation: fullQuote.cite,
       osisIDWork: osisBible.$.osisIDWork,
-      diplayFullCitation: pluginConfig.displayFormat === 'cite',
+      displayFullCitation: pluginConfig.displayFormat === 'cite',
       displayOsisIDWork: pluginConfig.displayBibleVersion,
       style: {
         fontSize: `${pluginConfig.verseFontSize}px`,
