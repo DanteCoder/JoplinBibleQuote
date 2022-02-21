@@ -1,28 +1,9 @@
+import Verse from './components/Verse';
 import { PluginConfig } from './interfaces/config';
 import { OsisBible } from './interfaces/osisBible';
 import { ParsedQuote } from './interfaces/parsedQuote';
 import { cssObj2String } from './utils/cssObj2String';
 import { getVerseText } from './utils/getVerseText';
-
-/**
- * Creates the html for a verse
- * @param verseText
- * @param verseNumber
- * @param verseOptions
- * @returns html string
- */
-export function createVerseHtml(verseText: string, verseNumber: number, verseOptions: VerseOptions): string {
-  let html = document.createElement('div');
-  html.setAttribute('style', cssObj2String(verseOptions.style));
-
-  if (verseOptions.displayNumber) {
-    html.innerHTML += `${verseNumber}. `;
-  }
-
-  html.innerHTML += `${verseText}`;
-
-  return html.outerHTML;
-}
 
 /**
  * Creates the html for a chapter
@@ -126,7 +107,9 @@ export function createBlockHtml(
         for (let verse of chapter.verses) {
           const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
           versesHTML.push(
-            createVerseHtml(verseText, verse, {
+            Verse({
+              text: verseText,
+              number: verse,
               displayNumber:
                 pluginConfig.displayFormat === 'full' ||
                 chapter.verses.length > 1 ||
