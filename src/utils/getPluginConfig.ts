@@ -12,6 +12,7 @@ export function getPluginConfig() {
     citationLanguage: localStorageConfig['citeLang'],
     bookNamesLanguage: localStorageConfig['bookNamesLang'],
     biblePath: path.normalize(localStorageConfig['biblePath']),
+    biblesPath: path.normalize(localStorageConfig['biblesPath']),
     bookAlignment: localStorageConfig['bookAlignment'],
     chapterAlignment: localStorageConfig['chapterAlignment'],
     chapterPadding: localStorageConfig['chapterPadding'],

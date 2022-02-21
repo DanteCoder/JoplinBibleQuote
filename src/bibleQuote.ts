@@ -12,6 +12,7 @@ export namespace bibleQuote {
     await updateSetting('citeLang');
     await updateSetting('bookNamesLang');
     await updateSetting('biblePath');
+    await updateSetting('biblesPath');
     await updateSetting('bookAlignment');
     await updateSetting('chapterAlignment');
     await updateSetting('chapterPadding');

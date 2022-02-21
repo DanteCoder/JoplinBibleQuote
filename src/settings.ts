@@ -44,8 +44,17 @@ export namespace settings {
         type: SettingItemType.String,
         section: 'bibleQuoteSection',
         public: true,
-        label: 'Path to OSIS Bible file',
-        description: 'e.g. C:/My/Path/To/OSIS_Bible.xml',
+        label: 'Path to the default OSIS Bible file',
+        description: 'e.g. C:/My/Path/To/Default-OSIS-Bible.xml',
+      },
+
+      biblesPath: {
+        value: '',
+        type: SettingItemType.String,
+        section: 'bibleQuoteSection',
+        public: true,
+        label: 'Path to a folder containing OSIS bibles',
+        description: 'If you want to select from multiple versions: e.g. C:/My/Path/To/MyFolder',
       },
 
       bookAlignment: {
