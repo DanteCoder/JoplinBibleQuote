@@ -3,14 +3,12 @@ import path = require('path');
 
 // Utils
 import bibleIndexFull from './bibleIndex';
-import { parseQuote } from './utils/parseQuote';
 import { getOsisBible } from './utils/getOsisBible';
-import CitationsBlock from './components/CitationsBlock';
+import Main from './components/Main';
 
 // Interfaces
 import { BibleLanguage } from './interfaces/bibleIndex';
 import { PluginConfig } from './interfaces/config';
-import { ParsedQuote } from './interfaces/parsedQuote';
 
 let pluginConfig: PluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
@@ -54,24 +52,20 @@ export default function (context) {
           );
         }
 
-        const html = document.createElement('div');
-        html.setAttribute('style', `border:1px solid #545454;`);
-
         // Extract the citations from the block of text
         const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
 
-        const parsedQuotes: Array<ParsedQuote> = [];
-        for (const citation of citations) {
-          parsedQuotes.push(parseQuote(citation, bcv, bibleIndex, bibleInfo));
-        }
-
-        html.innerHTML += CitationsBlock({
+        // Create the html to render
+        const html = Main({
+          bcv,
+          bibleIndex,
+          bibleInfo,
+          citations,
           osisBible,
-          parsedQuotes,
           pluginConfig,
         });
 
-        return html.outerHTML;
+        return html;
       };
     },
   };
