@@ -2,11 +2,10 @@
 import path = require('path');
 
 // Utils
-import bibleIndexFull from './bibleIndex';
-import { createBookHtml, createChapterHtml, createCitationHtml, createVerseHtml } from './htmlCreator';
-import { getVerseText } from './utils/getVerseText';
-import { parseQuote } from './utils/parseQuote';
 import { getOsisBible } from './utils/getOsisBible';
+import { getPluginConfig } from './utils/getPluginConfig';
+import bibleIndexFull from './bibleIndex';
+import Main from './components/Main';
 
 // Interfaces
 import { BibleLanguage } from './interfaces/bibleIndex';
@@ -54,110 +53,23 @@ export default function (context) {
           );
         }
 
-        const html = document.createElement('div');
         // Extract the citations from the block of text
         const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
 
-        if (citations) {
-          html.setAttribute('style', `border:1px solid #545454;`);
+        // Create the html to render
+        const html = Main({
+          bcv,
+          bibleIndex,
+          bibleInfo,
+          citations,
+          osisBible,
+          pluginConfig,
+        });
 
-          for (const citationIndex in citations) {
-            const citation = citations[citationIndex];
-            const fullQuote = parseQuote(citation, bcv, bibleIndex, bibleInfo);
-
-            const booksHtml = [];
-            for (const book of fullQuote.books) {
-              const chaptersHTML = [];
-              for (const chapter of book.chapters) {
-                const versesHTML = [];
-                for (let verse of chapter.verses) {
-                  const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
-                  versesHTML.push(
-                    createVerseHtml(verseText, verse, {
-                      verseFontSize: pluginConfig.verseFontSize,
-                      displayNumber:
-                        pluginConfig.displayFormat === 'full' ||
-                        chapter.verses.length > 1 ||
-                        book.chapters.length > 1 ||
-                        fullQuote.books.length > 1,
-                    })
-                  );
-                }
-
-                chaptersHTML.push(
-                  createChapterHtml(versesHTML, {
-                    chapterAlignment: pluginConfig.chapterAlignment,
-                    chapterNumber: chapter.id,
-                    chapterPadding: pluginConfig.chapterPadding,
-                    chapterText: pluginConfig.chapterTitleText,
-                    displayChapter:
-                      pluginConfig.displayFormat === 'full' ||
-                      (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
-                  })
-                );
-              }
-
-              booksHtml.push(
-                createBookHtml(chaptersHTML, {
-                  bookAlignment: pluginConfig.bookAlignment,
-                  bookName: book.name,
-                  displayBookName:
-                    pluginConfig.displayFormat === 'full' ||
-                    (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
-                })
-              );
-            }
-
-            html.innerHTML += createCitationHtml(booksHtml, {
-              citation: fullQuote.cite,
-              osisIDWork: osisBible.$.osisIDWork,
-              diplayFullCitation: pluginConfig.displayFormat === 'cite',
-              displayOsisIDWork: pluginConfig.displayBibleVersion,
-            });
-
-            // Add a line separator after the citation if theres is more than one
-            // and don't add a separator to the last one
-            if (parseInt(citationIndex) !== citations.length - 1) {
-              const divisorHr = document.createElement('hr');
-              divisorHr.setAttribute('width', `90%`);
-              divisorHr.setAttribute('size', `1`);
-              html.appendChild(divisorHr);
-            }
-          }
-        }
-
-        return html.outerHTML;
+        return html;
       };
     },
   };
-}
-
-/**
- * Gets the plugin configuration from localStorage
- * @returns pluginConfig object
- */
-function getPluginConfig(): PluginConfig {
-  const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
-  const pluginConfig: PluginConfig = {
-    citationLanguage: localStorageConfig['citeLang'],
-    bookNamesLanguage: localStorageConfig['bookNamesLang'],
-    biblePath: path.normalize(localStorageConfig['biblePath']),
-    bookAlignment: localStorageConfig['bookAlignment'],
-    chapterAlignment: localStorageConfig['chapterAlignment'],
-    chapterPadding: localStorageConfig['chapterPadding'],
-    verseFontSize: localStorageConfig['verseFontSize'],
-    verseAlignment: localStorageConfig['verseAlignment'],
-    displayFormat: localStorageConfig['displayFormat'],
-    displayBibleVersion: localStorageConfig['displayBibleVersion'],
-    chapterTitleText: '',
-  };
-  pluginConfig.chapterTitleText = bibleIndexFull[pluginConfig.bookNamesLanguage].chapterTitle;
-
-  for (const key in pluginConfig) {
-    if (pluginConfig[key] === '') pluginConfig[key] = null;
-  }
-
-  return pluginConfig;
 }
 
 /**
