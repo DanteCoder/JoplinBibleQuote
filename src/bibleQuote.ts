@@ -1,12 +1,12 @@
 import joplin from 'api';
-import { settings } from './settings';
+import { Settings } from './settings';
 import { ContentScriptType } from 'api/types';
 
 export namespace bibleQuote {
   export async function init() {
     console.log('Biblie Quote plugin started!');
 
-    await settings.register();
+    await Settings.register();
 
     localStorage.setItem('bibleQuotePlugin', JSON.stringify({}));
     await updateSetting('citeLang');
