@@ -1,4 +1,4 @@
-import { OsisBible } from 'src/interfaces/osisBible';
+import { OsisBible } from '../interfaces/osisBible';
 import { xmlBible2Js } from './xmlBible2Js';
 
 /**
@@ -7,18 +7,28 @@ import { xmlBible2Js } from './xmlBible2Js';
  * @returns OsisBible from a file and error = true if there
  * was an error importing the bible
  */
-export function getOsisBible(biblePath: string): returnValue {
-  let osisBible: OsisBible = { $: { osisIDWork: '' }, div: [{ chapter: [{ verse: [{ _: '' }] }] }] };
-  let error = false;
+export function getOsisBible(biblePath: string): ReturnValue {
+  const returnValue = { osisBible: null, error: undefined };
 
   const result = xmlBible2Js(biblePath);
-  if (result.error) return { osisBible, error: result.error };
-  osisBible = result.parsedBible.osis.osisText[0];
 
-  return { osisBible, error };
+  // Handle xml import errors
+  if (result.error) {
+    returnValue.error = result.error;
+    return returnValue;
+  }
+
+  // Handle invalid OSIS xml erros
+  try {
+    returnValue.osisBible = result.parsedBible.osis.osisText[0];
+  } catch (error) {
+    returnValue.error = error;
+  }
+
+  return returnValue;
 }
 
-interface returnValue {
+interface ReturnValue {
   osisBible: OsisBible;
-  error: boolean;
+  error: Error;
 }
