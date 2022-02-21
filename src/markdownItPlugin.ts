@@ -3,6 +3,7 @@ import { PluginConfig } from './interfaces/config';
 import { getOsisBible } from './utils/getOsisBible';
 import { getPluginConfig } from './utils/getPluginConfig';
 import bibleIndexFull from './bibleIndex';
+import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
 
 let pluginConfig: PluginConfig = getPluginConfig();
@@ -38,14 +39,7 @@ export default function (context) {
         }
 
         // Invalid osis Bible import handle
-        if (importResult.error) {
-          return (
-            '<div style="padding:35px; border: 1px solid #545454;">' +
-            '<p style="text-align: center;">There is no selected OSIS xml bible or the path is invalid.<p>' +
-            `<p style="text-align: center;">Error code: ${importResult.error}<p>` +
-            '</div>'
-          );
-        }
+        if (importResult.error) return ErrorManager(importResult.error);
 
         // Extract the citations from the block of text
         const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
