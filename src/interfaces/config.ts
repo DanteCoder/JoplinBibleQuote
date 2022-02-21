@@ -2,13 +2,12 @@ export interface PluginConfig {
   biblePath: string;
   biblesPath: string;
   bookAlignment: string;
-  bookNamesLanguage: string;
+  bookNamesLang: string;
   chapterAlignment: string;
   chapterPadding: number;
-  chapterTitleText: string;
-  citationLanguage: string;
-  displayFormat: string;
+  citeLang: string;
   displayBibleVersion: boolean;
+  displayFormat: string;
   verseAlignment: string;
   verseFontSize: number;
 }

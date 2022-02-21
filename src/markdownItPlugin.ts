@@ -1,16 +1,15 @@
 import { BibleLanguage } from './interfaces/bibleIndex';
-import { PluginConfig } from './interfaces/config';
 import { getOsisBible } from './utils/getOsisBible';
 import { getPluginConfig } from './utils/getPluginConfig';
 import bibleIndexFull from './bibleIndex';
 import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
 
-let pluginConfig: PluginConfig = getPluginConfig();
-let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
+let pluginConfig = getPluginConfig();
+let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLang];
 let importResult = getOsisBible(pluginConfig.biblePath);
 let osisBible = importResult.osisBible;
-let bcv = importBcvParser(pluginConfig.citationLanguage);
+let bcv = importBcvParser(pluginConfig.citeLang);
 const bibleInfo = bcv.translation_info();
 
 export default function (context) {
@@ -32,10 +31,10 @@ export default function (context) {
         if (localStorage.getItem('bibleQuoteSettingsUpdated') === 'true') {
           localStorage.setItem('bibleQuoteSettingsUpdated', 'false');
           pluginConfig = getPluginConfig();
-          bibleIndex = bibleIndexFull[pluginConfig.bookNamesLanguage];
+          bibleIndex = bibleIndexFull[pluginConfig.bookNamesLang];
           importResult = getOsisBible(pluginConfig.biblePath);
           osisBible = importResult.osisBible;
-          bcv = importBcvParser(pluginConfig.citationLanguage);
+          bcv = importBcvParser(pluginConfig.citeLang);
         }
 
         // Invalid osis Bible import handle
