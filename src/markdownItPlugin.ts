@@ -1,15 +1,9 @@
-// Libraries
-import path = require('path');
-
-// Utils
+import { BibleLanguage } from './interfaces/bibleIndex';
+import { PluginConfig } from './interfaces/config';
 import { getOsisBible } from './utils/getOsisBible';
 import { getPluginConfig } from './utils/getPluginConfig';
 import bibleIndexFull from './bibleIndex';
 import Main from './components/Main';
-
-// Interfaces
-import { BibleLanguage } from './interfaces/bibleIndex';
-import { PluginConfig } from './interfaces/config';
 
 let pluginConfig: PluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLanguage];
