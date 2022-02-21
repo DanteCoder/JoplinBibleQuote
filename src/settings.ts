@@ -2,7 +2,7 @@ import joplin from 'api';
 import { SettingItem, SettingItemType } from 'api/types';
 
 export namespace Settings {
-  const settings: Record<string, SettingItem> = {
+  export const settings: Record<string, SettingItem> = {
     citeLang: {
       value: 'en',
       type: SettingItemType.String,
