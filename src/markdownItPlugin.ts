@@ -2,8 +2,9 @@
 import path = require('path');
 
 // Utils
-import bibleIndexFull from './bibleIndex';
 import { getOsisBible } from './utils/getOsisBible';
+import { getPluginConfig } from './utils/getPluginConfig';
+import bibleIndexFull from './bibleIndex';
 import Main from './components/Main';
 
 // Interfaces
@@ -69,34 +70,6 @@ export default function (context) {
       };
     },
   };
-}
-
-/**
- * Gets the plugin configuration from localStorage
- * @returns pluginConfig object
- */
-function getPluginConfig(): PluginConfig {
-  const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
-  const pluginConfig: PluginConfig = {
-    citationLanguage: localStorageConfig['citeLang'],
-    bookNamesLanguage: localStorageConfig['bookNamesLang'],
-    biblePath: path.normalize(localStorageConfig['biblePath']),
-    bookAlignment: localStorageConfig['bookAlignment'],
-    chapterAlignment: localStorageConfig['chapterAlignment'],
-    chapterPadding: localStorageConfig['chapterPadding'],
-    verseFontSize: localStorageConfig['verseFontSize'],
-    verseAlignment: localStorageConfig['verseAlignment'],
-    displayFormat: localStorageConfig['displayFormat'],
-    displayBibleVersion: localStorageConfig['displayBibleVersion'],
-    chapterTitleText: '',
-  };
-  pluginConfig.chapterTitleText = bibleIndexFull[pluginConfig.bookNamesLanguage].chapterTitle;
-
-  for (const key in pluginConfig) {
-    if (pluginConfig[key] === '') pluginConfig[key] = null;
-  }
-
-  return pluginConfig;
 }
 
 /**
