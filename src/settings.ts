@@ -136,6 +136,8 @@ export namespace Settings {
     },
   };
 
+  export const pathSettings = ['biblePath', 'biblesPath'];
+
   export async function register() {
     await joplin.settings.registerSection('bibleQuoteSection', {
       iconName: 'fas fa-book',

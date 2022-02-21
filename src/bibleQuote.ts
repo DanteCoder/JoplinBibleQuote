@@ -1,3 +1,4 @@
+import path = require('path');
 import joplin from 'api';
 import { Settings } from './settings';
 import { ContentScriptType } from 'api/types';
@@ -39,7 +40,16 @@ export namespace bibleQuote {
   export async function updateSetting(setting: string): Promise<void> {
     localStorage.setItem('bibleQuoteSettingsUpdated', 'true');
     const localStorageConfig = JSON.parse(localStorage.getItem('bibleQuotePlugin'));
-    localStorageConfig[setting] = await joplin.settings.value(setting);
+
+    let value = await joplin.settings.value(setting);
+
+    // If the setting is a path normalize it before saving to localStorage
+    if (Settings.pathSettings.includes(setting)) {
+      if (typeof value === 'undefined') value = '';
+      value = path.normalize(value);
+    }
+
+    localStorageConfig[setting] = value;
     localStorage.setItem('bibleQuotePlugin', JSON.stringify(localStorageConfig));
   }
 }
