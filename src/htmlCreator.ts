@@ -1,37 +1,10 @@
+import Chapter from './components/Chapter';
 import Verse from './components/Verse';
 import { PluginConfig } from './interfaces/config';
 import { OsisBible } from './interfaces/osisBible';
 import { ParsedQuote } from './interfaces/parsedQuote';
 import { cssObj2String } from './utils/cssObj2String';
 import { getVerseText } from './utils/getVerseText';
-
-/**
- * Creates the html for a chapter
- * @param versesHtml
- * @param chapterOptions
- * @returns html string
- */
-export function createChapterHtml(versesHtml: Array<string>, chapterOptions: ChapterOptions): string {
-  const html = document.createElement('div');
-
-  if (chapterOptions.displayChapter) {
-    const chapterTitle = document.createElement('h3');
-    chapterTitle.setAttribute('style', cssObj2String(chapterOptions.style));
-    chapterTitle.innerHTML = `${chapterOptions.chapterText} ${chapterOptions.chapterNumber}`;
-    html.appendChild(chapterTitle);
-  }
-
-  const versesDiv = document.createElement('div');
-  versesDiv.setAttribute('style', `display: flex; flex-direction: column; gap: 8px;`);
-
-  for (const verseHtml of versesHtml) {
-    versesDiv.innerHTML += verseHtml;
-  }
-
-  html.appendChild(versesDiv);
-
-  return html.outerHTML;
-}
 
 /**
  * Creates the html for a book
@@ -124,9 +97,10 @@ export function createBlockHtml(
         }
 
         chaptersHTML.push(
-          createChapterHtml(versesHTML, {
-            chapterNumber: chapter.id,
-            chapterText: pluginConfig.chapterTitleText,
+          Chapter({
+            verses: versesHTML,
+            text: pluginConfig.chapterTitleText,
+            number: chapter.id,
             displayChapter:
               pluginConfig.displayFormat === 'full' ||
               (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
