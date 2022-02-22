@@ -48,7 +48,6 @@ export default function (context) {
 
         // Parse the block of bible code
         const parsedEntities = parser(token.content, bcv, availableVersions);
-        console.log('🚀 ~ file: markdownItPlugin.ts ~ line 51 ~ parsedEntities', parsedEntities);
 
         // Create the html to render
         const html = Main({

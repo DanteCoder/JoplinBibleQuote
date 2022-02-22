@@ -57,8 +57,11 @@ export default function Main(props: Props) {
     html.innerHTML += `<hr style="${cssObj2String({
       border: 'none',
       borderTop: '3px double grey',
-      margin: '0px',
-    })}">`;
+      marginBottom: '0px',
+      marginLeft: '15px',
+      marginRight: '15px',
+      marginTop: '0px',
+    })}">`.repeat(2);
   }
 
   return html.outerHTML;
