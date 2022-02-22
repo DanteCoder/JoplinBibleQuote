@@ -1,0 +1,10 @@
+export interface ParseResult {
+  type: 'entities' | 'error' | 'help';
+  errorMessage?: string;
+  entities?: Array<ParsedEntity>;
+}
+
+export interface ParsedEntity {
+  versions: Array<string>;
+  osisIds: Array<string>;
+}
