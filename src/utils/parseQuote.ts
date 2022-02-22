@@ -2,36 +2,25 @@ import { osis2Cite } from './osis2Cite';
 import { BibleLanguage } from 'src/interfaces/bibleIndex';
 import { OsisParts } from 'src/interfaces/osisParts';
 import { ParsedQuote } from 'src/interfaces/parsedQuote';
+import { OsisObject } from 'src/interfaces/osisObject';
 
 /**
  * Parses a bible quote like "Genesis 1:1" into a JS object.
- * @param quote
- * @param bcv the bcv parser
+ * @param osisObject
  * @param bibleIndex
  * @param bibleInfo https://github.com/openbibleinfo/Bible-Passage-Reference-Parser#translation_infotranslation
  * @returns The parsed quote organized in books, chapters and verses
  */
-export function parseQuote(quote: string, bcv: any, bibleIndex: BibleLanguage, bibleInfo: any): ParsedQuote {
+export function parseQuote(osisObject: OsisObject, bibleIndex: BibleLanguage, bibleInfo: any): ParsedQuote {
   let parsedQuote: ParsedQuote = { books: [], cite: '' };
 
-  // If the citation is empty return an empty parsedQuote
-  if (bcv.parse(quote).osis() === '') {
-    return parsedQuote;
-  }
-
-  // Options for the bcv parser
-  bcv.set_options({
-    osis_compaction_strategy: 'bcv',
-    consecutive_combination_strategy: 'separate',
-  });
-  let bvcParsedObject = bcv.parse(quote).parsed_entities()[0];
   let startBcv = null;
   let endBcv = null;
 
   // Normalized citation
-  parsedQuote.cite = osis2Cite(bvcParsedObject, bibleIndex, bibleInfo);
+  parsedQuote.cite = osis2Cite(osisObject, bibleIndex, bibleInfo);
 
-  for (let entity of bvcParsedObject.entities) {
+  for (let entity of osisObject.entities) {
     startBcv = entity.start;
     endBcv = entity.end;
 

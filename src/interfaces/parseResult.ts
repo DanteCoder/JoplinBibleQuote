@@ -6,5 +6,5 @@ export interface ParseResult {
 
 export interface ParsedEntity {
   versions: Array<string>;
-  osisIds: Array<string>;
+  osisObjects: Array<any>;
 }

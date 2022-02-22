@@ -47,16 +47,21 @@ export default function (context) {
         if (osisBibleResult.error) return ErrorManager(osisBibleResult.error);
 
         // Parse the block of bible code
-        const parsedEntities = parser(token.content, bcv, availableVersions);
+        const parseResult = parser(token.content, bcv, availableVersions);
+
+        // Pending ErrorManager generalization
+        if (parseResult.type === 'error') return '';
+
+        // Pending Help component
+        if (parseResult.type === 'help') return '';
 
         // Create the html to render
         const html = Main({
-          bcv,
           bibleIndex,
           bibleInfo,
           defaultOsisBible,
           osisBibles,
-          parsedEntities,
+          parsedEntities: parseResult.entities,
           pluginConfig,
         });
 

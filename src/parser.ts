@@ -1,3 +1,4 @@
+import { OsisObject } from './interfaces/osisObject';
 import { ParsedEntity, ParseResult } from './interfaces/parseResult';
 
 const versionKeyword = /^version\s"([^"]+)"$/;
@@ -21,11 +22,16 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     type: 'entities',
     entities: [
       {
-        osisIds: [],
+        osisObjects: [],
         versions: ['default'],
       },
     ],
   };
+
+  bcvParser.set_options({
+    osis_compaction_strategy: 'bcv',
+    consecutive_combination_strategy: 'separate',
+  });
 
   let errorMessage = null;
   linesLoop: for (const line of lines) {
@@ -41,8 +47,8 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
         break;
       }
 
-      // Push the parsed osisId
-      parseResult.entities[parseResult.entities.length - 1].osisIds.push(osisId);
+      const bcvParsedObject: OsisObject = bcvParser.parse(match[1]).parsed_entities()[0];
+      parseResult.entities[parseResult.entities.length - 1].osisObjects.push(bcvParsedObject);
       continue;
     }
 
@@ -115,7 +121,7 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     break;
   }
 
-  if (parseResult.entities[0].osisIds.length === 0 && errorMessage === null) {
+  if (parseResult.entities[0].osisObjects.length === 0 && errorMessage === null) {
     errorMessage = 'No citation specified. Try writing "(Genesis 1:1)"';
   }
 
@@ -159,7 +165,7 @@ function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>): 
   const prevEntity = entities[entities.length - 1];
 
   // Check if the previous entity has osisIds
-  if (prevEntity.osisIds.length === 0) {
+  if (prevEntity.osisObjects.length === 0) {
     // Check if the last version is 'default'
     if (prevEntity.versions[0] === 'default') {
       entities.pop();
@@ -172,7 +178,7 @@ function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>): 
   }
 
   entities.push({
-    osisIds: [],
+    osisObjects: [],
     versions: versions,
   });
 
