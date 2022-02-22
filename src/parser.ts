@@ -1,8 +1,10 @@
+import { ParsedEntity } from './interfaces/parsedEntity';
+
 const versionKeyword = /^version\s(.*)/;
 const versionsKeyword = /^versions\s(.*)/;
 const helpKeyword = /^help$/;
 const citationRegExp = /^\(([^\(\)]+)\)$/;
-const verRegExp = /^"([^"]+)"$/;
+const verRegExp = /^\s?"([^"]+)"$/;
 
 /**
  * Parses a block of bible code
@@ -11,9 +13,15 @@ const verRegExp = /^"([^"]+)"$/;
  * @param availableVersions
  * @returns An object containing the parsed entities
  */
-export default function parser(tokenContent: string, bcvParser: any, availableVersions: Array<string>): Array<Entity> {
+export default function parser(
+  tokenContent: string,
+  bcvParser: any,
+  availableVersions: Array<string>
+): Array<Array<ParsedEntity>> {
+  console.log('🚀 ~ file: parser.ts ~ line 21 ~ availableVersions', availableVersions);
   const lines = tokenContent.split('\n');
-  const parsedEntities: Array<Entity> = [];
+  const parsedEntities: Array<Array<ParsedEntity>> = [[]];
+  let index = 0;
 
   let versions = ['default'];
   for (const line of lines) {
@@ -24,10 +32,10 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     if (match) {
       // Check if the citation is valid
       if (bcvParser.parse(match[1]).osis() === '') {
-        return [{ type: 'error', content: `Invalid citation: "${match[1]}"` }];
+        return [[{ type: 'error', content: `Invalid citation: "${match[1]}"` }]];
       }
 
-      parsedEntities.push({
+      parsedEntities[index].push({
         type: 'citation',
         content: { citation: match[1], versions },
       });
@@ -39,14 +47,15 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     if (match) {
       // Check if there is something after the "version" keyword
       if (match[1] === null) {
-        return [{ type: 'error', content: `You must specify Bible version after keyword "version"` }];
+        return [[{ type: 'error', content: `You must specify Bible version after keyword "version"` }]];
       }
 
       // Extract the version
       const versionMatchResult = extractVersion(match[1], availableVersions);
-      if (versionMatchResult.type === 'error') return [versionMatchResult];
+      if (versionMatchResult.type === 'error') return [[versionMatchResult]];
 
       versions = [versionMatchResult.content];
+      if (parsedEntities[0].length > 0) index += 1;
       continue;
     }
 
@@ -55,28 +64,29 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     if (match) {
       // Check if there is something after the "versions" keyword
       if (match[1] === null)
-        return [{ type: 'error', content: `You must specify Bible versions after keyword "versions"` }];
+        return [[{ type: 'error', content: `You must specify Bible versions after keyword "versions"` }]];
 
       // Extract the versions
       versions = [];
-      const _versions = match[1].split(' ');
+      const _versions = match[1].split(',');
       for (const version of _versions) {
         const versionMatchResult = extractVersion(version, availableVersions);
-        if (versionMatchResult.type === 'error') return [versionMatchResult];
+        if (versionMatchResult.type === 'error') return [[versionMatchResult]];
         versions.push(versionMatchResult.content);
       }
+      if (parsedEntities[0].length > 0) index += 1;
       continue;
     }
 
     // If the keyword is "help" send help
     match = line.match(helpKeyword);
     if (match) {
-      return [{ type: 'help', content: 'Help is on the way!' }];
+      return [[{ type: 'help', content: 'Help is on the way!' }]];
     }
   }
 
-  if (parsedEntities.length === 0) {
-    return [{ type: 'error', content: 'No citations specified' }];
+  if (parsedEntities[0].length === 0) {
+    return [[{ type: 'error', content: 'No citations specified' }]];
   }
 
   return parsedEntities;
@@ -88,7 +98,7 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
  * @param availableVersions
  * @returns An object containing the extracted version or an error
  */
-function extractVersion(string: string, availableVersions: Array<string>): Entity {
+function extractVersion(string: string, availableVersions: Array<string>): ParsedEntity {
   // Extract the version
   const versionMatch = string.match(verRegExp);
 
@@ -102,9 +112,4 @@ function extractVersion(string: string, availableVersions: Array<string>): Entit
     return { type: 'error', content: `Not imported Bible version: "${versionMatch[1]}"` };
   }
   return { type: 'version', content: versionMatch[1] };
-}
-
-interface Entity {
-  type: 'citation' | 'help' | 'error' | 'version';
-  content: any;
 }
