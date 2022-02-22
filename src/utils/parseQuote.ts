@@ -1,8 +1,7 @@
 import { osis2Cite } from './osis2Cite';
 import { BibleLanguage } from 'src/interfaces/bibleIndex';
-import { OsisParts } from 'src/interfaces/osisParts';
 import { ParsedQuote } from 'src/interfaces/parsedQuote';
-import { OsisObject } from 'src/interfaces/osisObject';
+import { BCV, OsisObject } from 'src/interfaces/osisObject';
 
 /**
  * Parses a bible quote like "Genesis 1:1" into a JS object.
@@ -117,21 +116,21 @@ export function parseQuote(osisObject: OsisObject, bibleIndex: BibleLanguage, bi
    */
   function push2ParsedQuote(singleOsisVerse: string): void {
     const split = singleOsisVerse.split('.');
-    const osisParts: OsisParts = {
-      bookId: split[0],
-      chapter: parseInt(split[1]),
-      verse: parseInt(split[2]),
+    const osisParts: BCV = {
+      b: split[0],
+      c: parseInt(split[1]),
+      v: parseInt(split[2]),
     };
     let lastBookIndex: number = null;
     let lastChapterIndex: number = null;
 
-    const bookNumber = bibleInfo.order[osisParts.bookId];
+    const bookNumber = bibleInfo.order[osisParts.b];
     const bookName = bibleIndex.books[bookNumber - 1];
 
     // Push the book if there are no books in parsedQuote
     if (parsedQuote.books.length === 0) {
       parsedQuote.books.push({
-        id: osisParts.bookId,
+        id: osisParts.b,
         num: bookNumber,
         name: bookName,
         chapters: [],
@@ -140,9 +139,9 @@ export function parseQuote(osisObject: OsisObject, bibleIndex: BibleLanguage, bi
     // Push the book to parsedQuote only if it's different from the last pushed book pushed
     else {
       lastBookIndex = parsedQuote.books.length - 1;
-      if (parsedQuote.books[lastBookIndex].id !== osisParts.bookId) {
+      if (parsedQuote.books[lastBookIndex].id !== osisParts.b) {
         parsedQuote.books.push({
-          id: osisParts.bookId,
+          id: osisParts.b,
           num: bookNumber,
           name: bookName,
           chapters: [],
@@ -154,16 +153,16 @@ export function parseQuote(osisObject: OsisObject, bibleIndex: BibleLanguage, bi
     // Push the chapter to the last book pushed if the book is empty
     if (parsedQuote.books[lastBookIndex].chapters.length === 0) {
       parsedQuote.books[lastBookIndex].chapters.push({
-        id: osisParts.chapter,
+        id: osisParts.c,
         verses: [],
       });
     }
     // Push the chapter to the last book pushed only if it's different from the last pushed chapter
     else {
       lastChapterIndex = parsedQuote.books[lastBookIndex].chapters.length - 1;
-      if (parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].id !== osisParts.chapter) {
+      if (parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].id !== osisParts.c) {
         parsedQuote.books[lastBookIndex].chapters.push({
-          id: osisParts.chapter,
+          id: osisParts.c,
           verses: [],
         });
       }
@@ -171,7 +170,7 @@ export function parseQuote(osisObject: OsisObject, bibleIndex: BibleLanguage, bi
     lastChapterIndex = parsedQuote.books[lastBookIndex].chapters.length - 1;
 
     // Push the verse to the last chapter pushed
-    parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].verses.push(osisParts.verse);
+    parsedQuote.books[lastBookIndex].chapters[lastChapterIndex].verses.push(osisParts.v);
   }
 
   return parsedQuote;
