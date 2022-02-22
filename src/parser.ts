@@ -5,7 +5,6 @@ const versionsKeyword = /^versions\s("[^"]+"(?:,\s?"[^"]+")*)$/;
 const helpKeyword = /^help$/;
 const emptyLine = /^\s*$/;
 const citationRegExp = /^\(([^\(\)]+)\)$/;
-const verRegExp = /^\s?"([^"]+)"$/;
 
 /**
  * Parses a block of bible code into groups of ParsedEntities
