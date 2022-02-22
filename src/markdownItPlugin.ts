@@ -1,14 +1,18 @@
 import { BibleLanguage } from './interfaces/bibleIndex';
 import { getOsisBible } from './utils/getOsisBible';
+import { getOsisBibles } from './utils/getOsisBibles';
 import { getPluginConfig } from './utils/getPluginConfig';
 import bibleIndexFull from './bibleIndex';
 import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
+import parser from './parser';
 
 let pluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLang];
-let importResult = getOsisBible(pluginConfig.biblePath);
-let osisBible = importResult.osisBible;
+let osisBibleResult = getOsisBible(pluginConfig.biblePath);
+let defaultOsisBible = osisBibleResult.osisBible;
+let osisBibles = getOsisBibles(pluginConfig.biblesPath);
+let availableVersions = osisBibles.map((bible) => bible.$.osisIDWork);
 let bcv = importBcvParser(pluginConfig.citeLang);
 const bibleInfo = bcv.translation_info();
 
@@ -32,24 +36,28 @@ export default function (context) {
           localStorage.setItem('bibleQuoteSettingsUpdated', 'false');
           pluginConfig = getPluginConfig();
           bibleIndex = bibleIndexFull[pluginConfig.bookNamesLang];
-          importResult = getOsisBible(pluginConfig.biblePath);
-          osisBible = importResult.osisBible;
+          osisBibleResult = getOsisBible(pluginConfig.biblePath);
+          defaultOsisBible = osisBibleResult.osisBible;
+          osisBibles = getOsisBibles(pluginConfig.biblesPath);
+          availableVersions = osisBibles.map((bible) => bible.$.osisIDWork);
           bcv = importBcvParser(pluginConfig.citeLang);
         }
 
-        // Invalid osis Bible import handle
-        if (importResult.error) return ErrorManager(importResult.error);
+        // Invalid main osis Bible import handle
+        if (osisBibleResult.error) return ErrorManager(osisBibleResult.error);
 
-        // Extract the citations from the block of text
-        const citations = token.content.replace(/\n/g, ' ').match(/\(.*?\)/g);
+        // Parse the block of bible code
+        const parsedEntities = parser(token.content, bcv, availableVersions);
+        console.log('🚀 ~ file: markdownItPlugin.ts ~ line 51 ~ parsedEntities', parsedEntities);
 
         // Create the html to render
         const html = Main({
           bcv,
           bibleIndex,
           bibleInfo,
-          citations,
-          osisBible,
+          defaultOsisBible,
+          osisBibles,
+          parsedEntities,
           pluginConfig,
         });
 

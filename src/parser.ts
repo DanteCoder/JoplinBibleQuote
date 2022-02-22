@@ -7,7 +7,9 @@ const citationRegExp = /^\(([^\(\)]+)\)$/;
 const verRegExp = /^\s?"([^"]+)"$/;
 
 /**
- * Parses a block of bible code
+ * Parses a block of bible code into groups of ParsedEntities
+ * grouped by bible version. On each "version" or "versions"
+ * keyword a new group is created
  * @param tokenContent
  * @param bcvParser
  * @param availableVersions
@@ -18,10 +20,8 @@ export default function parser(
   bcvParser: any,
   availableVersions: Array<string>
 ): Array<Array<ParsedEntity>> {
-  console.log('🚀 ~ file: parser.ts ~ line 21 ~ availableVersions', availableVersions);
   const lines = tokenContent.split('\n');
   const parsedEntities: Array<Array<ParsedEntity>> = [[]];
-  let index = 0;
 
   let versions = ['default'];
   for (const line of lines) {
@@ -35,7 +35,7 @@ export default function parser(
         return [[{ type: 'error', content: `Invalid citation: "${match[1]}"` }]];
       }
 
-      parsedEntities[index].push({
+      parsedEntities[parsedEntities.length - 1].push({
         type: 'citation',
         content: { citation: match[1], versions },
       });
@@ -55,7 +55,7 @@ export default function parser(
       if (versionMatchResult.type === 'error') return [[versionMatchResult]];
 
       versions = [versionMatchResult.content];
-      if (parsedEntities[0].length > 0) index += 1;
+      if (parsedEntities[0].length > 0) parsedEntities.push([]);
       continue;
     }
 
@@ -72,9 +72,10 @@ export default function parser(
       for (const version of _versions) {
         const versionMatchResult = extractVersion(version, availableVersions);
         if (versionMatchResult.type === 'error') return [[versionMatchResult]];
+        if (versions.includes(versionMatchResult.content)) continue;
         versions.push(versionMatchResult.content);
       }
-      if (parsedEntities[0].length > 0) index += 1;
+      if (parsedEntities[0].length > 0) parsedEntities.push([]);
       continue;
     }
 
@@ -87,6 +88,10 @@ export default function parser(
 
   if (parsedEntities[0].length === 0) {
     return [[{ type: 'error', content: 'No citations specified' }]];
+  }
+
+  if (parsedEntities[parsedEntities.length - 1].length === 0) {
+    parsedEntities.pop();
   }
 
   return parsedEntities;
@@ -109,7 +114,12 @@ function extractVersion(string: string, availableVersions: Array<string>): Parse
 
   // Check if the version is valid
   if (!availableVersions.includes(versionMatch[1])) {
-    return { type: 'error', content: `Not imported Bible version: "${versionMatch[1]}"` };
+    return {
+      type: 'error',
+      content: `Not imported Bible version: "${versionMatch[1]}".<br>
+      Available versions:<br>
+      ${availableVersions.toString().replace(/,/g, '<br>')}`,
+    };
   }
   return { type: 'version', content: versionMatch[1] };
 }
