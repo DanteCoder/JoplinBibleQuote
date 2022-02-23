@@ -21,7 +21,7 @@ export function getOsisBibles(biblesPath: string): Array<OsisBible> {
   // Try to open the Bible files
   for (const file of files) {
     const result = getOsisBible(path.join(biblesPath, file.name));
-    if (result.error) continue;
+    if (result.errorMessage) continue;
     osisBibles.push(result.osisBible);
   }
 

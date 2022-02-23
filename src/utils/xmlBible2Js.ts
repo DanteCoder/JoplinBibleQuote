@@ -1,4 +1,5 @@
 import fs = require('fs');
+import { OsisBible } from 'src/interfaces/osisBible';
 import { parseString as parseXmlString } from 'xml2js';
 
 /**
@@ -12,16 +13,25 @@ export function xmlBible2Js(biblePath: string): ReturnValue {
   try {
     xmlFile = fs.readFileSync(biblePath, 'utf8');
   } catch (error) {
-    return { parsedBible: null, error };
+    if (error.code === 'ENOENT') {
+      return { errorMessage: `Invalid path "${biblePath}"` };
+    }
+    if (error.code === 'EISDIR') {
+      return { errorMessage: 'There is no selected path for the default OSIS Bible' };
+    }
   }
-  parseXmlString(xmlFile, (error: Error, result: any) => {
-    returnValue = { parsedBible: result, error };
+  parseXmlString(xmlFile, (error: any, result: any) => {
+    if (error) {
+      returnValue = { errorMessage: `Error opening the file "${biblePath}". Error Message:\n\n` + String(error) };
+      return;
+    }
+    returnValue = { parsedBible: result };
   });
 
   return returnValue;
 }
 
 interface ReturnValue {
-  parsedBible: any;
-  error: Error;
+  parsedBible?: any;
+  errorMessage?: string;
 }

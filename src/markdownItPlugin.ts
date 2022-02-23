@@ -43,14 +43,14 @@ export default function (context) {
           bcv = importBcvParser(pluginConfig.citeLang);
         }
 
-        // Invalid main osis Bible import handle
-        if (osisBibleResult.error) return ErrorManager(osisBibleResult.error);
+        // Handle osis bible import errors
+        if (osisBibleResult.errorMessage) return ErrorManager(osisBibleResult.errorMessage);
 
         // Parse the block of bible code
         const parseResult = parser(token.content, bcv, availableVersions);
 
-        // Pending ErrorManager generalization
-        if (parseResult.type === 'error') return '';
+        // Handle parsing errors
+        if (parseResult.type === 'error') return ErrorManager(parseResult.errorMessage);
 
         // Pending Help component
         if (parseResult.type === 'help') return '';

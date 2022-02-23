@@ -110,14 +110,7 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     if (match) continue;
 
     // If there is no match
-    errorMessage =
-      `Invalid syntax: ${line}\n` +
-      'Available syntaxes are:\n' +
-      '(Genesis 1:1)\n\n' +
-      'version "YourVersion"\n' +
-      '(Genesis 1:1)\n\n' +
-      'versions "Version1", "Version2"\n' +
-      '(Genesis 1:1)\n';
+    errorMessage = `Invalid syntax: ${line}\nType "help" for a list of commands`;
     break;
   }
 

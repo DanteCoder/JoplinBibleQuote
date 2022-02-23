@@ -8,27 +8,24 @@ import { xmlBible2Js } from './xmlBible2Js';
  * was an error importing the bible
  */
 export function getOsisBible(biblePath: string): ReturnValue {
-  const returnValue = { osisBible: null, error: undefined };
-
   const result = xmlBible2Js(biblePath);
 
   // Handle xml import errors
-  if (result.error) {
-    returnValue.error = result.error;
-    return returnValue;
+  if (result.errorMessage) {
+    return { errorMessage: result.errorMessage };
   }
 
   // Handle invalid OSIS xml erros
-  try {
-    returnValue.osisBible = result.parsedBible.osis.osisText[0];
-  } catch (error) {
-    returnValue.error = error;
+  if (!result.parsedBible?.osis?.osisText?.[0]) {
+    return {
+      errorMessage: `Error importing the xml file "${biblePath}"\n Is the file a valid osis xml Bible?`,
+    };
   }
 
-  return returnValue;
+  return { osisBible: result.parsedBible?.osis?.osisText?.[0] };
 }
 
 interface ReturnValue {
-  osisBible: OsisBible;
-  error: Error;
+  osisBible?: OsisBible;
+  errorMessage?: string;
 }
