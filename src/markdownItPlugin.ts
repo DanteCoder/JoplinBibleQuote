@@ -5,6 +5,7 @@ import { getPluginConfig } from './utils/getPluginConfig';
 import bibleIndexFull from './bibleIndex';
 import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
+import Help from './components/Help';
 import parser from './parser';
 
 let pluginConfig = getPluginConfig();
@@ -53,7 +54,7 @@ export default function (context) {
         if (parseResult.type === 'error') return ErrorManager(parseResult.errorMessage);
 
         // Pending Help component
-        if (parseResult.type === 'help') return '';
+        if (parseResult.type === 'help') return Help();
 
         // Create the html to render
         const html = Main({
