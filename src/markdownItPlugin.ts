@@ -53,7 +53,7 @@ export default function (context) {
         // Handle parsing errors
         if (parseResult.type === 'error') return ErrorManager(parseResult.errorMessage);
 
-        // Pending Help component
+        // Handle "help" command
         if (parseResult.type === 'help') return Help();
 
         // Create the html to render

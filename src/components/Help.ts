@@ -32,7 +32,7 @@ export default function Help() {
     'command: versions "VER-1", "VER-2", "VER-N"\n' +
     'action: Displays the following citations on multiple versions.\n' +
     'e.g.\n' +
-    'version "KJV", "RVR"\n' +
+    'versions "KJV", "RVR"\n' +
     '(Genesis 1:1)\n' +
     '(John 3:16)'
   ).replace(/\n/g, '<br>');
