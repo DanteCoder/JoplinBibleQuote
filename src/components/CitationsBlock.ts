@@ -3,6 +3,7 @@ import { OsisBible } from '../interfaces/osisBible';
 import { ParsedQuote } from '../interfaces/parsedQuote';
 import { cssObj2String } from '../utils/cssObj2String';
 import { getVerseText } from '../utils/getVerseText';
+import bibleIndexFull from '../bibleIndex';
 import Book from './Book';
 import Chapter from './Chapter';
 import Citation from './Citation';
@@ -52,7 +53,7 @@ export default function CitationsBlock(props: Props) {
         chaptersHTML.push(
           Chapter({
             verses: versesHTML,
-            text: pluginConfig.chapterTitleText,
+            text: bibleIndexFull[pluginConfig.bookNamesLang].chapterTitle,
             number: chapter.id,
             displayChapter:
               pluginConfig.displayFormat === 'full' ||
