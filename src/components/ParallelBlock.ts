@@ -8,6 +8,7 @@ import bibleIndexFull from '../bibleIndex';
 import ChapterTitle from './ChapterTitle';
 import ParallelVerses from './ParallelVerses';
 import BookName from './BookTitle';
+import FullCitation from './FullCitation';
 
 /**
  * Creates the html for parallel bible versions
@@ -27,6 +28,27 @@ export default function ParallelBlock(props: Props) {
 
   for (const osisObject of parsedEntity.osisObjects) {
     const parsedQuote = parseQuote(osisObject, bibleIndex, bibleInfo);
+
+    const citationsDiv = document.createElement('div');
+    citationsDiv.setAttribute(
+      'style',
+      cssObj2String({
+        display: 'grid',
+        columnGap: `${pluginConfig.verseFontSize}px`,
+        gridTemplateColumns: '1fr '.repeat(parsedEntity.versions.length),
+      })
+    );
+    for (const version of parsedEntity.versions) {
+      citationsDiv.innerHTML += FullCitation({
+        citation: parsedQuote.cite,
+        displayOsisIDWork: true,
+        osisIDWork: version,
+        style: {
+          fontSize: `${pluginConfig.verseFontSize}px`,
+        },
+      });
+    }
+    html.appendChild(citationsDiv);
 
     for (const book of parsedQuote.books) {
       if (

@@ -1,4 +1,4 @@
-import { cssObj2String } from '../utils/cssObj2String';
+import FullCitation from './FullCitation';
 
 /**
  * Creates the html for a citation
@@ -10,13 +10,7 @@ export default function Citation(props: Props) {
   const html = document.createElement('div');
 
   if (displayFullCitation) {
-    const citationTitle = document.createElement('h3');
-    citationTitle.setAttribute('style', cssObj2String(style));
-    citationTitle.innerHTML = `<b>${citation}<b>`;
-
-    if (displayOsisIDWork) citationTitle.innerHTML += `<b> (${osisIDWork})<b>`;
-
-    html.appendChild(citationTitle);
+    html.innerHTML += FullCitation({ citation, displayOsisIDWork, osisIDWork, style });
   }
 
   for (const book of books) {
