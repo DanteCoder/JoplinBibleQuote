@@ -5,9 +5,9 @@ import { ParsedEntity } from '../interfaces/parseResult';
 import { cssObj2String } from '../utils/cssObj2String';
 import { parseQuote } from '../utils/parseQuote';
 import bibleIndexFull from '../bibleIndex';
-import ParallelChapter from './ParallelChapter';
+import ChapterTitle from './ChapterTitle';
 import ParallelVerses from './ParallelVerses';
-import ParallelBook from './ParallelBook';
+import BookName from './BookTitle';
 
 /**
  * Creates the html for parallel bible versions
@@ -29,18 +29,35 @@ export default function ParallelBlock(props: Props) {
     const parsedQuote = parseQuote(osisObject, bibleIndex, bibleInfo);
 
     for (const book of parsedQuote.books) {
-      html.innerHTML += ParallelBook({
-        displayName:
-          pluginConfig.displayFormat === 'full' ||
-          (pluginConfig.displayFormat === 'cite' && parsedQuote.books.length > 1),
-        name: book.name,
-        style: {
-          textAlign: pluginConfig.bookAlignment,
-        },
-        versions: parsedEntity.versions.length,
-      });
+      if (
+        pluginConfig.displayFormat === 'full' ||
+        (pluginConfig.displayFormat === 'cite' && parsedQuote.books.length > 1)
+      ) {
+        html.innerHTML += BookName({
+          name: book.name,
+          style: {
+            textAlign: pluginConfig.bookAlignment,
+          },
+        });
+      }
+
       for (const chapter of book.chapters) {
-        const parallelVerses = ParallelVerses({
+        if (
+          pluginConfig.displayFormat === 'full' ||
+          (pluginConfig.displayFormat === 'cite' && (parsedQuote.books.length > 1 || book.chapters.length > 1))
+        ) {
+          html.innerHTML += ChapterTitle({
+            number: chapter.id,
+            style: {
+              fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
+              padding: `${pluginConfig.chapterPadding}px`,
+              textAlign: pluginConfig.chapterAlignment,
+            },
+            text: bibleIndexFull[pluginConfig.bookNamesLang].chapterTitle,
+          });
+        }
+
+        html.innerHTML += ParallelVerses({
           bookNum: book.num,
           chapter: chapter,
           osisBibles,
@@ -49,19 +66,6 @@ export default function ParallelBlock(props: Props) {
             fontSize: `${pluginConfig.verseFontSize}px`,
             textAlign: pluginConfig.verseAlignment,
           },
-        });
-
-        html.innerHTML += ParallelChapter({
-          versions: parsedEntity.versions.length,
-          displayChapter: true,
-          number: chapter.id,
-          parallelVerses,
-          style: {
-            fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
-            padding: `${pluginConfig.chapterPadding}px`,
-            textAlign: pluginConfig.chapterAlignment,
-          },
-          text: bibleIndexFull[pluginConfig.bookNamesLang].chapterTitle,
         });
       }
     }

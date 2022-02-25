@@ -1,4 +1,4 @@
-import { cssObj2String } from '../utils/cssObj2String';
+import BookName from './BookTitle';
 
 /**
  * Creates the html for a book
@@ -10,10 +10,7 @@ export default function Book(props: Props) {
   const html = document.createElement('div');
 
   if (displayName) {
-    const bookNameTitle = document.createElement('h2');
-    bookNameTitle.setAttribute('style', cssObj2String(style));
-    bookNameTitle.innerHTML = `<b>${name}<b>`;
-    html.appendChild(bookNameTitle);
+    html.innerHTML += BookName({ name, style });
   }
 
   for (const chapter of chapters) {

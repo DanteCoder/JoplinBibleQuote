@@ -1,4 +1,4 @@
-import { cssObj2String } from '../utils/cssObj2String';
+import ChapterTitle from './ChapterTitle';
 
 /**
  * Creates the html for a chapter
@@ -10,10 +10,7 @@ export default function Chapter(props: Props) {
   const html = document.createElement('div');
 
   if (displayChapter) {
-    const chapterTitle = document.createElement('h3');
-    chapterTitle.setAttribute('style', cssObj2String(style));
-    chapterTitle.innerHTML = `${text} ${number}`;
-    html.appendChild(chapterTitle);
+    html.innerHTML += ChapterTitle({ number, style, text });
   }
 
   const versesDiv = document.createElement('div');

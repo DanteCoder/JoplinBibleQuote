@@ -57,7 +57,7 @@ export default function CitationsBlock(props: Props) {
             number: chapter.id,
             displayChapter:
               pluginConfig.displayFormat === 'full' ||
-              (pluginConfig.displayFormat === 'cite' && book.chapters.length > 1),
+              (pluginConfig.displayFormat === 'cite' && (book.chapters.length > 1 || fullQuote.books.length > 1)),
             style: {
               fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
               padding: `${pluginConfig.chapterPadding}px`,
