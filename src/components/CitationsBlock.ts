@@ -93,8 +93,7 @@ export default function CitationsBlock(props: Props) {
       },
     });
 
-    // Add a line separator after the citation if theres is more than one
-    // and don't add a separator to the last one
+    // Add a line separator between citations
     if (fullQuote !== parsedQuotes[parsedQuotes.length - 1]) {
       html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
     }

@@ -91,6 +91,11 @@ export default function ParallelBlock(props: Props) {
         });
       }
     }
+
+    // Add a line separator between citations
+    if (osisObject !== parsedEntity.osisObjects[parsedEntity.osisObjects.length - 1]) {
+      html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
+    }
   }
 
   return html.outerHTML;
