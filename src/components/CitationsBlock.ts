@@ -48,7 +48,7 @@ export default function CitationsBlock(props: Props) {
         for (const chapter of book.chapters) {
           const versesHTML = [];
           for (let verse of chapter.verses) {
-            const verseText = getVerseText(defaultOsisBible, { book: book.num, chapter: chapter.id, verse });
+            const verseText = getVerseText(defaultOsisBible, { b: book.id, c: chapter.id, v: verse });
             versesHTML.push(
               Verse({
                 text: verseText,

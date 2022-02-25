@@ -80,7 +80,7 @@ export default function ParallelBlock(props: Props) {
         }
 
         html.innerHTML += ParallelVerses({
-          bookNum: book.num,
+          bookId: book.id,
           chapter: chapter,
           osisBibles,
           versions: parsedEntity.versions,

@@ -10,7 +10,7 @@ import Verse from './Verse';
  * @returns html string
  */
 export default function ParallelVerses(props: Props) {
-  const { bookNum, chapter, osisBibles, style, versions } = props;
+  const { bookId, chapter, osisBibles, style, versions } = props;
   const html = document.createElement('div');
   html.setAttribute(
     'style',
@@ -26,7 +26,7 @@ export default function ParallelVerses(props: Props) {
     for (const version of versions) {
       const verseText = getVerseText(
         osisBibles.find((bible) => bible.$.osisIDWork === version),
-        { book: bookNum, chapter: chapter.id, verse }
+        { b: bookId, c: chapter.id, v: verse }
       );
 
       html.innerHTML += Verse({ displayNumber: true, number: verse, text: verseText, style });
@@ -37,7 +37,7 @@ export default function ParallelVerses(props: Props) {
 }
 
 interface Props {
-  bookNum: number;
+  bookId: string;
   chapter: Chapter;
   versions: Array<string>;
   osisBibles: Array<OsisBible>;
