@@ -1,8 +1,8 @@
 import { OsisObject } from './interfaces/osisObject';
-import { ParsedEntity, ParseResult } from './interfaces/parseResult';
+import { EntityOptions, ParsedEntity, ParseResult } from './interfaces/parseResult';
 
 const versionKeyword = /^version\s"([^"]+)"$/;
-const versionsKeyword = /^versions\s("[^"]+"(?:,\s?"[^"]+")*)$/;
+const versionsKeyword = /^versions\s("[^"]+"(?:,\s?"[^"]+")*)(?: (par))?$/;
 const helpKeyword = /^help$/;
 const emptyLine = /^\s*$/;
 const citationRegExp = /^\(([^\(\)]+)\)$/;
@@ -90,7 +90,12 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
         extractedVersions.push(versionMatchResult.version);
       }
 
-      const pushResult = pushNewEntity(parseResult.entities, extractedVersions);
+      // Check for the keyword "par"
+      const options: EntityOptions = {
+        parallel: match[2] ? true : false,
+      };
+
+      const pushResult = pushNewEntity(parseResult.entities, extractedVersions, options);
       if (pushResult.type === 'error') {
         errorMessage = pushResult.errorMessage;
         break;
@@ -152,9 +157,10 @@ function extractVersion(string: string, availableVersions: Array<string>): Extra
  * Creates a new entity in the entities array of the ParseResult
  * @param entities
  * @param versions
+ * @param options
  * @returns The result of the push
  */
-function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>): PushResult {
+function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>, options?: EntityOptions): PushResult {
   const prevEntity = entities[entities.length - 1];
 
   // Check if the previous entity has osisIds
@@ -172,7 +178,8 @@ function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>): 
 
   entities.push({
     osisObjects: [],
-    versions: versions,
+    versions,
+    options,
   });
 
   return { type: 'success' };

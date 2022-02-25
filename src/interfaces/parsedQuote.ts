@@ -10,7 +10,7 @@ interface Book {
   chapters: Array<Chapter>;
 }
 
-interface Chapter {
+export interface Chapter {
   id: number;
   verses: Array<number>;
 }
