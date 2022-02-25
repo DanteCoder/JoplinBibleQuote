@@ -1,11 +1,10 @@
 import { BibleLanguage } from '../interfaces/bibleIndex';
 import { PluginConfig } from '../interfaces/config';
 import { OsisBible } from '../interfaces/osisBible';
-import { ParsedQuote } from '../interfaces/parsedQuote';
 import { ParsedEntity } from '../interfaces/parseResult';
 import { cssObj2String } from '../utils/cssObj2String';
-import { parseQuote } from '../utils/parseQuote';
 import CitationsBlock from './CitationsBlock';
+import ParallelBlock from './ParallelBlock';
 
 /**
  * Creates the html for the render
@@ -18,33 +17,28 @@ export default function Main(props: Props) {
   html.setAttribute('style', `border:1px solid #545454;`);
 
   for (const entity of parsedEntities) {
-    const parsedQuotes: Array<ParsedQuote> = [];
-    for (const osisObject of entity.osisObjects) {
-      parsedQuotes.push(parseQuote(osisObject, bibleIndex, bibleInfo));
-    }
-
-    for (const version of entity.versions) {
-      let osisBible: OsisBible;
-      if (version === 'default') {
-        osisBible = defaultOsisBible;
-      } else {
-        osisBible = osisBibles.find((bible) => bible.$.osisIDWork === version);
-      }
-
-      html.innerHTML += CitationsBlock({
-        osisBible,
-        parsedQuotes,
+    if (entity.options?.parallel) {
+      html.innerHTML += ParallelBlock({
+        bibleIndex,
+        bibleInfo,
+        osisBibles,
+        parsedEntity: entity,
         pluginConfig,
       });
-
-      if (version === entity.versions[entity.versions.length - 1]) continue;
-      html.innerHTML += `<hr style="${cssObj2String({
-        border: 'none',
-        borderTop: '3px double grey',
-        marginLeft: '30px',
-        marginRight: '30px',
-      })}">`;
     }
+
+    if (!entity.options?.parallel) {
+      html.innerHTML += CitationsBlock({
+        bibleIndex,
+        bibleInfo,
+        defaultOsisBible,
+        entity,
+        osisBibles,
+        pluginConfig,
+      });
+    }
+
+    // Add a line separator between blocks
     if (entity === parsedEntities[parsedEntities.length - 1]) continue;
     html.innerHTML += `<hr style="${cssObj2String({
       border: 'none',

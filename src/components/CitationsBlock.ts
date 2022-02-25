@@ -8,6 +8,9 @@ import Book from './Book';
 import Chapter from './Chapter';
 import Citation from './Citation';
 import Verse from './Verse';
+import { ParsedEntity } from '../interfaces/parseResult';
+import { parseQuote } from '../utils/parseQuote';
+import { BibleLanguage } from '../interfaces/bibleIndex';
 
 /**
  * Creates the html for a list of citations
@@ -15,7 +18,7 @@ import Verse from './Verse';
  * @returns html string
  */
 export default function CitationsBlock(props: Props) {
-  const { osisBible, parsedQuotes, pluginConfig } = props;
+  const { bibleIndex, bibleInfo, defaultOsisBible, entity, osisBibles, pluginConfig } = props;
   const html = document.createElement('div');
 
   html.setAttribute(
@@ -25,85 +28,111 @@ export default function CitationsBlock(props: Props) {
     })
   );
 
-  for (const fullQuote of parsedQuotes) {
-    const booksHtml = [];
-    for (const book of fullQuote.books) {
-      const chaptersHTML = [];
-      for (const chapter of book.chapters) {
-        const versesHTML = [];
-        for (let verse of chapter.verses) {
-          const verseText = getVerseText(osisBible, { book: book.num, chapter: chapter.id, verse });
-          versesHTML.push(
-            Verse({
-              text: verseText,
-              number: verse,
-              displayNumber:
+  const parsedQuotes: Array<ParsedQuote> = [];
+  for (const osisObject of entity.osisObjects) {
+    parsedQuotes.push(parseQuote(osisObject, bibleIndex, bibleInfo));
+  }
+
+  for (const version of entity.versions) {
+    let osisBible: OsisBible;
+    if (version === 'default') {
+      osisBible = defaultOsisBible;
+    } else {
+      osisBible = osisBibles.find((bible) => bible.$.osisIDWork === version);
+    }
+
+    for (const fullQuote of parsedQuotes) {
+      const booksHtml = [];
+      for (const book of fullQuote.books) {
+        const chaptersHTML = [];
+        for (const chapter of book.chapters) {
+          const versesHTML = [];
+          for (let verse of chapter.verses) {
+            const verseText = getVerseText(defaultOsisBible, { book: book.num, chapter: chapter.id, verse });
+            versesHTML.push(
+              Verse({
+                text: verseText,
+                number: verse,
+                displayNumber:
+                  pluginConfig.displayFormat === 'full' ||
+                  chapter.verses.length > 1 ||
+                  book.chapters.length > 1 ||
+                  fullQuote.books.length > 1,
+                style: {
+                  fontSize: `${pluginConfig.verseFontSize}px`,
+                  textAlign: pluginConfig.verseAlignment,
+                },
+              })
+            );
+          }
+
+          chaptersHTML.push(
+            Chapter({
+              verses: versesHTML,
+              text: bibleIndexFull[pluginConfig.bookNamesLang].chapterTitle,
+              number: chapter.id,
+              displayChapter:
                 pluginConfig.displayFormat === 'full' ||
-                chapter.verses.length > 1 ||
-                book.chapters.length > 1 ||
-                fullQuote.books.length > 1,
+                (pluginConfig.displayFormat === 'cite' && (book.chapters.length > 1 || fullQuote.books.length > 1)),
               style: {
-                fontSize: `${pluginConfig.verseFontSize}px`,
-                textAlign: pluginConfig.verseAlignment,
+                fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
+                padding: `${pluginConfig.chapterPadding}px`,
+                textAlign: pluginConfig.chapterAlignment,
+                textIndent: `${pluginConfig.verseFontSize * 2}px`,
               },
             })
           );
         }
 
-        chaptersHTML.push(
-          Chapter({
-            verses: versesHTML,
-            text: bibleIndexFull[pluginConfig.bookNamesLang].chapterTitle,
-            number: chapter.id,
-            displayChapter:
+        booksHtml.push(
+          Book({
+            chapters: chaptersHTML,
+            name: book.name,
+            displayName:
               pluginConfig.displayFormat === 'full' ||
-              (pluginConfig.displayFormat === 'cite' && (book.chapters.length > 1 || fullQuote.books.length > 1)),
+              (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
             style: {
-              fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
-              padding: `${pluginConfig.chapterPadding}px`,
-              textAlign: pluginConfig.chapterAlignment,
-              textIndent: `${pluginConfig.verseFontSize * 2}px`,
+              textAlign: pluginConfig.bookAlignment,
             },
           })
         );
       }
 
-      booksHtml.push(
-        Book({
-          chapters: chaptersHTML,
-          name: book.name,
-          displayName:
-            pluginConfig.displayFormat === 'full' ||
-            (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
-          style: {
-            textAlign: pluginConfig.bookAlignment,
-          },
-        })
-      );
+      html.innerHTML += Citation({
+        books: booksHtml,
+        citation: fullQuote.cite,
+        osisIDWork: osisBible.$.osisIDWork,
+        displayFullCitation: pluginConfig.displayFormat === 'cite',
+        displayOsisIDWork: pluginConfig.displayBibleVersion,
+        style: {
+          fontSize: `${pluginConfig.verseFontSize}px`,
+        },
+      });
+
+      // Add a line separator between citations
+      if (fullQuote !== parsedQuotes[parsedQuotes.length - 1]) {
+        html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
+      }
     }
 
-    html.innerHTML += Citation({
-      books: booksHtml,
-      citation: fullQuote.cite,
-      osisIDWork: osisBible.$.osisIDWork,
-      displayFullCitation: pluginConfig.displayFormat === 'cite',
-      displayOsisIDWork: pluginConfig.displayBibleVersion,
-      style: {
-        fontSize: `${pluginConfig.verseFontSize}px`,
-      },
-    });
-
-    // Add a line separator between citations
-    if (fullQuote !== parsedQuotes[parsedQuotes.length - 1]) {
-      html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
-    }
+    // Add a line separator between versions
+    if (version === entity.versions[entity.versions.length - 1]) continue;
+    html.innerHTML += `<hr style="${cssObj2String({
+      border: 'none',
+      borderTop: '3px double grey',
+      marginTop: `${pluginConfig.verseFontSize}px`,
+      marginBottom: `${pluginConfig.verseFontSize}px`,
+    })}">`;
   }
 
   return html.outerHTML;
 }
 
 interface Props {
-  parsedQuotes: Array<ParsedQuote>;
-  osisBible: OsisBible;
+  bibleIndex: BibleLanguage;
+  bibleInfo: any;
+  entity: ParsedEntity;
+  defaultOsisBible: OsisBible;
+  osisBibles: Array<OsisBible>;
   pluginConfig: PluginConfig;
 }
