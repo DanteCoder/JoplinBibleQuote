@@ -1,7 +1,8 @@
 export interface ParseResult {
-  type: 'entities' | 'error' | 'help';
+  type: 'entities' | 'error' | 'help' | 'index';
   errorMessage?: string;
   entities?: Array<ParsedEntity>;
+  bookId?: string;
 }
 
 export interface ParsedEntity {

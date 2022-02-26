@@ -4,6 +4,7 @@ import { EntityOptions, ParsedEntity, ParseResult } from './interfaces/parseResu
 const versionKeyword = /^version\s"([^"]+)"$/;
 const versionsKeyword = /^versions\s("[^"]+"(?:,\s?"[^"]+")*)(?: (par))?$/;
 const helpKeyword = /^help$/;
+const indexKeyword = /^index(?: ([^\s]+))?$/;
 const emptyLine = /^\s*$/;
 const citationRegExp = /^\(([^\(\)]+)\)$/;
 
@@ -27,6 +28,8 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
       },
     ],
   };
+
+  const bibleInfo = bcvParser.translation_info();
 
   bcvParser.set_options({
     osis_compaction_strategy: 'bcv',
@@ -108,6 +111,20 @@ export default function parser(tokenContent: string, bcvParser: any, availableVe
     match = line.match(helpKeyword);
     if (match) {
       return { type: 'help' };
+    }
+
+    // If the keyword is "index" send index
+    match = line.match(indexKeyword);
+    if (match) {
+      if (match[1]) {
+        const chapters = bibleInfo.chapters[match[1]];
+        if (!chapters) {
+          return { type: 'error', errorMessage: `Invalid OSIS ID: "${match[1]}"` };
+        }
+        return { type: 'index', bookId: match[1] };
+      }
+
+      return { type: 'index' };
     }
 
     // If the line is a space or empty string

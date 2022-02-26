@@ -7,6 +7,7 @@ import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
 import Help from './components/Help';
 import parser from './parser';
+import BibleIndex from './components/BibleIndex';
 
 let pluginConfig = getPluginConfig();
 let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLang];
@@ -55,6 +56,10 @@ export default function (context) {
 
         // Handle "help" command
         if (parseResult.type === 'help') return Help();
+
+        // Handle "index" command
+        if (parseResult.type === 'index')
+          return BibleIndex({ bibleIndex, bibleInfo, bookId: parseResult.bookId ?? undefined });
 
         // Create the html to render
         const html = Main({

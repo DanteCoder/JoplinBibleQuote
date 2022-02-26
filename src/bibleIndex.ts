@@ -2,7 +2,10 @@ import { BibleIndex } from './interfaces/bibleIndex';
 
 const bibleIndexFull: BibleIndex = {
   en: {
-    chapterTitle: 'Chapter',
+    book: 'Book',
+    chapter: 'Chapter',
+    chapters: 'Chapters',
+    verses: 'Verses',
     books: [
       'Genesis',
       'Exodus',
@@ -73,7 +76,10 @@ const bibleIndexFull: BibleIndex = {
     ],
   },
   es: {
-    chapterTitle: 'Capítulo',
+    book: 'Libro',
+    chapter: 'Capítulo',
+    chapters: 'Capítulos',
+    verses: 'Versículos',
     books: [
       'Génesis',
       'Éxodo',
@@ -144,7 +150,10 @@ const bibleIndexFull: BibleIndex = {
     ],
   },
   fr: {
-    chapterTitle: 'Chapitre',
+    book: 'Livre',
+    chapter: 'Chapitre',
+    chapters: 'Chapitres',
+    verses: 'Versets',
     books: [
       'Genèse',
       'Exode',

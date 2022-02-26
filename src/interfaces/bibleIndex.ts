@@ -5,6 +5,9 @@ export interface BibleIndex {
 }
 
 export interface BibleLanguage {
-  chapterTitle: string;
+  book: string;
   books: Array<string>;
+  chapter: string;
+  chapters: string;
+  verses: string;
 }
