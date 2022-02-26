@@ -92,6 +92,8 @@ export default function CitationsBlock(props: Props) {
               pluginConfig.displayFormat === 'full' ||
               (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
             style: {
+              fontSize: `${pluginConfig.verseFontSize * 1.6}px`,
+              margin: '0px',
               textAlign: pluginConfig.bookAlignment,
             },
           })

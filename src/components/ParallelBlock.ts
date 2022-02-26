@@ -58,6 +58,8 @@ export default function ParallelBlock(props: Props) {
         html.innerHTML += BookName({
           name: book.name,
           style: {
+            fontSize: `${pluginConfig.verseFontSize * 1.6}px`,
+            margin: '0px',
             textAlign: pluginConfig.bookAlignment,
           },
         });
