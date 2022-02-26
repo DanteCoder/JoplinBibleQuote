@@ -55,7 +55,7 @@ export default function (context) {
         if (parseResult.type === 'error') return ErrorManager(parseResult.errorMessage);
 
         // Handle "help" command
-        if (parseResult.type === 'help') return Help();
+        if (parseResult.type === 'help') return Help({ language: pluginConfig.bookNamesLang });
 
         // Handle "index" command
         if (parseResult.type === 'index')
