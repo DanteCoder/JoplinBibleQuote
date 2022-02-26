@@ -97,7 +97,7 @@ export default function CitationsBlock(props: Props) {
         citation: fullQuote.cite,
         osisIDWork: osisBible.$.osisIDWork,
         displayFullCitation: true,
-        displayOsisIDWork: pluginConfig.displayBibleVersion,
+        displayOsisIDWork: true,
         style: {
           fontSize: `${pluginConfig.verseFontSize}px`,
         },
