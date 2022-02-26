@@ -69,7 +69,7 @@ export default function CitationsBlock(props: Props) {
           chaptersHTML.push(
             Chapter({
               verses: versesHTML,
-              text: bibleIndexFull[pluginConfig.bookNamesLang].chapter,
+              text: bibleIndexFull[pluginConfig.language].chapter,
               number: chapter.id,
               displayChapter:
                 pluginConfig.displayFormat === 'full' ||

@@ -3,28 +3,14 @@ import { SettingItem, SettingItemType } from 'api/types';
 
 export namespace Settings {
   export const settings: Record<string, SettingItem> = {
-    citeLang: {
+    language: {
       value: 'en',
       type: SettingItemType.String,
       isEnum: true,
       section: 'bibleQuoteSection',
       public: true,
-      label: 'Citation language',
-      description: 'The language of the citations.',
-      options: {
-        en: 'English',
-        es: 'Spanish',
-        fr: 'Français',
-      },
-    },
-    bookNamesLang: {
-      value: 'en',
-      type: SettingItemType.String,
-      isEnum: true,
-      section: 'bibleQuoteSection',
-      public: true,
-      label: 'Bible book names language',
-      description: 'The language to show the books name on.',
+      label: 'Language',
+      description: 'The language to display for book names and to parse citations.',
       options: {
         en: 'English',
         es: 'Spanish',

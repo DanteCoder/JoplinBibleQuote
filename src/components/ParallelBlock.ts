@@ -77,7 +77,7 @@ export default function ParallelBlock(props: Props) {
               padding: `${pluginConfig.chapterPadding}px`,
               textAlign: pluginConfig.chapterAlignment,
             },
-            text: bibleIndexFull[pluginConfig.bookNamesLang].chapter,
+            text: bibleIndexFull[pluginConfig.language].chapter,
           });
         }
 

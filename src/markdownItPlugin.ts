@@ -10,12 +10,12 @@ import parser from './parser';
 import BibleIndex from './components/BibleIndex';
 
 let pluginConfig = getPluginConfig();
-let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.bookNamesLang];
+let bibleIndex: BibleLanguage = bibleIndexFull[pluginConfig.language];
 let osisBibleResult = getOsisBible(pluginConfig.biblePath);
 let defaultOsisBible = osisBibleResult.osisBible;
 let osisBibles = getOsisBibles(pluginConfig.biblesPath);
 let availableVersions = osisBibles.map((bible) => bible.$.osisIDWork);
-let bcv = importBcvParser(pluginConfig.citeLang);
+let bcv = importBcvParser(pluginConfig.language);
 const bibleInfo = bcv.translation_info();
 
 export default function (context) {
@@ -37,12 +37,12 @@ export default function (context) {
         if (localStorage.getItem('bibleQuoteSettingsUpdated') === 'true') {
           localStorage.setItem('bibleQuoteSettingsUpdated', 'false');
           pluginConfig = getPluginConfig();
-          bibleIndex = bibleIndexFull[pluginConfig.bookNamesLang];
+          bibleIndex = bibleIndexFull[pluginConfig.language];
           osisBibleResult = getOsisBible(pluginConfig.biblePath);
           defaultOsisBible = osisBibleResult.osisBible;
           osisBibles = getOsisBibles(pluginConfig.biblesPath);
           availableVersions = osisBibles.map((bible) => bible.$.osisIDWork);
-          bcv = importBcvParser(pluginConfig.citeLang);
+          bcv = importBcvParser(pluginConfig.language);
         }
 
         // Handle osis bible import errors
@@ -55,7 +55,7 @@ export default function (context) {
         if (parseResult.type === 'error') return ErrorManager(parseResult.errorMessage);
 
         // Handle "help" command
-        if (parseResult.type === 'help') return Help({ language: pluginConfig.bookNamesLang });
+        if (parseResult.type === 'help') return Help({ language: pluginConfig.language });
 
         // Handle "index" command
         if (parseResult.type === 'index')
