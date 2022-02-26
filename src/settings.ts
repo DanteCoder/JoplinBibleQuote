@@ -94,19 +94,6 @@ export namespace Settings {
         justify: 'Justify',
       },
     },
-    displayFormat: {
-      value: 'full',
-      type: SettingItemType.String,
-      isEnum: true,
-      section: 'bibleQuoteSection',
-      public: true,
-      label: 'Display citation on the view',
-      description: `Displays the full citation on top of the view.`,
-      options: {
-        cite: 'Display',
-        full: 'Hide',
-      },
-    },
     displayBibleVersion: {
       value: true,
       type: SettingItemType.Bool,

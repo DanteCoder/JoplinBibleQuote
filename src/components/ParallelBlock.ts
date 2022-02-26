@@ -51,10 +51,7 @@ export default function ParallelBlock(props: Props) {
     html.appendChild(citationsDiv);
 
     for (const book of parsedQuote.books) {
-      if (
-        pluginConfig.displayFormat === 'full' ||
-        (pluginConfig.displayFormat === 'cite' && parsedQuote.books.length > 1)
-      ) {
+      if (parsedQuote.books.length > 1) {
         html.innerHTML += BookName({
           name: book.name,
           style: {
@@ -66,10 +63,7 @@ export default function ParallelBlock(props: Props) {
       }
 
       for (const chapter of book.chapters) {
-        if (
-          pluginConfig.displayFormat === 'full' ||
-          (pluginConfig.displayFormat === 'cite' && (parsedQuote.books.length > 1 || book.chapters.length > 1))
-        ) {
+        if (parsedQuote.books.length > 1 || book.chapters.length > 1) {
           html.innerHTML += ChapterTitle({
             number: chapter.id,
             style: {

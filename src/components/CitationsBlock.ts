@@ -53,11 +53,7 @@ export default function CitationsBlock(props: Props) {
               Verse({
                 text: verseText,
                 number: verse,
-                displayNumber:
-                  pluginConfig.displayFormat === 'full' ||
-                  chapter.verses.length > 1 ||
-                  book.chapters.length > 1 ||
-                  fullQuote.books.length > 1,
+                displayNumber: chapter.verses.length > 1 || book.chapters.length > 1 || fullQuote.books.length > 1,
                 style: {
                   fontSize: `${pluginConfig.verseFontSize}px`,
                   textAlign: pluginConfig.verseAlignment,
@@ -71,9 +67,7 @@ export default function CitationsBlock(props: Props) {
               verses: versesHTML,
               text: bibleIndexFull[pluginConfig.language].chapter,
               number: chapter.id,
-              displayChapter:
-                pluginConfig.displayFormat === 'full' ||
-                (pluginConfig.displayFormat === 'cite' && (book.chapters.length > 1 || fullQuote.books.length > 1)),
+              displayChapter: book.chapters.length > 1 || fullQuote.books.length > 1,
               style: {
                 fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
                 padding: `${pluginConfig.chapterPadding}px`,
@@ -88,9 +82,7 @@ export default function CitationsBlock(props: Props) {
           Book({
             chapters: chaptersHTML,
             name: book.name,
-            displayName:
-              pluginConfig.displayFormat === 'full' ||
-              (pluginConfig.displayFormat === 'cite' && fullQuote.books.length > 1),
+            displayName: fullQuote.books.length > 1,
             style: {
               fontSize: `${pluginConfig.verseFontSize * 1.6}px`,
               margin: '0px',
@@ -104,7 +96,7 @@ export default function CitationsBlock(props: Props) {
         books: booksHtml,
         citation: fullQuote.cite,
         osisIDWork: osisBible.$.osisIDWork,
-        displayFullCitation: pluginConfig.displayFormat === 'cite',
+        displayFullCitation: true,
         displayOsisIDWork: pluginConfig.displayBibleVersion,
         style: {
           fontSize: `${pluginConfig.verseFontSize}px`,

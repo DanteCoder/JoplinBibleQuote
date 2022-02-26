@@ -5,7 +5,6 @@ export interface PluginConfig {
   chapterAlignment: string;
   chapterPadding: number;
   displayBibleVersion: boolean;
-  displayFormat: string;
   language: string;
   verseAlignment: string;
   verseFontSize: number;
