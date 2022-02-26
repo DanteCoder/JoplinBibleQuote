@@ -40,7 +40,7 @@ const helpLanguages = {
     'e.g.\n' +
     '(Genesis 1:1)\n\n' +
     'command: version "VER"\n' +
-    'action: Changes the version for the following citations\n' +
+    'action: Changes the version for the following citations.\n' +
     'e.g.\n' +
     'version "KJV"\n' +
     '(Genesis 1:1)\n\n' +
