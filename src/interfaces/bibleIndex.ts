@@ -2,6 +2,7 @@ export interface BibleIndex {
   en: BibleLanguage;
   es: BibleLanguage;
   fr: BibleLanguage;
+  zh: BibleLanguage;
 }
 
 export interface BibleLanguage {
