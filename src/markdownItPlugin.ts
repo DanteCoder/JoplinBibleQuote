@@ -2,7 +2,7 @@ import { BibleLanguage } from './interfaces/bibleIndex';
 import { getOsisBible } from './utils/getOsisBible';
 import { getOsisBibles } from './utils/getOsisBibles';
 import { getPluginConfig } from './utils/getPluginConfig';
-import bibleIndexFull from './bibleIndex';
+import { bibleIndexFull } from './languages';
 import ErrorManager from './components/ErrorManager';
 import Main from './components/Main';
 import Help from './components/Help';
