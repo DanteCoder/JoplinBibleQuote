@@ -302,37 +302,37 @@ export const bibleIndexFull: BibleIndex = {
 export const helpLanguages = {
   en:
     'Available commands:\n' +
-    'command: help\n' +
+    'command: <code>help</code>\n' +
     'action: Displays this help.\n\n' +
-    'command: index\n' +
+    'command: <code>index</code>\n' +
     'action: Displays the index of the Bible.\n\n' +
-    'command: index OSIS-ID\n' +
+    'command: <code>index OSIS-ID</code>\n' +
     'action: Displays the chapters and their number of verses from a book ' +
     'by its OSIS ID. You can see the OSIS IDs with the "index" command.\n' +
     'e.g.\n' +
-    'index Gen\n\n' +
-    'command: (your citation)\n' +
+    '<code>index Gen</code>\n\n' +
+    'command: <code>(your citation)</code>\n' +
     'action: Displays the citation between the parenthesis' +
     ' in the specified version, or the default version if ' +
     "there's no specified version.\n" +
     'e.g.\n' +
-    '(Genesis 1:1)\n\n' +
-    'command: version "VER"\n' +
+    '<code>(Genesis 1:1)</code>\n\n' +
+    'command: <code>version "VER"</code>\n' +
     'action: Changes the version for the following citations.\n' +
     'e.g.\n' +
-    'version "KJV"\n' +
-    '(Genesis 1:1)\n\n' +
-    'command: versions "VER-1", "VER-2", "VER-N"\n' +
+    '<code>version "KJV"\n' +
+    '(Genesis 1:1)</code>\n\n' +
+    'command: <code>versions "VER-1", "VER-2", "VER-N"</code>\n' +
     'action: Displays the following citations on multiple versions.\n' +
     'e.g.\n' +
-    'versions "KJV", "RVR"\n' +
+    '<code>versions "KJV", "RVR"\n' +
     '(Genesis 1:1)\n' +
-    '(John 3:16)\n\n' +
-    'command: versions "VER-1", "VER-2", "VER-N" par\n' +
+    '(John 3:16)</code>\n\n' +
+    'command: <code>versions "VER-1", "VER-2", "VER-N" par</code>\n' +
     'action: Displays the following citations on multiple versions ' +
     'in parallel columns.\n' +
     'e.g.\n' +
-    'versions "KJV", "RVR" par\n' +
+    '<code>versions "KJV", "RVR" par\n' +
     '(Genesis 1:1)\n' +
-    '(John 3:16)',
+    '(John 3:16)</code>',
 };
