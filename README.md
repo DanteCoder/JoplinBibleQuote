@@ -28,7 +28,7 @@ To display all the available commands type the word "help" in a block:
 
 ## Installation
 1. In Joplin, open the configuration screen, then under "Plugins" search for "Bible Quote" and install it. 
-2. Download a bible from /bibles/OSIS to your computer, or use an already existing OSIS xml bible (you can convert almost any bible format to OSIS xml using the software linked below).
+2. Download a bible from /bibles/OSIS within this repository to your computer, or use an already existing OSIS xml bible (you can convert almost any bible format to OSIS xml using the software linked below). However, when you retrieve the .xml file, you must right click and save the link in order to download it. Otherwise, you will only get text.
 3. Copy the path of the OSIS xml bible and paste it on the plugin setting "Path to the default OSIS Bible file".
 4. Optionally set a path to a folder containing more osis bibles in the setting "Path to a folder containing OSIS bibles".
 5. Select your desired language for the plugin and save.
