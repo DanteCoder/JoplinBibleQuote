@@ -37,7 +37,7 @@ To display all the available commands type the word "help" in a block:
 For the settings to take effect on already existing citations you need to let the markdown render to refresh. This can be done modifying the note or changing to another note and returning to the previous note.
  
  ## Notes
-- To convert almost any bible format to OSIS xml you can use the [Simple Bible Reader](https://www.softpedia.com/get/Others/Home-Education/Jeyareuben-Simple-Bible-Reader.shtml) software.
+- To convert almost any bible format to OSIS xml you can use the [Simple Bible Reader](https://trumpet-call.org/simplebiblereader/) software.
 - If you have a bug or any issue, feel free to make an issue or to modify the plugin.
 - If you want to contribute please base your pull requests to the "dev" branch, and prefer to make small, trackable commits.
 
