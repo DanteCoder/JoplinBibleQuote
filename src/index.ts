@@ -1,8 +1,8 @@
 import joplin from 'api';
-import { bibleQuote } from './bibleQuote'
+import { bibleQuote } from './bibleQuote';
 
 joplin.plugins.register({
-	onStart: async function() {
-		bibleQuote.init();
-	},
+  onStart: async function () {
+    bibleQuote.init();
+  },
 });

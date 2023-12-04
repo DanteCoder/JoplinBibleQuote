@@ -15,6 +15,7 @@ export namespace Settings {
         en: 'English',
         es: 'Spanish',
         fr: 'Français',
+        zh: 'Chinese',
       },
     },
     biblePath: {

@@ -3,7 +3,7 @@ import { OsisBible } from '../interfaces/osisBible';
 import { ParsedQuote } from '../interfaces/parsedQuote';
 import { cssObj2String } from '../utils/cssObj2String';
 import { getVerseText } from '../utils/getVerseText';
-import bibleIndexFull from '../bibleIndex';
+import { bibleIndexFull } from '../languages';
 import Book from './Book';
 import Chapter from './Chapter';
 import Citation from './Citation';

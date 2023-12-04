@@ -4,7 +4,7 @@ import { OsisBible } from '../interfaces/osisBible';
 import { ParsedEntity } from '../interfaces/parseResult';
 import { cssObj2String } from '../utils/cssObj2String';
 import { parseQuote } from '../utils/parseQuote';
-import bibleIndexFull from '../bibleIndex';
+import { bibleIndexFull } from '../languages';
 import ChapterTitle from './ChapterTitle';
 import ParallelVerses from './ParallelVerses';
 import BookName from './BookTitle';

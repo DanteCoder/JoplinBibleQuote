@@ -11,14 +11,14 @@ import { OsisObject } from 'src/interfaces/osisObject';
 export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bibleInfo: any) {
   let citation = '';
 
-  /*
-	entity types:
-	bcv		=>	Single verse
-	bc		=>	Single chapter
-	cv		=>	Can be preceded by (bcv || bc)
-	integer	=>	Can be preceded by (bcv || bc || cv)
-	range	=>	Can be preceded by (bcv || bc || cv || null)
-	*/
+  /**
+   * entity types:
+   * bcv  =>  Single verse
+   * bc  =>  Single chapter
+   * cv  =>  Can be preceded by (bcv || bc)
+   * integer  =>  Can be preceded by (bcv || bc || cv)
+   * range  =>  Can be preceded by (bcv || bc || cv || null)
+   */
 
   let lastType = null;
   let lastBook = null;
