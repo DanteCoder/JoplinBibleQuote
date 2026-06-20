@@ -17,5 +17,6 @@ export default function ErrorManager(errorMessage: string) {
   );
 
   html.innerHTML = errorMessage.replace(/\n/g, '<br>');
+
   return html.outerHTML;
 }

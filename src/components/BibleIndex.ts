@@ -1,4 +1,4 @@
-import { BibleLanguage } from '../interfaces/bibleIndex';
+import { BibleInfo, BibleLanguage } from '../interfaces/bibleIndex';
 import { cssObj2String } from '../utils/cssObj2String';
 
 export default function BibleIndex(props: Props) {
@@ -28,12 +28,12 @@ export default function BibleIndex(props: Props) {
     bibleInfo.chapters[bookId].forEach((verses, i) => {
       let p = document.createElement('p');
       p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = i + 1;
+      p.innerHTML = String(i + 1);
       html.appendChild(p);
 
       p = document.createElement('p');
       p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = verses;
+      p.innerHTML = String(verses);
       html.appendChild(p);
     });
   } else {
@@ -49,8 +49,9 @@ export default function BibleIndex(props: Props) {
 
       p = document.createElement('p');
       p.setAttribute('style', cssObj2String({ margin: '0px' }));
+
       const osisId = osisBooksIds[osisBooksOrder[i] - 1];
-      p.innerHTML = bibleInfo.chapters[osisId].length;
+      p.innerHTML = String(bibleInfo.chapters[osisId].length);
       html.appendChild(p);
 
       p = document.createElement('p');
@@ -69,6 +70,6 @@ export default function BibleIndex(props: Props) {
 
 interface Props {
   bibleIndex: BibleLanguage;
-  bibleInfo: any;
+  bibleInfo: BibleInfo;
   bookId?: string;
 }

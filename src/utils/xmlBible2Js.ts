@@ -1,30 +1,37 @@
-import fs = require('fs');
-import { OsisBible } from 'src/interfaces/osisBible';
+import * as fs from 'fs';
 import { parseString as parseXmlString } from 'xml2js';
 
-/**
- * Parses an xml bible to a JS object
- * @param biblePath The path to the xml file
- * @returns Parsed xml bible and error
- */
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+  return typeof error === 'object' && error !== null && 'code' in error;
+}
+
 export function xmlBible2Js(biblePath: string): ReturnValue {
-  let returnValue: ReturnValue;
-  let xmlFile: any;
+  let returnValue: ReturnValue = {};
+  let xmlFile: string;
+
   try {
     xmlFile = fs.readFileSync(biblePath, 'utf8');
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return { errorMessage: `Invalid path "${biblePath}"` };
+  } catch (error: unknown) {
+    if (isNodeError(error)) {
+      if (error.code === 'ENOENT') {
+        return { errorMessage: `Invalid path "${biblePath}"` };
+      }
+
+      if (error.code === 'EISDIR') {
+        return { errorMessage: 'There is no selected path for the default OSIS Bible' };
+      }
     }
-    if (error.code === 'EISDIR') {
-      return { errorMessage: 'There is no selected path for the default OSIS Bible' };
-    }
+
+    return { errorMessage: String(error) };
   }
-  parseXmlString(xmlFile, (error: any, result: any) => {
+
+  parseXmlString(xmlFile, (error: unknown, result: unknown) => {
     if (error) {
       returnValue = { errorMessage: `Error opening the file "${biblePath}". Error Message:\n\n` + String(error) };
+
       return;
     }
+
     returnValue = { parsedBible: result };
   });
 
@@ -32,6 +39,6 @@ export function xmlBible2Js(biblePath: string): ReturnValue {
 }
 
 interface ReturnValue {
-  parsedBible?: any;
+  parsedBible?: unknown;
   errorMessage?: string;
 }

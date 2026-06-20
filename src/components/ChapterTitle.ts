@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import { cssObj2String } from '../utils/cssObj2String';
 
 /**
@@ -17,6 +18,6 @@ export default function ChapterTitle(props: Props) {
 
 interface Props {
   number: number;
-  style: any;
+  style: StyleProps;
   text: string;
 }

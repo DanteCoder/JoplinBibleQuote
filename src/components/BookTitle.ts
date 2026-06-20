@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import { cssObj2String } from '../utils/cssObj2String';
 
 /**
@@ -17,5 +18,5 @@ export default function BookName(props: Props) {
 
 interface Props {
   name: string;
-  style: any;
+  style: StyleProps;
 }

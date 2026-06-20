@@ -1,16 +1,16 @@
+import { BibleInfo, BibleLanguage } from '../interfaces/bibleIndex';
 import { PluginConfig } from '../interfaces/config';
 import { OsisBible } from '../interfaces/osisBible';
 import { ParsedQuote } from '../interfaces/parsedQuote';
+import { ParsedEntity } from '../interfaces/parseResult';
+import { bibleIndexFull } from '../languages';
 import { cssObj2String } from '../utils/cssObj2String';
 import { getVerseText } from '../utils/getVerseText';
-import { bibleIndexFull } from '../languages';
+import { parseQuote } from '../utils/parseQuote';
 import Book from './Book';
 import Chapter from './Chapter';
 import Citation from './Citation';
 import Verse from './Verse';
-import { ParsedEntity } from '../interfaces/parseResult';
-import { parseQuote } from '../utils/parseQuote';
-import { BibleLanguage } from '../interfaces/bibleIndex';
 
 /**
  * Creates the html for a list of citations
@@ -29,25 +29,30 @@ export default function CitationsBlock(props: Props) {
   );
 
   const parsedQuotes: Array<ParsedQuote> = [];
+
   for (const osisObject of entity.osisObjects) {
     parsedQuotes.push(parseQuote(osisObject, bibleIndex, bibleInfo));
   }
 
   for (const version of entity.versions) {
     let osisBible: OsisBible;
+
     if (version === 'default') {
       osisBible = defaultOsisBible;
     } else {
-      osisBible = osisBibles.find((bible) => bible.$.osisIDWork === version);
+      osisBible = osisBibles.find(bible => bible.$.osisIDWork === version)!;
     }
 
     for (const fullQuote of parsedQuotes) {
       const booksHtml = [];
+
       for (const book of fullQuote.books) {
         const chaptersHTML = [];
+
         for (const chapter of book.chapters) {
           const versesHTML = [];
-          for (let verse of chapter.verses) {
+
+          for (const verse of chapter.verses) {
             const verseText = getVerseText(osisBible, { b: book.id, c: chapter.id, v: verse });
             versesHTML.push(
               Verse({
@@ -111,6 +116,7 @@ export default function CitationsBlock(props: Props) {
 
     // Add a line separator between versions
     if (version === entity.versions[entity.versions.length - 1]) continue;
+
     html.innerHTML += `<hr style="${cssObj2String({
       border: 'none',
       borderTop: '3px double grey',
@@ -124,7 +130,7 @@ export default function CitationsBlock(props: Props) {
 
 interface Props {
   bibleIndex: BibleLanguage;
-  bibleInfo: any;
+  bibleInfo: BibleInfo;
   entity: ParsedEntity;
   defaultOsisBible: OsisBible;
   osisBibles: Array<OsisBible>;
