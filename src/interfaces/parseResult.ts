@@ -1,3 +1,5 @@
+import { OsisObject } from './osisObject';
+
 export interface ParseResult {
   type: 'entities' | 'error' | 'help' | 'index';
   errorMessage?: string;
@@ -7,7 +9,7 @@ export interface ParseResult {
 
 export interface ParsedEntity {
   versions: Array<string>;
-  osisObjects: Array<any>;
+  osisObjects: Array<OsisObject>;
   options?: EntityOptions;
 }
 

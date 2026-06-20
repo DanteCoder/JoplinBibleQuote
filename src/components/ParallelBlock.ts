@@ -1,14 +1,14 @@
-import { BibleLanguage } from '../interfaces/bibleIndex';
+import { BibleInfo, BibleLanguage } from '../interfaces/bibleIndex';
 import { PluginConfig } from '../interfaces/config';
 import { OsisBible } from '../interfaces/osisBible';
 import { ParsedEntity } from '../interfaces/parseResult';
+import { bibleIndexFull } from '../languages';
 import { cssObj2String } from '../utils/cssObj2String';
 import { parseQuote } from '../utils/parseQuote';
-import { bibleIndexFull } from '../languages';
-import ChapterTitle from './ChapterTitle';
-import ParallelVerses from './ParallelVerses';
 import BookName from './BookTitle';
+import ChapterTitle from './ChapterTitle';
 import FullCitation from './FullCitation';
+import ParallelVerses from './ParallelVerses';
 
 /**
  * Creates the html for parallel bible versions
@@ -38,6 +38,7 @@ export default function ParallelBlock(props: Props) {
         gridTemplateColumns: '1fr '.repeat(parsedEntity.versions.length),
       })
     );
+
     for (const version of parsedEntity.versions) {
       citationsDiv.innerHTML += FullCitation({
         citation: parsedQuote.cite,
@@ -48,6 +49,7 @@ export default function ParallelBlock(props: Props) {
         },
       });
     }
+
     html.appendChild(citationsDiv);
 
     for (const book of parsedQuote.books) {
@@ -99,7 +101,7 @@ export default function ParallelBlock(props: Props) {
 
 interface Props {
   bibleIndex: BibleLanguage;
-  bibleInfo: any;
+  bibleInfo: BibleInfo;
   parsedEntity: ParsedEntity;
   osisBibles: Array<OsisBible>;
   pluginConfig: PluginConfig;

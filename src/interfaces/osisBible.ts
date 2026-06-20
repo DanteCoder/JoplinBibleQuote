@@ -2,26 +2,26 @@ export interface OsisBible {
   $: {
     osisIDWork: string;
   };
-  div: Array<book>;
+  div: Array<OsisBook>;
 }
 
-interface book {
+export interface OsisBook {
   $: {
     osisRefWork: string;
     osisIDWork: string;
     osisID: string;
   };
-  chapter: Array<chapter>;
+  chapter: Array<OsisChapter>;
 }
 
-interface chapter {
+export interface OsisChapter {
   $: {
     osisID: string;
   };
-  verse: Array<verse>;
+  verse: Array<OsisVerse>;
 }
 
-interface verse {
+export interface OsisVerse {
   $: {
     osisID: string;
   };

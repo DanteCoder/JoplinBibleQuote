@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import BookName from './BookTitle';
 
 /**
@@ -24,5 +25,5 @@ interface Props {
   chapters: Array<string>;
   name: string;
   displayName: boolean;
-  style: any;
+  style: StyleProps;
 }

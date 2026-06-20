@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import FullCitation from './FullCitation';
 
 /**
@@ -26,5 +27,5 @@ interface Props {
   displayFullCitation: boolean;
   displayOsisIDWork: boolean;
   osisIDWork: string;
-  style: any;
+  style: StyleProps;
 }
