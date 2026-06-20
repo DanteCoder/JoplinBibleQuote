@@ -1,11 +1,6 @@
 import { helpLanguages } from '../languages';
 import { cssObj2String } from '../utils/cssObj2String';
 
-/**
- * Creates the html for help
- * @param error
- * @returns html string
- */
 export default function Help(props: Props) {
   const { language } = props;
   const html = document.createElement('div');
@@ -19,6 +14,7 @@ export default function Help(props: Props) {
   );
 
   html.innerHTML = (helpLanguages[language] ?? helpLanguages.en).replace(/\n/g, '<br>');
+
   return html.outerHTML;
 }
 

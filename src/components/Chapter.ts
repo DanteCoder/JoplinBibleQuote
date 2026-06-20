@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import ChapterTitle from './ChapterTitle';
 
 /**
@@ -19,6 +20,7 @@ export default function Chapter(props: Props) {
   for (const verse of verses) {
     versesDiv.innerHTML += verse;
   }
+
   html.appendChild(versesDiv);
 
   return html.outerHTML;
@@ -29,5 +31,5 @@ interface Props {
   number: number;
   text: string;
   displayChapter: boolean;
-  style: any;
+  style: StyleProps;
 }

@@ -1,30 +1,14 @@
-import { BibleLanguage } from 'src/interfaces/bibleIndex';
+import { BibleInfo, BibleLanguage } from 'src/interfaces/bibleIndex';
 import { OsisObject } from 'src/interfaces/osisObject';
 
-/**
- * Gets the bcv parsed entities object andcreates a normalized citation text.
- * @param osisObject https://github.com/openbibleinfo/Bible-Passage-Reference-Parser#parsed_entities
- * @param bibleIndex
- * @param bibleInfo https://github.com/openbibleinfo/Bible-Passage-Reference-Parser#translation_infotranslation
- * @returns The normalized citation
- */
-export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bibleInfo: any) {
+export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bibleInfo: BibleInfo): string {
   let citation = '';
 
-  /**
-   * entity types:
-   * bcv  =>  Single verse
-   * bc  =>  Single chapter
-   * cv  =>  Can be preceded by (bcv || bc)
-   * integer  =>  Can be preceded by (bcv || bc || cv)
-   * range  =>  Can be preceded by (bcv || bc || cv || null)
-   */
+  let lastType: string | null = null;
+  let lastBook: string | null = null;
+  let lastChap: number | null = null;
 
-  let lastType = null;
-  let lastBook = null;
-  let lastChap = null;
-
-  for (let entity of osisObject.entities) {
+  for (const entity of osisObject.entities) {
     if (entity.type === 'bcv') {
       if (entity.start.b !== lastBook) {
         const bookName = bibleIndex.books[bibleInfo.books.indexOf(entity.start.b)];
@@ -67,8 +51,8 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
         citation += ';' + entity.start.c;
       }
     } else if (entity.type === 'range') {
-      //Get the type of range
-      let rangeType = null;
+      let rangeType: string | null = null;
+
       if (entity.start.b !== entity.end.b) {
         rangeType = 'book';
       } else {
@@ -92,6 +76,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ',' + entity.start.v;
           }
+
           lastType = 'v';
         } else if (startEntityType === 'bc') {
           if (entity.start.b !== lastBook) {
@@ -100,6 +85,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ',' + entity.start.v;
           }
+
           lastType = 'v';
         } else if (startEntityType === 'cv') {
           if (entity.start.c !== lastChap) {
@@ -107,6 +93,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ',' + entity.start.v;
           }
+
           lastType = 'v';
         } else if (startEntityType === 'integer') {
           if (lastType === 'v') {
@@ -128,6 +115,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ';' + entity.start.c + ':' + entity.start.v;
           }
+
           lastType = 'v';
         } else if (startEntityType === 'bc') {
           if (entity.start.b !== lastBook) {
@@ -136,6 +124,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ';' + entity.start.c;
           }
+
           lastType = 'c';
         } else if (startEntityType === 'cv') {
           if (entity.start.c !== lastChap) {
@@ -143,6 +132,7 @@ export function osis2Cite(osisObject: OsisObject, bibleIndex: BibleLanguage, bib
           } else {
             citation += ',' + entity.start.v;
           }
+
           lastType = 'v';
         } else if (startEntityType === 'integer') {
           if (lastType === 'v') {

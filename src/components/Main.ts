@@ -1,4 +1,4 @@
-import { BibleLanguage } from '../interfaces/bibleIndex';
+import { BibleInfo, BibleLanguage } from '../interfaces/bibleIndex';
 import { PluginConfig } from '../interfaces/config';
 import { OsisBible } from '../interfaces/osisBible';
 import { ParsedEntity } from '../interfaces/parseResult';
@@ -40,6 +40,7 @@ export default function Main(props: Props) {
 
     // Add a line separator between blocks
     if (entity === parsedEntities[parsedEntities.length - 1]) continue;
+
     html.innerHTML += `<hr style="${cssObj2String({
       border: 'none',
       borderTop: '3px double grey',
@@ -55,7 +56,7 @@ export default function Main(props: Props) {
 
 interface Props {
   bibleIndex: BibleLanguage;
-  bibleInfo: any;
+  bibleInfo: BibleInfo;
   defaultOsisBible: OsisBible;
   osisBibles: Array<OsisBible>;
   parsedEntities: Array<ParsedEntity>;

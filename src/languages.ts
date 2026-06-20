@@ -299,7 +299,7 @@ export const bibleIndexFull: BibleIndex = {
   },
 };
 
-export const helpLanguages = {
+export const helpLanguages: Record<string, string> = {
   en:
     'Available commands:\n' +
     'command: <code>help</code>\n' +

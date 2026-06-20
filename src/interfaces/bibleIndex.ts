@@ -1,4 +1,5 @@
 export interface BibleIndex {
+  [key: string]: BibleLanguage;
   en: BibleLanguage;
   es: BibleLanguage;
   fr: BibleLanguage;
@@ -11,4 +12,10 @@ export interface BibleLanguage {
   chapter: string;
   chapters: string;
   verses: string;
+}
+
+export interface BibleInfo {
+  books: string[];
+  chapters: Record<string, number[]>;
+  order: Record<string, number>;
 }

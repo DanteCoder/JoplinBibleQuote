@@ -1,3 +1,4 @@
+import { StyleProps } from '../interfaces/style';
 import { cssObj2String } from '../utils/cssObj2String';
 
 /**
@@ -18,7 +19,7 @@ export default function FullCitation(props: Props) {
 }
 
 interface Props {
-  style: any;
+  style: StyleProps;
   citation: string;
   osisIDWork: string;
   displayOsisIDWork: boolean;
