@@ -29,7 +29,7 @@
     "@joplin/lib": "~2.9",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^18.7.13",
-    "@types/xml2js": "^0.4.9",
+    
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
     "chalk": "^4.1.0",
@@ -52,8 +52,7 @@
     "yargs": "^16.2.0"
   },
   "dependencies": {
-    "bible-passage-reference-parser": "^2.0.1",
-    "xml2js": "^0.4.23"
+    "bible-passage-reference-parser": "^2.0.1"
   },
   "files": [
     "publish"
