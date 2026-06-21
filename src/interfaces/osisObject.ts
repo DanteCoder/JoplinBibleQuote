@@ -10,7 +10,7 @@ export interface OsisEntityStart {
   b: string;
   c: number;
   v: number;
-  type: 'bcv' | 'bc' | 'cv' | 'integer';
+  type?: 'bcv' | 'bc' | 'cv' | 'integer';
 }
 
 export interface OsisEntity {
