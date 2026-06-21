@@ -5,52 +5,21 @@ import { ParsedEntity } from '../interfaces/parseResult';
 import { bibleIndexFull } from '../languages';
 import { cssObj2String } from '../utils/cssObj2String';
 import { parseQuote } from '../utils/parseQuote';
-import BookName from './BookTitle';
+import BookName from './BookName';
 import ChapterTitle from './ChapterTitle';
 import FullCitation from './FullCitation';
 import ParallelVerses from './ParallelVerses';
 
-/**
- * Creates the html for parallel bible versions
- * @param props
- * @returns html string
- */
 export default function ParallelBlock(props: Props) {
   const { bibleIndex, bibleInfo, osisBibles, parsedEntity, pluginConfig } = props;
   const html = document.createElement('div');
 
-  html.setAttribute(
-    'style',
-    cssObj2String({
-      padding: '30px',
-    })
-  );
+  html.setAttribute('style', cssObj2String({ padding: '30px' }));
 
   for (const osisObject of parsedEntity.osisObjects) {
     const parsedQuote = parseQuote(osisObject, bibleIndex, bibleInfo);
 
-    const citationsDiv = document.createElement('div');
-    citationsDiv.setAttribute(
-      'style',
-      cssObj2String({
-        display: 'grid',
-        columnGap: `${pluginConfig.verseFontSize}px`,
-        gridTemplateColumns: '1fr '.repeat(parsedEntity.versions.length),
-      })
-    );
-
-    for (const version of parsedEntity.versions) {
-      citationsDiv.innerHTML += FullCitation({
-        citation: parsedQuote.cite,
-        displayOsisIDWork: true,
-        osisIDWork: version,
-        style: {
-          fontSize: `${pluginConfig.verseFontSize}px`,
-        },
-      });
-    }
-
-    html.appendChild(citationsDiv);
+    html.appendChild(buildCitationsGrid(parsedQuote, parsedEntity.versions, pluginConfig));
 
     for (const book of parsedQuote.books) {
       if (parsedQuote.books.length > 1) {
@@ -79,7 +48,7 @@ export default function ParallelBlock(props: Props) {
 
         html.innerHTML += ParallelVerses({
           bookId: book.id,
-          chapter: chapter,
+          chapter,
           osisBibles,
           versions: parsedEntity.versions,
           style: {
@@ -90,13 +59,39 @@ export default function ParallelBlock(props: Props) {
       }
     }
 
-    // Add a line separator between citations
     if (osisObject !== parsedEntity.osisObjects[parsedEntity.osisObjects.length - 1]) {
       html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
     }
   }
 
   return html.outerHTML;
+}
+
+function buildCitationsGrid(
+  parsedQuote: { cite: string },
+  versions: Array<string>,
+  pluginConfig: PluginConfig
+): HTMLDivElement {
+  const div = document.createElement('div');
+  div.setAttribute(
+    'style',
+    cssObj2String({
+      display: 'grid',
+      columnGap: `${pluginConfig.verseFontSize}px`,
+      gridTemplateColumns: '1fr '.repeat(versions.length),
+    })
+  );
+
+  for (const version of versions) {
+    div.innerHTML += FullCitation({
+      citation: parsedQuote.cite,
+      displayOsisIDWork: true,
+      osisIDWork: version,
+      style: { fontSize: `${pluginConfig.verseFontSize}px` },
+    });
+  }
+
+  return div;
 }
 
 interface Props {

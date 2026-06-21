@@ -18,9 +18,7 @@ async function renderAllPlaceholders(): Promise<void> {
     try {
       source = JSON.parse(rawSource);
     } catch {
-      el.textContent = '[Bible Quote: invalid source data]';
-      el.setAttribute('data-done', '1');
-
+      markError(el, '[Bible Quote: invalid source data]');
       continue;
     }
 
@@ -33,14 +31,17 @@ async function renderAllPlaceholders(): Promise<void> {
       if (html) {
         el.outerHTML = html;
       } else {
-        el.textContent = '[Bible Quote: render error]';
-        el.setAttribute('data-done', '1');
+        markError(el);
       }
     } catch {
-      el.textContent = '[Bible Quote: render error]';
-      el.setAttribute('data-done', '1');
+      markError(el);
     }
   }
+}
+
+function markError(el: HTMLElement, message?: string): void {
+  el.textContent = message ?? '[Bible Quote: render error]';
+  el.setAttribute('data-done', '1');
 }
 
 function run(): void {

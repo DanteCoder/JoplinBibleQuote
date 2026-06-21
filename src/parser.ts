@@ -24,15 +24,7 @@ export default function parser(
   availableVersions: Array<string>
 ): ParseResult {
   const lines = tokenContent.split('\n');
-  let parseResult: ParseResult = {
-    type: 'entities',
-    entities: [
-      {
-        osisObjects: [],
-        versions: ['default'],
-      },
-    ],
-  };
+  const entities: Array<ParsedEntity> = [{ osisObjects: [], versions: ['default'] }];
 
   const bibleInfo = bcvParser.translation_info();
 
@@ -49,39 +41,34 @@ export default function parser(
     match = line.match(citationRegExp);
 
     if (match) {
-      const osisId = bcvParser.parse(match[1]).osis();
+      const parsed = bcvParser.parse(match[1]);
+      const osisId = parsed.osis();
 
       if (osisId === '') {
         errorMessage = `Invalid citation: "${match[1]}"`;
         break;
       }
 
-      const bcvParsedObject: OsisObject = bcvParser.parse(match[1]).parsed_entities()[0];
-
-      if (parseResult.entities) {
-        const entities = parseResult.entities;
-        entities[entities.length - 1].osisObjects.push(bcvParsedObject);
-      }
+      const current = entities[entities.length - 1];
+      current.osisObjects.push(parsed.parsed_entities()[0]);
       continue;
     }
 
     match = line.match(versionKeyword);
 
     if (match) {
-      const versionMatchResult = extractVersion(match[1], availableVersions);
+      const result = extractVersion(match[1], availableVersions);
 
-      if (versionMatchResult.type === 'error') {
-        errorMessage = versionMatchResult.errorMessage!;
+      if (result.type === 'error') {
+        errorMessage = result.errorMessage!;
         break;
       }
 
-      if (parseResult.entities) {
-        const pushResult = pushNewEntity(parseResult.entities, [versionMatchResult.version!]);
+      const pushResult = pushNewEntity(entities, [result.version!]);
 
-        if (pushResult.type === 'error') {
-          errorMessage = pushResult.errorMessage!;
-          break;
-        }
+      if (pushResult.type === 'error') {
+        errorMessage = pushResult.errorMessage!;
+        break;
       }
 
       continue;
@@ -90,33 +77,22 @@ export default function parser(
     match = line.match(versionsKeyword);
 
     if (match) {
-      const extractedVersions: string[] = [];
-      const _versions: Array<string> = match[1].split(',');
+      const extractedVersions = parseVersionList(match[1], availableVersions);
 
-      for (const _version of _versions) {
-        const versionMatchResult = extractVersion(_version.replace(/(?:^\s")+|"+/g, ''), availableVersions);
-
-        if (versionMatchResult.type === 'error') {
-          errorMessage = versionMatchResult.errorMessage!;
-          break linesLoop;
-        }
-
-        if (extractedVersions.includes(versionMatchResult.version!)) continue;
-
-        extractedVersions.push(versionMatchResult.version!);
+      if (extractedVersions.type === 'error') {
+        errorMessage = extractedVersions.errorMessage!;
+        break linesLoop;
       }
 
       const options: EntityOptions = {
         parallel: match[2] ? true : false,
       };
 
-      if (parseResult.entities) {
-        const pushResult = pushNewEntity(parseResult.entities, extractedVersions, options);
+      const pushResult = pushNewEntity(entities, extractedVersions.versions!, options);
 
-        if (pushResult.type === 'error') {
-          errorMessage = pushResult.errorMessage!;
-          break;
-        }
+      if (pushResult.type === 'error') {
+        errorMessage = pushResult.errorMessage!;
+        break;
       }
 
       continue;
@@ -152,21 +128,39 @@ export default function parser(
     break;
   }
 
-  if (parseResult.entities && parseResult.entities[0].osisObjects.length === 0 && errorMessage === null) {
+  if (entities[0].osisObjects.length === 0 && errorMessage === null) {
     errorMessage = 'No citation specified. Try writing "(Genesis 1:1)"';
   }
 
   if (errorMessage) {
-    parseResult = {
-      type: 'error',
-      errorMessage,
-    };
+    return { type: 'error', errorMessage };
   }
 
-  return parseResult;
+  return { type: 'entities', entities };
 }
 
-function extractVersion(string: string, availableVersions: Array<string>): ExtracResult {
+function parseVersionList(
+  raw: string,
+  availableVersions: Array<string>
+): { type: 'version'; versions: Array<string> } | { type: 'error'; errorMessage: string } {
+  const versions: string[] = [];
+  const parts = raw.split(',');
+
+  for (const part of parts) {
+    const version = part.replace(/(?:^\s")+|"+/g, '');
+    const result = extractVersion(version, availableVersions);
+
+    if (result.type === 'error') return { type: 'error', errorMessage: result.errorMessage! };
+
+    if (!versions.includes(result.version!)) {
+      versions.push(result.version!);
+    }
+  }
+
+  return { type: 'version', versions };
+}
+
+function extractVersion(string: string, availableVersions: Array<string>): ExtractResult {
   if (!availableVersions.includes(string)) {
     return {
       type: 'error',
@@ -194,16 +188,12 @@ function pushNewEntity(entities: Array<ParsedEntity>, versions: Array<string>, o
     }
   }
 
-  entities.push({
-    osisObjects: [],
-    versions,
-    options,
-  });
+  entities.push({ osisObjects: [], versions, options });
 
   return { type: 'success' };
 }
 
-interface ExtracResult {
+interface ExtractResult {
   type: 'version' | 'error';
   version?: string;
   errorMessage?: string;

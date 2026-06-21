@@ -1,5 +1,5 @@
 import { StyleProps } from '../interfaces/style';
-import BookName from './BookTitle';
+import BookName from './BookName';
 
 /**
  * Creates the html for a book
