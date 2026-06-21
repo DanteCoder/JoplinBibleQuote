@@ -289,11 +289,22 @@ function resolveExtraScriptPath(name) {
 	s.pop();
 	const nameNoExt = s.join('.');
 
+	const output = {
+		filename: `${nameNoExt}.js`,
+		path: distDir,
+	};
+
+	// bibleQuoteRuntime runs as a standalone browser script in the
+	// webview (loaded via <script> tag), not as a CommonJS module.
+	// Skipping library wrapper avoids "exports is not defined" at runtime.
+	if (nameNoExt === 'bibleQuoteRuntime') {
+		return { entry: relativePath, output };
+	}
+
 	return {
 		entry: relativePath,
 		output: {
-			filename: `${nameNoExt}.js`,
-			path: distDir,
+			...output,
 			library: 'default',
 			libraryTarget: 'commonjs',
 			libraryExport: 'default',
