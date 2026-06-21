@@ -14,9 +14,8 @@ describe('ErrorManager', () => {
     expect(html).toContain('line1<br>line2');
   });
 
-  it('includes red border styling', () => {
+  it('includes error classes', () => {
     const html = ErrorManager('error');
-    expect(html).toContain('red');
-    expect(html).toContain('border');
+    expect(html).toContain('class="bq-block bq-error"');
   });
 });

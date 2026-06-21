@@ -11,8 +11,8 @@ describe('BookName', () => {
     expect(html).toContain('</h2>');
   });
 
-  it('includes min-width style', () => {
+  it('includes bq-book-name class', () => {
     const html = BookName({ name: 'Genesis', style: { fontSize: '16px' } });
-    expect(html).toContain('min-width');
+    expect(html).toContain('class="bq-book-name"');
   });
 });

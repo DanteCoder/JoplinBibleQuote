@@ -11,9 +11,12 @@ describe('markdownItPlugin', () => {
   });
 
   describe('assets', () => {
-    it('returns the runtime script asset', () => {
+    it('returns runtime script and CSS assets', () => {
       const assets = plugin.assets();
-      expect(assets).toEqual([{ name: 'bibleQuoteRuntime.js' }]);
+      expect(assets).toEqual([
+        { name: 'bibleQuoteRuntime.js' },
+        { name: 'styles/bibleQuote.css' },
+      ]);
     });
   });
 
