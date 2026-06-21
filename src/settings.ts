@@ -40,7 +40,8 @@ export const settings: Record<string, SettingItem> = {
     type: SettingItemType.Int,
     section: 'bibleQuoteSection',
     public: true,
-    label: 'Verse font size',
+    label: 'Base font size',
+    description: 'Base font size in pixels. Chapter titles and book names scale from this value.',
   },
   verseAlignment: {
     value: 'justify',
@@ -76,7 +77,7 @@ export const settings: Record<string, SettingItem> = {
     isEnum: true,
     section: 'bibleQuoteSection',
     public: true,
-    label: 'Chapter number alignment',
+    label: 'Chapter title alignment',
     options: {
       center: 'Center',
       left: 'Left',
@@ -91,8 +92,8 @@ export const settings: Record<string, SettingItem> = {
     type: SettingItemType.Int,
     section: 'bibleQuoteSection',
     public: true,
-    label: 'Chapter side padding',
-    description: 'Chapter side padding in pixels.',
+    label: 'Chapter title padding',
+    description: 'Horizontal padding of the chapter title in pixels.',
   },
 };
 
