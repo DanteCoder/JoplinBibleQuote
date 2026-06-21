@@ -1,19 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getOsisBible } from '../src/utils/getOsisBible';
 
-vi.mock('../src/utils/xmlBible2Js', () => ({
-  xmlBible2Js: vi.fn(),
+vi.mock('../src/utils/xmlBibleParser', () => ({
+  xmlBibleParser: vi.fn(),
 }));
 
-import { xmlBible2Js } from '../src/utils/xmlBible2Js';
+import { xmlBibleParser } from '../src/utils/xmlBibleParser';
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
 describe('getOsisBible', () => {
-  it('returns osisBible when xmlBible2Js succeeds', () => {
-    vi.mocked(xmlBible2Js).mockReturnValue({
+  it('returns osisBible when xmlBibleParser succeeds', () => {
+    vi.mocked(xmlBibleParser).mockReturnValue({
       parsedBible: {
         osis: {
           osisText: [
@@ -32,8 +32,8 @@ describe('getOsisBible', () => {
     expect(result.errorMessage).toBeUndefined();
   });
 
-  it('returns error when xmlBible2Js returns error', () => {
-    vi.mocked(xmlBible2Js).mockReturnValue({
+  it('returns error when xmlBibleParser returns error', () => {
+    vi.mocked(xmlBibleParser).mockReturnValue({
       errorMessage: 'File not found',
     });
 
@@ -43,7 +43,7 @@ describe('getOsisBible', () => {
   });
 
   it('returns error when parsedBible is missing osis structure', () => {
-    vi.mocked(xmlBible2Js).mockReturnValue({
+    vi.mocked(xmlBibleParser).mockReturnValue({
       parsedBible: { notOsis: true },
     });
 
@@ -53,7 +53,7 @@ describe('getOsisBible', () => {
   });
 
   it('returns error when osis.osistext is empty', () => {
-    vi.mocked(xmlBible2Js).mockReturnValue({
+    vi.mocked(xmlBibleParser).mockReturnValue({
       parsedBible: {
         osis: {
           osisText: [],

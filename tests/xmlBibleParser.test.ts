@@ -1,30 +1,47 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { xmlBible2Js } from '../src/utils/xmlBible2Js';
+import { xmlBibleParser } from '../src/utils/xmlBibleParser';
 
 vi.mock('fs', () => ({
   readFileSync: vi.fn(),
 }));
 
-vi.mock('xml2js', () => ({
-  parseString: vi.fn(),
-}));
-
 import * as fs from 'fs';
-import { parseString } from 'xml2js';
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe('xmlBible2Js', () => {
+describe('xmlBibleParser', () => {
   it('returns parsed bible when file is valid', () => {
-    vi.mocked(fs.readFileSync).mockReturnValue('<xml>content</xml>');
-    vi.mocked(parseString).mockImplementation(((_xml: unknown, cb: (err: unknown, result: unknown) => void) => {
-      (cb as (err: unknown, result: unknown) => void)(null, { bible: { book: 'Genesis' } });
-    }) as never);
+    vi.mocked(fs.readFileSync).mockReturnValue(`<?xml version="1.0"?>
+<osis>
+  <osisText osisIDWork="KJV">
+    <div type="book" osisID="Gen">
+      <chapter osisID="Gen.1">
+        <verse osisID="Gen.1.1">In the beginning</verse>
+      </chapter>
+    </div>
+  </osisText>
+</osis>`);
 
-    const result = xmlBible2Js('/path/to/bible.xml');
-    expect(result.parsedBible).toEqual({ bible: { book: 'Genesis' } });
+    const result = xmlBibleParser('/path/to/bible.xml');
+    expect(result.parsedBible).toEqual({
+      osis: {
+        osisText: [{
+          $: { osisIDWork: 'KJV' },
+          div: [{
+            $: { type: 'book', osisID: 'Gen' },
+            chapter: [{
+              $: { osisID: 'Gen.1' },
+              verse: [{
+                $: { osisID: 'Gen.1.1' },
+                _: 'In the beginning',
+              }],
+            }],
+          }],
+        }],
+      },
+    });
     expect(result.errorMessage).toBeUndefined();
   });
 
@@ -35,7 +52,7 @@ describe('xmlBible2Js', () => {
       throw err;
     });
 
-    const result = xmlBible2Js('/invalid/path.xml');
+    const result = xmlBibleParser('/invalid/path.xml');
     expect(result.errorMessage).toContain('Invalid path');
   });
 
@@ -46,17 +63,14 @@ describe('xmlBible2Js', () => {
       throw err;
     });
 
-    const result = xmlBible2Js('/path/to/dir');
+    const result = xmlBibleParser('/path/to/dir');
     expect(result.errorMessage).toContain('no selected path');
   });
 
   it('returns error when XML parsing fails', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('<invalid>xml');
-    vi.mocked(parseString).mockImplementation(((_xml: unknown, cb: (err: unknown, _result: unknown) => void) => {
-      (cb as (err: unknown, _result: unknown) => void)(new Error('Parse error'), null);
-    }) as never);
 
-    const result = xmlBible2Js('/path/to/bible.xml');
+    const result = xmlBibleParser('/path/to/bible.xml');
     expect(result.errorMessage).toContain('Error opening the file');
   });
 
@@ -65,7 +79,7 @@ describe('xmlBible2Js', () => {
       throw new Error('Permission denied');
     });
 
-    const result = xmlBible2Js('/path/to/bible.xml');
+    const result = xmlBibleParser('/path/to/bible.xml');
     expect(result.errorMessage).toBe('Error: Permission denied');
   });
 });

@@ -1,5 +1,5 @@
 import { OsisBible } from '../interfaces/osisBible';
-import { xmlBible2Js } from './xmlBible2Js';
+import { xmlBibleParser } from './xmlBibleParser';
 
 interface XmlBibleResult {
   osis?: {
@@ -8,7 +8,7 @@ interface XmlBibleResult {
 }
 
 export function getOsisBible(biblePath: string): ReturnValue {
-  const result = xmlBible2Js(biblePath);
+  const result = xmlBibleParser(biblePath);
 
   if (result.errorMessage) {
     return { errorMessage: result.errorMessage };
