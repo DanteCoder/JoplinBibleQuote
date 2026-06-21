@@ -25,7 +25,7 @@ describe('bibleQuoteRuntime', () => {
     vi.stubGlobal('webviewApi', { postMessage });
 
     document.body.innerHTML = `
-      <div class="bible-quote-placeholder" data-source='{"test":"Genesis 1:1"}' data-cs-id="bible-quote">[Bible Quote...]</div>
+      <div class="bible-quote-placeholder" data-source='"Genesis 1:1"' data-cs-id="bible-quote">[Bible Quote...]</div>
     `;
 
     Object.defineProperty(document, 'readyState', {

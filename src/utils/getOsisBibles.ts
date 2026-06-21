@@ -6,9 +6,14 @@ import { getOsisBible } from './getOsisBible';
 export function getOsisBibles(biblesPath: string): Array<OsisBible> {
   const osisBibles: OsisBible[] = [];
 
-  let files = fs.readdirSync(biblesPath, {
-    withFileTypes: true,
-  });
+  let files: fs.Dirent[];
+  try {
+    files = fs.readdirSync(biblesPath, {
+      withFileTypes: true,
+    });
+  } catch {
+    return osisBibles;
+  }
 
   files = files.filter(file => file.name.match(/.xml$/));
 

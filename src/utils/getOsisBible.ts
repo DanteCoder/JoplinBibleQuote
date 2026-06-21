@@ -7,6 +7,17 @@ interface XmlBibleResult {
   };
 }
 
+function isXmlBibleResult(value: unknown): value is XmlBibleResult {
+  if (typeof value !== 'object' || value === null) return false;
+  const obj = value as Record<string, unknown>;
+  if (!('osis' in obj)) return true;
+  const osis = obj.osis;
+  if (typeof osis !== 'object' || osis === null) return false;
+  const osisObj = osis as Record<string, unknown>;
+  if (!('osisText' in osisObj)) return true;
+  return Array.isArray(osisObj.osisText);
+}
+
 export function getOsisBible(biblePath: string): ReturnValue {
   const result = xmlBibleParser(biblePath);
 
@@ -14,10 +25,9 @@ export function getOsisBible(biblePath: string): ReturnValue {
     return { errorMessage: result.errorMessage };
   }
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const parsedBible = result.parsedBible as XmlBibleResult | undefined;
+  const parsedBible = result.parsedBible;
 
-  if (!parsedBible?.osis?.osisText?.[0]) {
+  if (!isXmlBibleResult(parsedBible) || !parsedBible.osis?.osisText?.[0]) {
     return {
       errorMessage: `Error importing the xml file "${biblePath}"\n Is the file a valid osis xml Bible?`,
     };
