@@ -1,5 +1,6 @@
 {
 	"extraScripts": [
-		"markdownItPlugin.ts"
+		"markdownItPlugin.ts",
+		"bibleQuoteRuntime.ts"
 	]
 }
