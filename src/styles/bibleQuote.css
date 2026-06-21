@@ -23,12 +23,34 @@
   margin: 0px;
 }
 
+.bq-verse {
+  font-size: var(--bq-vf, 16px);
+  text-align: var(--bq-va, justify);
+}
+
 .bq-book-name {
+  font-size: calc(var(--bq-vf, 16px) * 1.6);
+  text-align: var(--bq-ba, center);
   min-width: max-content;
 }
 
 .bq-chapter-title {
+  font-size: calc(var(--bq-vf, 16px) * 1.1);
+  padding: var(--bq-cp, 10px);
+  text-align: var(--bq-ca, left);
   min-width: max-content;
+}
+
+.bq-chapter-title--indented {
+  text-indent: calc(var(--bq-vf, 16px) * 2);
+}
+
+.bq-citation {
+  font-size: var(--bq-vf, 16px);
+}
+
+.bq-book {
+  margin: 0px;
 }
 
 .bq-verse-flex {

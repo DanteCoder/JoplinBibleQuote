@@ -95,7 +95,7 @@ describe('parseQuote', () => {
       ],
     };
     const result = parseQuote(osisObject, bibleIndex, bibleInfo);
-    expect(result.cite).toBeTruthy();
+    expect(result.cite).not.toBe('');
     expect(typeof result.cite).toBe('string');
   });
 });

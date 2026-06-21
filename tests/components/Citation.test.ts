@@ -11,7 +11,6 @@ describe('Citation', () => {
       displayFullCitation: false,
       displayOsisIDWork: false,
       osisIDWork: '',
-      style: {},
     });
     expect(html).toContain('book content');
   });
@@ -23,7 +22,6 @@ describe('Citation', () => {
       displayFullCitation: true,
       displayOsisIDWork: true,
       osisIDWork: 'KJV',
-      style: {},
     });
     expect(html).toContain('Gen 1:1');
     expect(html).toContain('KJV');
@@ -36,7 +34,6 @@ describe('Citation', () => {
       displayFullCitation: false,
       displayOsisIDWork: false,
       osisIDWork: '',
-      style: {},
     });
     expect(html).not.toContain('Gen 1:1');
   });
