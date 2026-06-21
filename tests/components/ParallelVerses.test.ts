@@ -35,20 +35,18 @@ describe('ParallelVerses', () => {
       chapter: { id: 1, verses: [1, 2] },
       osisBibles,
       versions: ['KJV', 'RVR'],
-      style: { fontSize: '16px' },
     });
     expect(html).toContain('verse 1');
     expect(html).toContain('verse 2');
   });
 
-  it('uses grid layout', () => {
+  it('uses parallel grid class', () => {
     const html = ParallelVerses({
       bookId: 'Gen',
       chapter: { id: 1, verses: [1] },
       osisBibles,
       versions: ['KJV'],
-      style: { fontSize: '16px' },
     });
-    expect(html).toContain('grid');
+    expect(html).toContain('class="bq-parallel-grid"');
   });
 });

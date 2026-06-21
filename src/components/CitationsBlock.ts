@@ -4,7 +4,7 @@ import { OsisBible } from '../interfaces/osisBible';
 import { ParsedQuote } from '../interfaces/parsedQuote';
 import { ParsedEntity } from '../interfaces/parseResult';
 import { bibleIndexFull } from '../languages';
-import { cssObj2String } from '../utils/cssObj2String';
+import { createHtml } from '../utils/createHtml';
 import { getVerseText } from '../utils/getVerseText';
 import { parseQuote } from '../utils/parseQuote';
 import Book from './Book';
@@ -14,13 +14,11 @@ import Verse from './Verse';
 
 export default function CitationsBlock(props: Props) {
   const { bibleIndex, bibleInfo, defaultOsisBible, entity, osisBibles, pluginConfig } = props;
-  const html = document.createElement('div');
-
-  html.setAttribute('style', cssObj2String({ padding: '30px' }));
-
   const parsedQuotes: Array<ParsedQuote> = entity.osisObjects.map(osisObject =>
     parseQuote(osisObject, bibleIndex, bibleInfo)
   );
+
+  let content = '';
 
   for (const version of entity.versions) {
     const osisBible = resolveOsisBible(version, defaultOsisBible, osisBibles);
@@ -28,7 +26,7 @@ export default function CitationsBlock(props: Props) {
     for (const fullQuote of parsedQuotes) {
       const booksHtml = buildBooksHtml(fullQuote, osisBible, bibleIndex, bibleInfo, pluginConfig);
 
-      html.innerHTML += Citation({
+      content += Citation({
         books: booksHtml,
         citation: fullQuote.cite,
         osisIDWork: osisBible.$.osisIDWork,
@@ -38,21 +36,16 @@ export default function CitationsBlock(props: Props) {
       });
 
       if (fullQuote !== parsedQuotes[parsedQuotes.length - 1]) {
-        html.innerHTML += `<hr style="border: none; border-top: 1px solid grey; margin: ${pluginConfig.verseFontSize}px">`;
+        content += '<hr class="bq-hr-light">';
       }
     }
 
     if (version !== entity.versions[entity.versions.length - 1]) {
-      html.innerHTML += `<hr style="${cssObj2String({
-        border: 'none',
-        borderTop: '3px double grey',
-        marginTop: `${pluginConfig.verseFontSize}px`,
-        marginBottom: `${pluginConfig.verseFontSize}px`,
-      })}">`;
+      content += '<hr class="bq-hr-double">';
     }
   }
 
-  return html.outerHTML;
+  return createHtml('div', content, { className: 'bq-block' });
 }
 
 function resolveOsisBible(version: string, defaultOsisBible: OsisBible, osisBibles: Array<OsisBible>): OsisBible {

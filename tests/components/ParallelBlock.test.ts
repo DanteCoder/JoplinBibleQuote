@@ -37,7 +37,7 @@ describe('ParallelBlock', () => {
     expect(html).toContain('ParallelVerses output');
   });
 
-  it('uses grid layout', () => {
+  it('uses citation grid layout', () => {
     const html = ParallelBlock({
       bibleIndex, bibleInfo, osisBibles: [],
       parsedEntity: { versions: ['KJV'], osisObjects: [{
@@ -49,6 +49,6 @@ describe('ParallelBlock', () => {
       }] },
       pluginConfig,
     });
-    expect(html).toContain('grid');
+    expect(html).toContain('class="bq-citation-grid"');
   });
 });

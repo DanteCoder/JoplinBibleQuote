@@ -1,24 +1,18 @@
 import { StyleProps } from '../interfaces/style';
+import { createHtml } from '../utils/createHtml';
 import FullCitation from './FullCitation';
 
-/**
- * Creates the html for a citation
- * @param props
- * @returns html string
- */
 export default function Citation(props: Props) {
   const { books, citation, osisIDWork, displayFullCitation, displayOsisIDWork, style } = props;
-  const html = document.createElement('div');
+  let content = '';
 
   if (displayFullCitation) {
-    html.innerHTML += FullCitation({ citation, displayOsisIDWork, osisIDWork, style });
+    content += FullCitation({ citation, displayOsisIDWork, osisIDWork, style });
   }
 
-  for (const book of books) {
-    html.innerHTML += book;
-  }
+  content += books.join('');
 
-  return html.outerHTML;
+  return createHtml('div', content, { style });
 }
 
 interface Props {

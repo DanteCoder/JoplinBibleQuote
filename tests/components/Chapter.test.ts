@@ -38,7 +38,7 @@ describe('Chapter', () => {
     expect(html).not.toContain('Chapter 5');
   });
 
-  it('uses a flex column container for verses', () => {
+  it('uses bq-verse-flex class for verses container', () => {
     const html = Chapter({
       verses: ['<div>v1</div>'],
       text: 'Chapter',
@@ -46,7 +46,6 @@ describe('Chapter', () => {
       displayChapter: false,
       style: {},
     });
-    expect(html).toContain('flex');
-    expect(html).toContain('column');
+    expect(html).toContain('class="bq-verse-flex"');
   });
 });

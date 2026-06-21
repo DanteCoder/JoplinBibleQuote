@@ -41,9 +41,8 @@ describe('BibleIndex', () => {
     expect(html).toContain('24');
   });
 
-  it('includes blue border styling', () => {
+  it('includes index classes', () => {
     const html = BibleIndex({ bibleIndex, bibleInfo });
-    expect(html).toContain('blue');
-    expect(html).toContain('border');
+    expect(html).toContain('class="bq-block bq-index"');
   });
 });
