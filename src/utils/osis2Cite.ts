@@ -37,7 +37,8 @@ function processSimple(
   bibleIndex: BibleLanguage,
   bibleInfo: BibleInfo
 ): { text: string; cursor: Cursor } {
-  const { b, c, v, type } = entity.start;
+  const { b, c, v } = entity.start;
+  const type = entity.start.type || entity.type;
   const result = formatStart(type, b, c, v, cursor, bibleIndex, bibleInfo);
 
   return { text: result.text, cursor: { ...cursor, ...result.cursor } };

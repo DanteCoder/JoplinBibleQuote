@@ -17,17 +17,12 @@ export default function ParallelBlock(props: Props) {
   for (const osisObject of parsedEntity.osisObjects) {
     const parsedQuote = parseQuote(osisObject, bibleIndex, bibleInfo);
 
-    content += buildCitationsGrid(parsedQuote, parsedEntity.versions, pluginConfig);
+    content += buildCitationsGrid(parsedQuote, parsedEntity.versions);
 
     for (const book of parsedQuote.books) {
       if (parsedQuote.books.length > 1) {
         content += BookName({
           name: book.name,
-          style: {
-            fontSize: `${pluginConfig.verseFontSize * 1.6}px`,
-            margin: '0px',
-            textAlign: pluginConfig.bookAlignment,
-          },
         });
       }
 
@@ -35,11 +30,6 @@ export default function ParallelBlock(props: Props) {
         if (parsedQuote.books.length > 1 || book.chapters.length > 1) {
           content += ChapterTitle({
             number: chapter.id,
-            style: {
-              fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
-              padding: `${pluginConfig.chapterPadding}px`,
-              textAlign: pluginConfig.chapterAlignment,
-            },
             text: bibleIndexFull[pluginConfig.language].chapter,
           });
         }
@@ -61,11 +51,7 @@ export default function ParallelBlock(props: Props) {
   return createHtml('div', content, { className: 'bq-block' });
 }
 
-function buildCitationsGrid(
-  parsedQuote: { cite: string },
-  versions: Array<string>,
-  pluginConfig: PluginConfig
-): string {
+function buildCitationsGrid(parsedQuote: { cite: string }, versions: Array<string>): string {
   let content = '';
 
   for (const version of versions) {
@@ -73,7 +59,6 @@ function buildCitationsGrid(
       citation: parsedQuote.cite,
       displayOsisIDWork: true,
       osisIDWork: version,
-      style: { fontSize: `${pluginConfig.verseFontSize}px` },
     });
   }
 

@@ -32,7 +32,6 @@ export default function CitationsBlock(props: Props) {
         osisIDWork: osisBible.$.osisIDWork,
         displayFullCitation: true,
         displayOsisIDWork: true,
-        style: { fontSize: `${pluginConfig.verseFontSize}px` },
       });
 
       if (fullQuote !== parsedQuotes[parsedQuotes.length - 1]) {
@@ -70,7 +69,6 @@ function buildBooksHtml(
           text: verseText,
           number: verse,
           displayNumber: chapter.verses.length > 1 || book.chapters.length > 1 || fullQuote.books.length > 1,
-          style: { fontSize: `${pluginConfig.verseFontSize}px`, textAlign: pluginConfig.verseAlignment },
         });
       });
 
@@ -79,12 +77,7 @@ function buildBooksHtml(
         text: bibleIndexFull[pluginConfig.language].chapter,
         number: chapter.id,
         displayChapter: book.chapters.length > 1 || fullQuote.books.length > 1,
-        style: {
-          fontSize: `${pluginConfig.verseFontSize * 1.1}px`,
-          padding: `${pluginConfig.chapterPadding}px`,
-          textAlign: pluginConfig.chapterAlignment,
-          textIndent: `${pluginConfig.verseFontSize * 2}px`,
-        },
+        indented: true,
       });
     });
 
@@ -92,11 +85,6 @@ function buildBooksHtml(
       chapters: chaptersHtml,
       name: book.name,
       displayName: fullQuote.books.length > 1,
-      style: {
-        fontSize: `${pluginConfig.verseFontSize * 1.6}px`,
-        margin: '0px',
-        textAlign: pluginConfig.bookAlignment,
-      },
     });
   });
 }

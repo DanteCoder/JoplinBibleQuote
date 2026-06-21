@@ -15,7 +15,7 @@ export default function ParallelVerses(props: Props) {
         c: chapter.id,
         v: verse,
       });
-      content += Verse({ displayNumber: true, number: verse, text: verseText, style: {} });
+      content += Verse({ displayNumber: true, number: verse, text: verseText });
     }
   }
 
