@@ -1,21 +1,11 @@
 import { StyleProps } from '../interfaces/style';
-import { cssObj2String } from '../utils/cssObj2String';
+import { createHtml } from '../utils/createHtml';
 
-/**
- * Creates the html for a full citation
- * @param props
- * @returns html string
- */
 export default function FullCitation(props: Props) {
   const { citation, displayOsisIDWork, osisIDWork, style } = props;
-  const html = document.createElement('h3');
+  const content = displayOsisIDWork ? `<b>${citation}</b> <b>(${osisIDWork})</b>` : `<b>${citation}</b>`;
 
-  html.setAttribute('style', cssObj2String(style));
-  html.innerHTML = `<b>${citation}<b>`;
-
-  if (displayOsisIDWork) html.innerHTML += `<b> (${osisIDWork})<b>`;
-
-  return html.outerHTML;
+  return createHtml('h3', content, { className: 'bq-citation', style });
 }
 
 interface Props {

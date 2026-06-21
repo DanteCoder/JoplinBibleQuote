@@ -1,71 +1,45 @@
 import { BibleInfo, BibleLanguage } from '../interfaces/bibleIndex';
-import { cssObj2String } from '../utils/cssObj2String';
+import { createHtml } from '../utils/createHtml';
 
 export default function BibleIndex(props: Props) {
   const { bibleIndex, bibleInfo, bookId } = props;
   const osisBooksIds: Array<string> = Object.keys(bibleInfo.order);
   const osisBooksOrder: Array<number> = Object.values(bibleInfo.order);
-  const html = document.createElement('div');
-
-  html.setAttribute(
-    'style',
-    cssObj2String({
-      padding: '30px',
-      border: '1px solid blue',
-      textAlign: 'left',
-      display: 'grid',
-      gridTemplateColumns: !bookId ? '1fr 0.6fr 0.4fr' : '1fr 1fr',
-    })
-  );
+  let content = '';
 
   if (bookId) {
-    html.innerHTML += `<p>${bibleIndex.books[bibleInfo.order[bookId] - 1]}</p>`;
-    html.innerHTML += '<p></p>';
-
-    html.innerHTML += `<p>${bibleIndex.chapter}</p>`;
-    html.innerHTML += `<p>${bibleIndex.verses}</p>`;
+    content += `<p>${bibleIndex.books[bibleInfo.order[bookId] - 1]}</p><p></p>`;
+    content += `<p>${bibleIndex.chapter}</p>`;
+    content += `<p>${bibleIndex.verses}</p>`;
 
     bibleInfo.chapters[bookId].forEach((verses, i) => {
-      let p = document.createElement('p');
-      p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = String(i + 1);
-      html.appendChild(p);
-
-      p = document.createElement('p');
-      p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = String(verses);
-      html.appendChild(p);
+      content += `<p class="bq-index-p">${i + 1}</p>`;
+      content += `<p class="bq-index-p">${verses}</p>`;
     });
   } else {
-    html.innerHTML += `<p>${bibleIndex.book}</p>`;
-    html.innerHTML += `<p>${bibleIndex.chapters}</p>`;
-    html.innerHTML += `<p>OSIS ID</p>`;
+    content += `<p>${bibleIndex.book}</p>`;
+    content += `<p>${bibleIndex.chapters}</p>`;
+    content += '<p>OSIS ID</p>';
 
     bibleIndex.books.forEach((book, i) => {
-      let p = document.createElement('p');
-      p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = `${i + 1}. ${book}`;
-      html.appendChild(p);
-
-      p = document.createElement('p');
-      p.setAttribute('style', cssObj2String({ margin: '0px' }));
-
       const osisId = osisBooksIds[osisBooksOrder[i] - 1];
-      p.innerHTML = String(bibleInfo.chapters[osisId].length);
-      html.appendChild(p);
-
-      p = document.createElement('p');
-      p.setAttribute('style', cssObj2String({ margin: '0px' }));
-      p.innerHTML = osisId;
-      html.appendChild(p);
+      content += `<p class="bq-index-p">${i + 1}. ${book}</p>`;
+      content += `<p class="bq-index-p">${bibleInfo.chapters[osisId].length}</p>`;
+      content += `<p class="bq-index-p">${osisId}</p>`;
 
       if (i === 38) {
-        html.innerHTML += '<p></p>'.repeat(3);
+        content += '<p></p>'.repeat(3);
       }
     });
   }
 
-  return html.outerHTML;
+  return createHtml('div', content, {
+    className: 'bq-block bq-index',
+    style: {
+      display: 'grid',
+      gridTemplateColumns: !bookId ? '1fr 0.6fr 0.4fr' : '1fr 1fr',
+    },
+  });
 }
 
 interface Props {

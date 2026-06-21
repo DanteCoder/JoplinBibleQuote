@@ -14,9 +14,8 @@ describe('Help', () => {
     expect(html).toContain('Available commands');
   });
 
-  it('includes green border styling', () => {
+  it('includes help classes', () => {
     const html = Help({ language: 'en' });
-    expect(html).toContain('green');
-    expect(html).toContain('border');
+    expect(html).toContain('class="bq-block bq-help"');
   });
 });

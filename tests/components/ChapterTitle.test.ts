@@ -15,8 +15,8 @@ describe('ChapterTitle', () => {
     expect(html).toContain('Chapitre 2');
   });
 
-  it('includes min-width style', () => {
+  it('includes bq-chapter-title class', () => {
     const html = ChapterTitle({ number: 1, style: { color: 'red' }, text: 'Chapter' });
-    expect(html).toContain('min-width');
+    expect(html).toContain('class="bq-chapter-title"');
   });
 });

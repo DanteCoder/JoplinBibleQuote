@@ -53,7 +53,7 @@ export default function (context: { contentScriptId: string }) {
       };
     },
     assets: function () {
-      return [{ name: 'bibleQuoteRuntime.js' }];
+      return [{ name: 'bibleQuoteRuntime.js' }, { name: 'styles/bibleQuote.css' }];
     },
   };
 }

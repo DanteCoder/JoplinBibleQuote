@@ -1,0 +1,71 @@
+.bq-block {
+  padding: 30px;
+  text-align: left;
+}
+
+.bq-main {
+  border: 1px solid #545454;
+}
+
+.bq-error {
+  border: 1px solid red;
+}
+
+.bq-help {
+  border: 1px solid green;
+}
+
+.bq-index {
+  border: 1px solid blue;
+}
+
+.bq-index-p {
+  margin: 0px;
+}
+
+.bq-book-name {
+  min-width: max-content;
+}
+
+.bq-chapter-title {
+  min-width: max-content;
+}
+
+.bq-verse-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bq-grid {
+  display: grid;
+}
+
+.bq-parallel-grid {
+  display: grid;
+  row-gap: calc(var(--bq-vf, 16px) / 2);
+  column-gap: var(--bq-vf, 16px);
+}
+
+.bq-citation-grid {
+  display: grid;
+  column-gap: var(--bq-vf, 16px);
+}
+
+.bq-hr-light {
+  border: none;
+  border-top: 1px solid grey;
+  margin: var(--bq-vf);
+}
+
+.bq-hr-double {
+  border: none;
+  border-top: 3px double grey;
+  margin: var(--bq-vf) 0;
+}
+
+.bq-double-hr {
+  border: none;
+  border-top: 3px double grey;
+  margin: 0px 15px;
+}

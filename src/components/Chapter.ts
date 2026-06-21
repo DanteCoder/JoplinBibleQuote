@@ -1,29 +1,18 @@
 import { StyleProps } from '../interfaces/style';
+import { createHtml } from '../utils/createHtml';
 import ChapterTitle from './ChapterTitle';
 
-/**
- * Creates the html for a chapter
- * @param props
- * @returns html string
- */
 export default function Chapter(props: Props) {
   const { verses, text, number, displayChapter, style } = props;
-  const html = document.createElement('div');
+  let content = '';
 
   if (displayChapter) {
-    html.innerHTML += ChapterTitle({ number, style, text });
+    content += ChapterTitle({ number, style, text });
   }
 
-  const versesDiv = document.createElement('div');
-  versesDiv.setAttribute('style', `display: flex; flex-direction: column; gap: 8px;`);
+  content += createHtml('div', verses.join(''), { className: 'bq-verse-flex' });
 
-  for (const verse of verses) {
-    versesDiv.innerHTML += verse;
-  }
-
-  html.appendChild(versesDiv);
-
-  return html.outerHTML;
+  return createHtml('div', content, { style });
 }
 
 interface Props {

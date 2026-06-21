@@ -11,8 +11,8 @@ vi.mock('../../src/components/ParallelBlock', () => ({
   default: () => '<div>ParallelBlock output</div>',
 }));
 
-vi.mock('../../src/utils/cssObj2String', () => ({
-  cssObj2String: () => 'mock-css',
+vi.mock('../../src/utils/createHtml', () => ({
+  createHtml: vi.fn((tag, content) => `<${tag}>${content}</${tag}>`),
 }));
 
 const bibleIndex = { book: 'Book', chapter: 'Chapter', chapters: 'Chapters', verses: 'Verses', books: ['Genesis'] };
@@ -39,12 +39,12 @@ describe('Main', () => {
     expect(html).toContain('ParallelBlock output');
   });
 
-  it('includes border styling on wrapper', () => {
+  it('renders wrapper with content', () => {
     const html = Main({
       bibleIndex, bibleInfo, defaultOsisBible, osisBibles: [],
       parsedEntities: [{ versions: ['default'], osisObjects: [] }],
       pluginConfig,
     });
-    expect(html).toContain('border');
+    expect(html).toContain('CitationsBlock output');
   });
 });

@@ -1,17 +1,11 @@
 import { StyleProps } from '../interfaces/style';
-import { cssObj2String } from '../utils/cssObj2String';
+import { createHtml } from '../utils/createHtml';
 
 export default function Verse(props: Props) {
   const { text, number, displayNumber, style } = props;
-  const html = document.createElement('div');
+  const content = `${displayNumber ? `${number}. ` : ''}${text}`;
 
-  html.setAttribute('style', cssObj2String(style));
-
-  if (displayNumber) html.innerHTML += `${number}. `;
-
-  html.innerHTML += text;
-
-  return html.outerHTML;
+  return createHtml('div', content, { className: 'bq-verse', style });
 }
 
 interface Props {

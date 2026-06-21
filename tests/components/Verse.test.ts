@@ -16,8 +16,8 @@ describe('Verse', () => {
     expect(html).toContain('And the earth was without form');
   });
 
-  it('applies style attributes', () => {
+  it('uses bq-verse class', () => {
     const html = Verse({ text: 'test', number: 1, displayNumber: false, style: { fontSize: '16px' } });
-    expect(html).toContain('font-size: 16px');
+    expect(html).toContain('class="bq-verse"');
   });
 });

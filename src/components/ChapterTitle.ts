@@ -1,19 +1,10 @@
 import { StyleProps } from '../interfaces/style';
-import { cssObj2String } from '../utils/cssObj2String';
+import { createHtml } from '../utils/createHtml';
 
-/**
- * Creates the html for the Chapter title
- * @param props
- * @returns html string
- */
 export default function ChapterTitle(props: Props) {
   const { number, style, text } = props;
-  const html = document.createElement('h3');
 
-  html.setAttribute('style', cssObj2String({ ...style, minWidth: 'max-content' }));
-  html.innerHTML = `${text} ${number}`;
-
-  return html.outerHTML;
+  return createHtml('h3', `${text} ${number}`, { className: 'bq-chapter-title', style });
 }
 
 interface Props {
