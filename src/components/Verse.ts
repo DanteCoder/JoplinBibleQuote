@@ -1,11 +1,6 @@
 import { StyleProps } from '../interfaces/style';
 import { cssObj2String } from '../utils/cssObj2String';
 
-/**
- * Creates the html for a verse
- * @param props
- * @returns html string
- */
 export default function Verse(props: Props) {
   const { text, number, displayNumber, style } = props;
   const html = document.createElement('div');
