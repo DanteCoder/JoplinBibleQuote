@@ -1,6 +1,6 @@
 {
   "name": "joplin-plugin-bible-quote",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "scripts": {
     "dist": "webpack --env joplin-plugin-config=buildMain && webpack --env joplin-plugin-config=buildExtraScripts && webpack --env joplin-plugin-config=createArchive",
     "postinstall": "husky",
@@ -29,7 +29,6 @@
     "@joplin/lib": "~2.9",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^18.7.13",
-    
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
     "chalk": "^4.1.0",
