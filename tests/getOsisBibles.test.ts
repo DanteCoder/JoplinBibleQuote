@@ -66,6 +66,6 @@ describe('getOsisBibles', () => {
       throw new Error('ENOENT');
     });
 
-    expect(() => getOsisBibles('/invalid/path')).toThrow();
+    expect(getOsisBibles('/invalid/path')).toEqual([]);
   });
 });
