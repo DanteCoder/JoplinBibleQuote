@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 import { describe, it, expect } from 'vitest';
-import BookName from '../../src/components/BookTitle';
+import BookName from '../../src/components/BookName';
 
 describe('BookName', () => {
   it('renders book name in an h2 tag', () => {
