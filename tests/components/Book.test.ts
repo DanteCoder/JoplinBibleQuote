@@ -9,7 +9,6 @@ describe('Book', () => {
       chapters: ['<div>chapter 1 content</div>'],
       name: 'Genesis',
       displayName: false,
-      style: {},
     });
     expect(html).toContain('chapter 1 content');
   });
@@ -19,7 +18,6 @@ describe('Book', () => {
       chapters: ['<div>content</div>'],
       name: 'Genesis',
       displayName: true,
-      style: {},
     });
     expect(html).toContain('Genesis');
   });
@@ -29,7 +27,6 @@ describe('Book', () => {
       chapters: ['<div>content</div>'],
       name: 'Genesis',
       displayName: false,
-      style: {},
     });
     expect(html).not.toContain('Genesis');
   });
@@ -39,7 +36,6 @@ describe('Book', () => {
       chapters: ['<div>ch1</div>', '<div>ch2</div>'],
       name: 'Gen',
       displayName: false,
-      style: {},
     });
     expect(html).toContain('ch1');
     expect(html).toContain('ch2');

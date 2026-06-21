@@ -10,7 +10,6 @@ describe('Chapter', () => {
       text: 'Chapter',
       number: 1,
       displayChapter: false,
-      style: {},
     });
     expect(html).toContain('verse 1');
     expect(html).toContain('verse 2');
@@ -22,7 +21,6 @@ describe('Chapter', () => {
       text: 'Chapter',
       number: 5,
       displayChapter: true,
-      style: {},
     });
     expect(html).toContain('Chapter 5');
   });
@@ -33,7 +31,6 @@ describe('Chapter', () => {
       text: 'Chapter',
       number: 5,
       displayChapter: false,
-      style: {},
     });
     expect(html).not.toContain('Chapter 5');
   });
@@ -44,7 +41,6 @@ describe('Chapter', () => {
       text: 'Chapter',
       number: 1,
       displayChapter: false,
-      style: {},
     });
     expect(html).toContain('class="bq-verse-flex"');
   });

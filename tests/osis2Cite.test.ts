@@ -43,8 +43,61 @@ describe('osis2Cite', () => {
       ],
     };
     const result = osis2Cite(osisObject, bibleIndex, bibleInfo);
+    expect(result).not.toBe('');
     expect(result).toContain('Genesis');
     expect(result).toContain('1:1');
+  });
+
+  it('formats a single bcv entity when start.type is missing (real parser behavior)', () => {
+    const osisObject = {
+      osis: 'Gen.1.1',
+      indices: [0, 8],
+      translations: ['KJV'],
+      entity_id: 0,
+      entities: [
+        {
+          osis: 'Gen.1.1',
+          type: 'bcv',
+          indices: [0, 8],
+          translations: ['KJV'],
+          start: { b: 'Gen', c: 1, v: 1 },
+          end: { b: 'Gen', c: 1, v: 1 },
+          enclosed_indices: [0, 1],
+          entity_id: 0,
+          entities: [],
+        },
+      ],
+    } as unknown as OsisObject;
+    const result = osis2Cite(osisObject, bibleIndex, bibleInfo);
+    expect(result).not.toBe('');
+    expect(result).toContain('Genesis');
+    expect(result).toContain('1:1');
+  });
+
+  it('formats a chapter-only entity when start.type is missing', () => {
+    const osisObject = {
+      osis: 'Gen.1',
+      indices: [0, 5],
+      translations: ['KJV'],
+      entity_id: 0,
+      entities: [
+        {
+          osis: 'Gen.1',
+          type: 'bc',
+          indices: [0, 5],
+          translations: ['KJV'],
+          start: { b: 'Gen', c: 1, v: 1 },
+          end: { b: 'Gen', c: 1, v: 31 },
+          enclosed_indices: [0, 1],
+          entity_id: 0,
+          entities: [],
+        },
+      ],
+    } as unknown as OsisObject;
+    const result = osis2Cite(osisObject, bibleIndex, bibleInfo);
+    expect(result).not.toBe('');
+    expect(result).toContain('Genesis');
+    expect(result).toContain('1');
   });
 
   it('formats a range of verses within same chapter', () => {
@@ -68,7 +121,20 @@ describe('osis2Cite', () => {
       ],
     };
     const result = osis2Cite(osisObject, bibleIndex, bibleInfo);
+    expect(result).not.toBe('');
     expect(result).toContain('Genesis');
     expect(result).toContain('1:1-5');
+  });
+
+  it('never returns empty string for any entity type', () => {
+    const entities = [
+      { type: 'bcv', start: { b: 'Gen', c: 1, v: 1 }, end: { b: 'Gen', c: 1, v: 1 } },
+      { type: 'bc', start: { b: 'Gen', c: 1, v: 1 }, end: { b: 'Gen', c: 1, v: 31 } },
+      { type: 'cv', start: { b: 'Gen', c: 3, v: 5 }, end: { b: 'Gen', c: 3, v: 5 } },
+      { type: 'cv', start: { b: 'Gen', c: 3, v: 5 }, end: { b: 'Gen', c: 3, v: 7 } },
+    ] as unknown as OsisObject['entities'];
+    const osisObject = { osis: '', indices: [], translations: [], entity_id: 0, entities } as unknown as OsisObject;
+    const result = osis2Cite(osisObject, bibleIndex, bibleInfo);
+    expect(result).not.toBe('');
   });
 });
